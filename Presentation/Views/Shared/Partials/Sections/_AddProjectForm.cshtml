@@ -90,10 +90,12 @@
 
             <div class="form-group">
                 <label asp-for="Budget">Budget</label>
-                <div class="field-group">
-                    <input asp-for="Budget" type="number" step="0.01" />
-                    <span asp-validation-for="Budget"></span>
+                <div class="field-group input-group"> <!-- Add 'input-group' class -->
+                    <span class="input-group-text">$</span> <!-- Add the dollar sign span -->
+                    <input asp-for="Budget" type="number" step="0.01" class="form-control" />
+                    <!-- Add 'form-control' class -->
                 </div>
+                <span asp-validation-for="Budget" class="text-danger"></span> <!-- Validation outside the group -->
             </div>
 
             <!-- Debug section for troubleshooting -->

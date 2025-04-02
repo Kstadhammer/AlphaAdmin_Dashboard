@@ -1,4 +1,4 @@
-@model IEnumerable<Business.Models.ProjectListItem>
+@model Presentation.ViewModels.ProjectIndexViewModel
 @{
     ViewData["Title"] = "Projects";
     // Ensure we pass any error/success messages from TempData to ViewBag if needed
@@ -19,8 +19,17 @@
     <button type="button" class="btn btn-add" data-modal="true" data-target="#addProjectModal">Add Project</button>
 </div>
 
+<!-- Status Filter Tabs -->
+<div class="filter-tabs">
+    <a href="#" class="filter-tab active">ALL [@Model.TotalProjectCount]</a>
+    @foreach (var statusFilter in Model.StatusFilters)
+    {
+        <a href="#" class="filter-tab">@statusFilter.StatusName.ToUpper() [@statusFilter.Count]</a>
+    }
+</div>
+
 <section id="projects">
     <div class="surface">
-        @await Html.PartialAsync("Partials/Sections/_ProjectList", Model)
+        @await Html.PartialAsync("Partials/Sections/_ProjectList", Model.Projects)
     </div>
 </section>

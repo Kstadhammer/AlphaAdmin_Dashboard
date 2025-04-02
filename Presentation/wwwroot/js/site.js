@@ -88,6 +88,20 @@
   } else {
     console.log("Edit Project form not found");
   }
+
+  // Initialize Choices.js for member multi-select in Add Project form
+  const addProjectMemberSelect = document.querySelector(
+    "#addProjectForm .member-select"
+  );
+  if (addProjectMemberSelect) {
+    console.log("Initializing Choices.js for Add Project members");
+    new Choices(addProjectMemberSelect, {
+      removeItemButton: true, // Add 'x' button to remove selected items
+      // placeholder: true, // Optional: Use if you want a placeholder
+      // placeholderValue: 'Select members...', // Optional: Placeholder text
+      // searchEnabled: true, // Optional: Enable searching within choices
+    });
+  }
 });
 
 // Add event listeners for close buttons

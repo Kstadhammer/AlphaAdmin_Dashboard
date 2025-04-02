@@ -7,14 +7,13 @@
         {
             <div class="project-card">
                 <div class="project-card-header">
-                    @if (!string.IsNullOrEmpty(project.ImageUrl))
-                    {
-                        <img class="project-image" src="@project.ImageUrl" alt="@project.Name" />
-                    }
-                    else
-                    {
-                        <img class="project-image" src="~/images/Projects.svg" alt="@project.Name" />
-                    }
+                    <!-- Project Icon Container with Gradient -->
+                    <div class="project-icon-container"
+                        style="background: @(string.IsNullOrEmpty(project.GradientCss) ? "var(--gray-200)" : project.GradientCss);">
+                        <img class="project-image"
+                            src="@(string.IsNullOrEmpty(project.ImageUrl) ? "/images/Projects.svg" : project.ImageUrl)"
+                            alt="@project.Name" />
+                    </div>
                     <div class="dropdown">
                         <i class="fa-regular fa-ellipsis dropdown-toggle" data-project-id="@project.Id"></i>
                         <div class="dropdown-menu">

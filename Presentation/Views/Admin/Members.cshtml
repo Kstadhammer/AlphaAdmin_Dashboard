@@ -3,11 +3,11 @@
     ViewData["Title"] = "Team Members";
 }
 
+<div class="page-header"> <!-- Moved header outside section -->
+    <h1>@ViewData["Title"]</h1>
+    <button class="btn btn-add">Add Member</button>
+</div>
 <section id="members">
-    <div class="page-header">
-        <h1>@ViewData["Title"]</h1>
-        <button class="btn btn-add">Add Member</button>
-    </div>
     <div class="surface">
         <div class="members-list">
             @if (Model != null)

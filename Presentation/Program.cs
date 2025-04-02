@@ -65,6 +65,26 @@ app.MapStaticAssets();
 app.MapControllerRoute(name: "default", pattern: "{controller=Admin}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+// Apply pending migrations automatically on startup
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            Console.WriteLine("Applying pending database migrations...");
+            await dbContext.Database.MigrateAsync();
+            Console.WriteLine("Migrations applied successfully.");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred while applying migrations: {ex.Message}");
+    // Optionally handle the error, e.g., stop the application
+}
+
 // Create roles if they don't exist
 using (var scope = app.Services.CreateScope())
 {
@@ -91,32 +111,38 @@ using (var scope = app.Services.CreateScope())
     };
     foreach (var statusName in defaultStatuses)
     {
-        var existsResult = await statusRepository.ExistsAsync(s => s.Name == statusName);
-        if (!existsResult.Succeeded || !existsResult.Result)
+        // Reverted to checking if status with this NAME already exists first
+        Console.WriteLine($"Checking for status: {statusName}");
+        var findResult = await statusRepository.FindAsync(s => s.Name == statusName);
+
+        if (!findResult.Succeeded)
         {
-            // Handle potential error from ExistsAsync or if status doesn't exist
-            if (!existsResult.Succeeded)
+            Console.WriteLine(
+                $"Error checking existence for status '{statusName}': {findResult.Error}"
+            );
+        }
+        else if (findResult.Result == null) // Status name not found, proceed to add
+        {
+            Console.WriteLine($"Status '{statusName}' not found, attempting to add...");
+            var addResult = await statusRepository.AddAsync(
+                new StatusEntity { Name = statusName, Color = "#808080" } // Add default color
+            );
+            if (!addResult.Succeeded)
+            {
+                Console.WriteLine($"Error adding status '{statusName}': {addResult.Error}");
+            }
+            else
             {
                 Console.WriteLine(
-                    $"Error checking existence for status '{statusName}': {existsResult.Error}"
+                    $"Successfully added status: {statusName} with ID {addResult.Result?.Id}"
                 );
-                // Decide if you want to continue or stop seeding based on the error
             }
-            else // Status does not exist, so add it
-            {
-                var addResult = await statusRepository.AddAsync(
-                    new StatusEntity { Name = statusName, Color = "#808080" } // Add default color
-                );
-                if (!addResult.Succeeded)
-                {
-                    Console.WriteLine($"Error adding status '{statusName}': {addResult.Error}");
-                    // Decide if you want to continue or stop seeding based on the error
-                }
-                else
-                {
-                    Console.WriteLine($"Added default status: {statusName}");
-                }
-            }
+        }
+        else // Status already exists
+        {
+            Console.WriteLine(
+                $"Status '{statusName}' already exists with ID {findResult.Result.Id}. Skipping add."
+            );
         }
     }
 }

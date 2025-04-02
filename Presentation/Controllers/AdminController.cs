@@ -1,11 +1,14 @@
 using System.Diagnostics; // Add for Debug.WriteLine
+using System.Diagnostics; // Keep for logging
+using System.Linq; // Add for Linq methods like Count()
 using Business.Interfaces;
-using Business.Models;
+using Business.Models; // Contains ProjectListItem, Status
 using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Presentation.ViewModels; // Add using for ViewModel
 
 namespace WebApp.Controllers;
 
@@ -58,59 +61,53 @@ public class AdminController : Controller
     {
         await SetCurrentUserAsync();
 
-        // Get Members for dropdown
+        // Prepare data for dropdowns (needed for Add/Edit modals)
         var members = await _memberService.GetAllMembers();
         ViewBag.Members =
             members
-                ?.Where(m => m != null)
-                .Select(m => new SelectListItem
+                ?.Select(m => new SelectListItem
                 {
-                    Value = m.Id?.ToString() ?? string.Empty,
-                    Text = $"{m.FirstName ?? ""} {m.LastName ?? ""}".Trim(),
+                    Value = m.Id,
+                    Text = $"{m.FirstName} {m.LastName}",
                 })
                 .ToList() ?? new List<SelectListItem>();
 
-        // Get Clients for dropdown
-        var clients = await _clientService.GetAllClientsAsync(); // Assuming this returns List<ClientListItem> or similar
+        var clients = await _clientService.GetAllClientsAsync();
         ViewBag.Clients =
-            clients
-                ?.Where(c => c != null)
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id?.ToString() ?? string.Empty,
-                    Text = c.ClientName ?? "Unnamed Client", // Use ClientName property
-                })
-                .ToList() ?? new List<SelectListItem>();
+            clients?.Select(c => new SelectListItem { Value = c.Id, Text = c.ClientName }).ToList()
+            ?? new List<SelectListItem>();
 
-        // Get Statuses for dropdown
-        var statusResult = await _statusService.GetStatusesAsync(); // Use correct method name
-        if (statusResult.Succeeded && statusResult.Result != null)
-        {
-            ViewBag.Statuses = statusResult
-                .Result.Where(s => s != null)
-                .Select(s => new SelectListItem
-                {
-                    Value = s.Id?.ToString() ?? string.Empty, // Use Status model properties
-                    Text = s.Name ?? "Unnamed Status",
-                })
-                .ToList();
-        }
-        else
-        {
-            ViewBag.Statuses = new List<SelectListItem>();
-            // Optionally add error handling/logging if statuses fail to load
-            // Example: TempData["Error"] = "Failed to load project statuses.";
-            Debug.WriteLine(
-                $"AdminController.Projects: Failed to load statuses. Succeeded={statusResult.Succeeded}, Error={statusResult.Error ?? "None"}"
-            );
-        }
+        var statusResult = await _statusService.GetStatusesAsync();
+        var statuses = statusResult.Succeeded
+            ? statusResult.Result ?? Enumerable.Empty<Status>()
+            : Enumerable.Empty<Status>();
+        ViewBag.Statuses = statuses
+            .Select(s => new SelectListItem { Value = s.Id, Text = s.Name })
+            .ToList();
 
-        // Get all projects for the main view model
-        Debug.WriteLine(
-            $"AdminController.Projects: Populated ViewBag.Statuses with {((List<SelectListItem>)ViewBag.Statuses)?.Count ?? 0} items."
-        );
-        var projects = await _projectService.GetAllProjectsAsync();
-        return View(projects); // Pass the list of projects to the view
+        // Get all projects for the list and counts
+        var projects = await _projectService.GetAllProjectsAsync(); // This returns List<ProjectListItem>
+
+        // Calculate counts for the filter bar
+        var statusFilters = statuses
+            .Select(s => new StatusFilterInfo
+            {
+                StatusId = s.Id,
+                StatusName = s.Name,
+                Count = projects.Count(p => p.StatusId == s.Id), // Calculate count using StatusId
+                // Removed duplicate placeholder Count assignment
+            })
+            .ToList();
+
+        // Create the ViewModel
+        var viewModel = new ProjectIndexViewModel
+        {
+            Projects = projects, // Pass the full list for now
+            StatusFilters = statusFilters,
+            TotalProjectCount = projects.Count,
+        };
+
+        return View(viewModel); // Pass the ViewModel to the view
     }
 
     [Route("members")]

@@ -376,6 +376,7 @@ nav .nav-link.active {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1.5rem; /* Add consistent spacing below header */
 }
 
 .btn {
@@ -1589,4 +1590,92 @@ form .field-validation-error {
 
 .project-card .dropdown-item.delete-project i {
   color: #de3434;
+}
+
+/* Input group styling for budget field */
+.input-group {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  border: 1px solid #ccc; /* Match input border */
+  border-radius: 4px; /* Match input border-radius */
+  padding-left: 0.5rem;
+}
+
+.input-group .input-group-text {
+  padding-right: 0.5rem;
+  color: #555; /* Adjust color as needed */
+  background-color: transparent; /* Make background transparent */
+  border: none; /* Remove default borders */
+}
+
+.input-group input.form-control {
+  border: none; /* Remove border from the input itself */
+  flex-grow: 1; /* Allow input to take remaining space */
+  box-shadow: none; /* Remove any default focus shadow */
+  padding-left: 0.25rem;
+}
+
+/* Optional: Adjust focus style for the whole group */
+.input-group:focus-within {
+  border-color: #80bdff; /* Example focus color */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Example focus shadow */
+}
+
+/* Consistent spacing for main content sections */
+main.main > section {
+  padding-top: 1.5rem; /* Adjust value as needed */
+}
+
+/* Ensure client list surface has no extra horizontal padding */
+#clients .surface {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Project Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 1.5rem; /* Space between tabs */
+  margin-bottom: 1.5rem; /* Space below tabs */
+  border-bottom: 1px solid var(--gray-200); /* Line below tabs */
+}
+
+.filter-tab {
+  padding: 0.5rem 0.25rem; /* Padding above/below text */
+  margin-bottom: -1px; /* Overlap border-bottom */
+  color: var(--text-muted-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 2px solid transparent; /* Placeholder for active indicator */
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.filter-tab:hover {
+  color: var(--text-color);
+  border-bottom-color: var(--gray-400);
+}
+
+.filter-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* Project List Icon Styling */
+.project-icon-container {
+  width: 50px; /* Match desired icon size */
+  height: 50px;
+  border-radius: 10px; /* Adjust for desired roundness */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Hide parts of SVG that might overflow */
+  background: var(--gray-200); /* Default background if gradient fails */
+}
+
+.project-icon-container .project-image {
+  width: 60%; /* Adjust size of icon within the container */
+  height: 60%;
+  object-fit: contain; /* Ensure icon scales nicely */
+  border-radius: 0; /* Remove border-radius if applied directly to image */
 }
