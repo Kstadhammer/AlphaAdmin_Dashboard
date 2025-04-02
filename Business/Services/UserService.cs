@@ -12,12 +12,12 @@ namespace Business.Services;
 
 public class UserService(
     IUserRepository userRepository,
-    UserManager<UserEntity> userManager,
+    UserManager<MemberEntity> userManager,
     RoleManager<IdentityRole> roleManager
 ) : IUserService
 {
     private readonly IUserRepository _userRepository = userRepository;
-    private readonly UserManager<UserEntity> _userManager = userManager;
+    private readonly UserManager<MemberEntity> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
     public async Task<UserResult> GetUsersAsync()
@@ -66,6 +66,7 @@ public class UserService(
     {
         if (formData == null)
         {
+            Debug.WriteLine("Form data is null");
             return new UserResult
             {
                 Succeeded = false,
@@ -74,9 +75,14 @@ public class UserService(
             };
         }
 
+        Debug.WriteLine(
+            $"Creating user with email: {formData.Email}, FirstName: {formData.FirstName}, LastName: {formData.LastName}"
+        );
+
         var existsResult = await _userRepository.ExistsAsync(x => x.Email == formData.Email);
         if (existsResult.Result)
         {
+            Debug.WriteLine($"User with email {formData.Email} already exists");
             return new UserResult
             {
                 Succeeded = false,
@@ -86,13 +92,50 @@ public class UserService(
         }
         try
         {
-            var userEntity = formData.MapTo<UserEntity>();
+            Debug.WriteLine("Mapping form data to UserEntity");
+            var userEntity = formData.MapTo<MemberEntity>();
+            Debug.WriteLine(
+                $"UserEntity created: {userEntity.Email}, UserName: {userEntity.UserName}"
+            );
+
+            Debug.WriteLine("Calling UserManager.CreateAsync");
             var result = await _userManager.CreateAsync(userEntity, formData.Password);
+            Debug.WriteLine($"UserManager.CreateAsync result: {result.Succeeded}");
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    Debug.WriteLine($"Error: {error.Code} - {error.Description}");
+                }
+
+                return new UserResult
+                {
+                    Succeeded = false,
+                    StatusCode = 400,
+                    Error = string.Join(", ", result.Errors.Select(e => e.Description)),
+                };
+            }
 
             if (result.Succeeded)
             {
+                // Make sure role name casing is correct - roles are case sensitive
+                if (!await _roleManager.RoleExistsAsync(roleName))
+                {
+                    Debug.WriteLine($"Role {roleName} does not exist");
+                    return new UserResult
+                    {
+                        Succeeded = false,
+                        StatusCode = 500,
+                        Error = $"Role {roleName} does not exist",
+                    };
+                }
+
+                Debug.WriteLine($"Adding user {userEntity.Id} to role {roleName}");
                 var addToRoleResult = await _userManager.AddToRoleAsync(userEntity, roleName);
-                return result.Succeeded
+                Debug.WriteLine($"AddToRoleAsync result: {addToRoleResult.Succeeded}");
+
+                return addToRoleResult.Succeeded
                     ? new UserResult { Succeeded = true, StatusCode = 201 }
                     : new UserResult
                     {
@@ -110,7 +153,8 @@ public class UserService(
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(ex.Message);
+            Debug.WriteLine($"Exception in CreateUserAsync: {ex.Message}");
+            Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             return new UserResult
             {
                 Succeeded = false,

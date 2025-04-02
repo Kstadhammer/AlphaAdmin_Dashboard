@@ -75,11 +75,13 @@ public class ProjectsController : Controller
     [Route("AddProject")]
     public async Task<IActionResult> AddProject(AddProjectForm form)
     {
+        Console.WriteLine("--- AddProject Action Entered ---"); // Log entry
+
         try
         {
             Console.WriteLine("AddProject method called in ProjectsController");
             Console.WriteLine(
-                $"Form data: Name={form.Name}, ClientName={form.ClientName}, Description={form.Description?.Length ?? 0} chars"
+                $"Form data: Name={form.Name}, ClientId={form.ClientId}, Description={form.Description?.Length ?? 0} chars" // Changed ClientName to ClientId
             );
             Console.WriteLine(
                 $"Form data: StartDate={form.StartDate}, EndDate={form.EndDate}, Budget={form.Budget}"

@@ -1,3 +1,4 @@
+using System.Diagnostics; // Add for Debug.WriteLine
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -14,18 +15,21 @@ public class AdminController : Controller
     private readonly IMemberService _memberService;
     private readonly IClientService _clientService;
     private readonly IProjectService _projectService;
+    private readonly IStatusService _statusService; // Add Status Service field
     private readonly UserManager<MemberEntity> _userManager;
 
     public AdminController(
         IMemberService memberService,
         IClientService clientService,
         IProjectService projectService,
+        IStatusService statusService, // Add Status Service parameter
         UserManager<MemberEntity> userManager
     )
     {
         _memberService = memberService;
         _clientService = clientService;
         _projectService = projectService;
+        _statusService = statusService; // Assign Status Service
         _userManager = userManager;
     }
 
@@ -54,23 +58,59 @@ public class AdminController : Controller
     {
         await SetCurrentUserAsync();
 
-        // Get all members for the dropdowns
+        // Get Members for dropdown
         var members = await _memberService.GetAllMembers();
         ViewBag.Members =
-            members != null
-                ? members
-                    .Where(m => m != null)
-                    .Select(m => new SelectListItem
-                    {
-                        Value = m.Id?.ToString() ?? "0",
-                        Text = $"{m.FirstName ?? ""} {m.LastName ?? ""}".Trim(),
-                    })
-                    .ToList()
-                : new List<SelectListItem>();
+            members
+                ?.Where(m => m != null)
+                .Select(m => new SelectListItem
+                {
+                    Value = m.Id?.ToString() ?? string.Empty,
+                    Text = $"{m.FirstName ?? ""} {m.LastName ?? ""}".Trim(),
+                })
+                .ToList() ?? new List<SelectListItem>();
 
-        // Get all projects
+        // Get Clients for dropdown
+        var clients = await _clientService.GetAllClientsAsync(); // Assuming this returns List<ClientListItem> or similar
+        ViewBag.Clients =
+            clients
+                ?.Where(c => c != null)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id?.ToString() ?? string.Empty,
+                    Text = c.ClientName ?? "Unnamed Client", // Use ClientName property
+                })
+                .ToList() ?? new List<SelectListItem>();
+
+        // Get Statuses for dropdown
+        var statusResult = await _statusService.GetStatusesAsync(); // Use correct method name
+        if (statusResult.Succeeded && statusResult.Result != null)
+        {
+            ViewBag.Statuses = statusResult
+                .Result.Where(s => s != null)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id?.ToString() ?? string.Empty, // Use Status model properties
+                    Text = s.Name ?? "Unnamed Status",
+                })
+                .ToList();
+        }
+        else
+        {
+            ViewBag.Statuses = new List<SelectListItem>();
+            // Optionally add error handling/logging if statuses fail to load
+            // Example: TempData["Error"] = "Failed to load project statuses.";
+            Debug.WriteLine(
+                $"AdminController.Projects: Failed to load statuses. Succeeded={statusResult.Succeeded}, Error={statusResult.Error ?? "None"}"
+            );
+        }
+
+        // Get all projects for the main view model
+        Debug.WriteLine(
+            $"AdminController.Projects: Populated ViewBag.Statuses with {((List<SelectListItem>)ViewBag.Statuses)?.Count ?? 0} items."
+        );
         var projects = await _projectService.GetAllProjectsAsync();
-        return View(projects);
+        return View(projects); // Pass the list of projects to the view
     }
 
     [Route("members")]

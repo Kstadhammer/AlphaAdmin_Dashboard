@@ -29,11 +29,25 @@
                 </div>
             </div>
 
+            <!-- Client Selection Dropdown -->
             <div class="form-group">
-                <label asp-for="ClientName">Client Name</label>
+                <label asp-for="ClientId">Client</label>
                 <div class="field-group">
-                    <input asp-for="ClientName" />
-                    <span asp-validation-for="ClientName"></span>
+                    <select asp-for="ClientId" asp-items="@ViewBag.Clients" class="form-control">
+                        <option value="">-- Select Client --</option>
+                    </select>
+                    <span asp-validation-for="ClientId"></span>
+                </div>
+            </div>
+
+            <!-- Status Selection Dropdown -->
+            <div class="form-group">
+                <label asp-for="StatusId">Status</label>
+                <div class="field-group">
+                    <select asp-for="StatusId" asp-items="@ViewBag.Statuses" class="form-control">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                    <span asp-validation-for="StatusId"></span>
                 </div>
             </div>
 

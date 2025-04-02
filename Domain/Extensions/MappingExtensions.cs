@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Domain.Extensions;
@@ -8,6 +10,24 @@ public static class MappingExtensions
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
         TDestination destination = Activator.CreateInstance<TDestination>()!;
+
+        // Special case for UserEntity creation
+        if (typeof(TDestination).Name == "UserEntity" && source.GetType().Name == "SignUpFormData")
+        {
+            // Get Email property
+            var emailProperty = source.GetType().GetProperty("Email");
+            var emailValue = emailProperty?.GetValue(source)?.ToString();
+
+            if (emailValue != null)
+            {
+                // Set both Email and UserName to the same value
+                var destEmailProperty = typeof(TDestination).GetProperty("Email");
+                var destUserNameProperty = typeof(TDestination).GetProperty("UserName");
+
+                destEmailProperty?.SetValue(destination, emailValue);
+                destUserNameProperty?.SetValue(destination, emailValue); // Required for ASP.NET Identity
+            }
+        }
 
         var sourceProperties = source
             .GetType()

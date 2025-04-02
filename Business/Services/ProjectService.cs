@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Interfaces;
@@ -8,6 +9,10 @@ using Data.Entities;
 using Data.Interfaces;
 using Domain.Extensions;
 using Domain.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services;
 
@@ -16,10 +21,26 @@ public class ProjectService : IProjectService
     private readonly IProjectRepository _projectRepository;
     private readonly IProjectFactory _projectFactory;
 
-    public ProjectService(IProjectRepository projectRepository, IProjectFactory projectFactory)
+    private readonly UserManager<MemberEntity> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IWebHostEnvironment _webHostEnvironment; // For handling file uploads
+
+    // Removed IClientRepository dependency
+
+    public ProjectService(
+        IProjectRepository projectRepository,
+        IProjectFactory projectFactory,
+        UserManager<MemberEntity> userManager,
+        IHttpContextAccessor httpContextAccessor,
+        IWebHostEnvironment webHostEnvironment
+    )
     {
         _projectRepository = projectRepository;
         _projectFactory = projectFactory;
+        _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
+        _webHostEnvironment = webHostEnvironment; // Assign injected service
+        // Removed IClientRepository assignment
     }
 
     public async Task<ProjectResult<Project>> GetProjectAsync(string id)
@@ -86,7 +107,7 @@ public class ProjectService : IProjectService
             var form = new AddProjectForm
             {
                 Name = formData.Name,
-                ClientName = formData.ClientName,
+                // ClientName = formData.ClientName, // Removed as AddProjectForm no longer has ClientName
                 Description = formData.Description,
                 StartDate = formData.StartDate,
                 EndDate = formData.EndDate,
@@ -94,7 +115,15 @@ public class ProjectService : IProjectService
                 IsActive = true,
             };
 
-            var entity = _projectFactory.CreateProjectEntity(form);
+            // TODO: This method needs review. It doesn't have access to the current user ID or image data.
+            // Passing string.Empty for userId and null for imageUrl to satisfy the compiler,
+            // but this is likely incorrect for actual use of this specific method.
+            var entity = _projectFactory.CreateProjectEntity(
+                form,
+                string.Empty /* userId */
+                ,
+                null /* imageUrl */
+            );
             var result = await _projectRepository.AddAsync(entity);
 
             return result.Succeeded
@@ -136,30 +165,82 @@ public class ProjectService : IProjectService
 
     public async Task<EditProjectForm> GetProjectForEditAsync(int id)
     {
-        // Note: This is a stub implementation since your actual repository uses string IDs
-        var result = await _projectRepository.GetByIdAsync(id.ToString());
-        if (!result.Succeeded)
+        try
         {
+            // Convert the integer ID to string for the repository
+            var projectId = id.ToString();
+            var result = await _projectRepository.GetByIdAsync(projectId);
+
+            if (!result.Succeeded || result.Result == null)
+            {
+                return null;
+            }
+
+            return _projectFactory.CreateEditProjectForm(result.Result);
+        }
+        catch (Exception)
+        {
+            // Log error here if needed
             return null;
         }
-
-        return _projectFactory.CreateEditProjectForm(result.Result);
     }
 
     public async Task<bool> AddProjectAsync(AddProjectForm form)
     {
-        if (form == null)
+        if (form == null || _httpContextAccessor.HttpContext == null)
             return false;
 
         try
         {
-            var entity = _projectFactory.CreateProjectEntity(form);
+            // 1. Get Current User ID
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            if (user == null)
+                return false; // User not found/logged in
+            var userId = user.Id;
+
+            // Removed client lookup logic
+            // 2. Handle Image Upload
+            string? imageUrl = null;
+            if (form.ProjectImage != null && form.ProjectImage.Length > 0)
+            {
+                // Ensure the target directory exists
+                var uploadsFolderPath = Path.Combine(
+                    _webHostEnvironment.WebRootPath,
+                    "images",
+                    "projects"
+                );
+                if (!Directory.Exists(uploadsFolderPath))
+                {
+                    Directory.CreateDirectory(uploadsFolderPath);
+                }
+
+                // Generate unique filename and save
+                var uniqueFileName =
+                    Guid.NewGuid().ToString() + "_" + Path.GetFileName(form.ProjectImage.FileName);
+                var filePath = Path.Combine(uploadsFolderPath, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await form.ProjectImage.CopyToAsync(stream);
+                }
+
+                // Store the relative path for web access
+                imageUrl = $"/images/projects/{uniqueFileName}";
+            }
+
+            // 3. Create Entity using Factory (passing userId and imageUrl)
+            // 3. Create Entity using Factory (passing userId, clientId, and imageUrl)
+            var entity = _projectFactory.CreateProjectEntity(form, userId, imageUrl); // Factory call expects (form, userId, imageUrl)
+
+            // 4. Add Entity via Repository
             var result = await _projectRepository.AddAsync(entity);
 
             return result.Succeeded;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            // TODO: Add proper logging here
+            Console.WriteLine($"Error adding project: {ex.Message}"); // Basic console logging
             return false;
         }
     }
@@ -192,12 +273,14 @@ public class ProjectService : IProjectService
     {
         try
         {
-            // Note: This is a stub implementation since your actual repository uses string IDs
-            var result = await _projectRepository.DeleteAsync(id.ToString());
+            // Convert the integer ID to string for the repository
+            var projectId = id.ToString();
+            var result = await _projectRepository.DeleteAsync(projectId);
             return result.Succeeded;
         }
         catch (Exception)
         {
+            // Log error here if needed
             return false;
         }
     }

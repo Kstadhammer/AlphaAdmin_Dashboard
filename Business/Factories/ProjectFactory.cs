@@ -9,12 +9,16 @@ namespace Business.Factories
 {
     public class ProjectFactory : IProjectFactory
     {
-        public ProjectEntity CreateProjectEntity(AddProjectForm form, string? imageUrl = null)
+        public ProjectEntity CreateProjectEntity( // Reverted signature
+            AddProjectForm form,
+            string userId,
+            string? imageUrl = null
+        )
         {
             return new ProjectEntity
             {
                 Name = form.Name,
-                ClientName = form.ClientName,
+                // ClientName = form.ClientName, // Removed as AddProjectForm no longer has ClientName
                 Description = form.Description,
                 StartDate = form.StartDate,
                 EndDate = form.EndDate,
@@ -22,6 +26,9 @@ namespace Business.Factories
                 CreatedAt = DateTime.UtcNow,
                 IsActive = form.IsActive,
                 ImageUrl = imageUrl,
+                ClientId = form.ClientId, // Assign ClientId from form
+                StatusId = form.StatusId, // Assign StatusId
+                UserId = userId, // Assign UserId
             };
         }
 

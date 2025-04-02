@@ -163,4 +163,23 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
             };
         }
     }
+
+    public async Task<BaseResult<TEntity?>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        try
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(predicate);
+            // Note: entity can be null here if not found, which is expected.
+            return new BaseResult<TEntity?> { Succeeded = true, Result = entity };
+        }
+        catch (Exception ex)
+        {
+            return new BaseResult<TEntity?>
+            {
+                Succeeded = false,
+                StatusCode = 500,
+                Error = ex.Message,
+            };
+        }
+    }
 }

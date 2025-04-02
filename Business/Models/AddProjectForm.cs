@@ -10,9 +10,8 @@ public class AddProjectForm
     [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Client name is required")]
-    [MaxLength(100)]
-    public string ClientName { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Client is required")]
+    public string ClientId { get; set; } = string.Empty;
 
     public string? Description { get; set; }
 
@@ -25,6 +24,9 @@ public class AddProjectForm
     public decimal Budget { get; set; }
 
     public List<string>? MemberIds { get; set; } = new List<string>();
+
+    [Required(ErrorMessage = "Status is required")]
+    public string StatusId { get; set; } = string.Empty;
 
     public bool IsActive { get; set; } = true;
 

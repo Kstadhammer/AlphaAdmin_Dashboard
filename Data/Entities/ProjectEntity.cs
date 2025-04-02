@@ -21,7 +21,7 @@ public class ProjectEntity
     public bool IsActive { get; set; }
 
     [NotMapped]
-    public virtual ICollection<UserEntity> Members { get; set; } = new List<UserEntity>();
+    public virtual ICollection<MemberEntity> Members { get; set; } = new List<MemberEntity>();
 
     [ForeignKey(nameof(Client))]
     public string ClientId { get; set; } = null!;
@@ -29,7 +29,7 @@ public class ProjectEntity
 
     [ForeignKey(nameof(User))]
     public string UserId { get; set; } = null!;
-    public UserEntity User { get; set; } = null!;
+    public MemberEntity User { get; set; } = null!;
 
     [ForeignKey(nameof(Status))]
     public string StatusId { get; set; } = null!;

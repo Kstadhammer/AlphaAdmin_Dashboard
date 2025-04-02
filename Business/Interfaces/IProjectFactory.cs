@@ -6,7 +6,12 @@ namespace Business.Interfaces;
 
 public interface IProjectFactory
 {
-    ProjectEntity CreateProjectEntity(AddProjectForm form, string? imageUrl = null);
+    ProjectEntity CreateProjectEntity(
+        AddProjectForm form,
+        string userId,
+        // Removed clientId parameter
+        string? imageUrl = null
+    ); // Reverted: Removed clientId parameter
     ProjectEntity UpdateProjectEntity(
         ProjectEntity entity,
         EditProjectForm form,

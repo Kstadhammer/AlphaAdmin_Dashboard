@@ -14,4 +14,5 @@ public interface IBaseRepository<TEntity>
     Task<BaseResult<TEntity>> UpdateAsync(TEntity entity);
     Task<BaseResult<bool>> DeleteAsync(string id);
     Task<BaseResult<bool>> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<BaseResult<TEntity?>> FindAsync(Expression<Func<TEntity, bool>> predicate); // Find first matching entity or null
 }

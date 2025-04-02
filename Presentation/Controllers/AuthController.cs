@@ -45,15 +45,49 @@ public class AuthController(IAuthService authService) : Controller
     [HttpPost]
     public async Task<IActionResult> SignUp(MemberSignUpForm form)
     {
-        if (ModelState.IsValid)
+        ViewBag.ErrorMessage = "";
+
+        try
         {
-            var result = await _authService.SignUpAsync(form);
-            if (result)
+            Console.WriteLine(
+                $"SignUp: Processing form with Email={form.Email}, FirstName={form.FirstName}, LastName={form.LastName}"
+            );
+
+            if (ModelState.IsValid)
             {
-                return LocalRedirect("~/");
+                var result = await _authService.SignUpAsync(form);
+                if (result)
+                {
+                    Console.WriteLine("SignUp: User created successfully, redirecting to Login");
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    // Get the actual error from the service
+                    Console.WriteLine("SignUp: User creation failed");
+                    ViewBag.ErrorMessage =
+                        "Failed to create account. Please try with a different email or a stronger password (8+ characters with numbers and special characters).";
+                }
+            }
+            else
+            {
+                var errors = ModelState
+                    .Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                Console.WriteLine($"SignUp: Validation errors: {string.Join(", ", errors)}");
+                ViewBag.ErrorMessage =
+                    ModelState
+                        .Values.FirstOrDefault(v => v.Errors.Count > 0)
+                        ?.Errors.FirstOrDefault()
+                        ?.ErrorMessage ?? "Please fix the validation errors.";
             }
         }
-        ViewBag.ErrorMessage = "";
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SignUp: Exception: {ex.Message}");
+            ViewBag.ErrorMessage = "An error occurred during registration. Please try again.";
+        }
+
         return View(form);
     }
 

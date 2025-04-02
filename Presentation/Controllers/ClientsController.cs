@@ -107,7 +107,9 @@ public class ClientsController : Controller
         var success = await _clientService.DeleteClientAsync(id);
         if (!success)
         {
-            TempData["Error"] = "Failed to delete client. Please try again.";
+            // Provide a more specific error message
+            TempData["Error"] =
+                "Failed to delete client. Ensure the client has no associated projects.";
         }
         else
         {

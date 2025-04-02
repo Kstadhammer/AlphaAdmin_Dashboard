@@ -10,9 +10,9 @@ namespace Business.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
-    private readonly SignInManager<UserEntity> _signInManager;
+    private readonly SignInManager<MemberEntity> _signInManager;
 
-    public AuthService(IUserService userService, SignInManager<UserEntity> signInManager)
+    public AuthService(IUserService userService, SignInManager<MemberEntity> signInManager)
     {
         _userService = userService;
         _signInManager = signInManager;
@@ -83,7 +83,12 @@ public class AuthService : IAuthService
     public async Task<bool> SignUpAsync(MemberSignUpForm form)
     {
         if (form == null)
+        {
+            Console.WriteLine("SignUpAsync: Form is null");
             return false;
+        }
+
+        Console.WriteLine($"SignUpAsync: Creating user with Email={form.Email}");
 
         // Create a SignUpFormData from MemberSignUpForm
         var signUpData = new SignUpFormData
@@ -94,7 +99,11 @@ public class AuthService : IAuthService
             LastName = form.LastName,
         };
 
+        // Fixed role name to match exactly what we created in Program.cs
         var result = await SignUpAsync(signUpData);
+        Console.WriteLine(
+            $"SignUpAsync: Result Succeeded={result.Succeeded}, StatusCode={result.StatusCode}, Error={result.Error ?? "none"}"
+        );
         return result.Succeeded;
     }
 
