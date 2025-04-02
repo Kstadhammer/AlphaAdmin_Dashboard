@@ -172,14 +172,15 @@ public class ProjectsController : Controller
 
     [HttpPost]
     [Route("DeleteProject")]
-    public async Task<IActionResult> DeleteProject(int id)
+    public async Task<IActionResult> DeleteProject(string id) // Change parameter type to string
     {
         try
         {
             Console.WriteLine($"DeleteProject method called for project ID: {id}");
             await SetCurrentUserAsync();
 
-            if (id <= 0)
+            // Check if the string ID is null or empty instead of <= 0
+            if (string.IsNullOrEmpty(id))
             {
                 TempData["Error"] = "Invalid project ID.";
                 return RedirectToAction("Projects", "Admin");
