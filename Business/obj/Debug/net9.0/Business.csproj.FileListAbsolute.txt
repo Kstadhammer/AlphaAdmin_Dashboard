@@ -1,0 +1,17 @@
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Business.deps.json
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Business.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Business.pdb
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Data.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Data.pdb
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.csproj.AssemblyReference.cache
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.GeneratedMSBuildEditorConfig.editorconfig
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.AssemblyInfoInputs.cache
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.AssemblyInfo.cs
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.csproj.CoreCompileInputs.cache
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.csproj.Up2Date
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/refint/Business.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/Business.pdb
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/obj/Debug/net9.0/ref/Business.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Domain.dll
+/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Business/bin/Debug/net9.0/Domain.pdb

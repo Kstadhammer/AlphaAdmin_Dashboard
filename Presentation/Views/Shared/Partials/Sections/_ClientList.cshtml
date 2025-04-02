@@ -1,0 +1,95 @@
+@model IEnumerable<Business.Models.ClientListItem>
+
+<div class="client-list surface">
+    <table>
+        <thead>
+            <tr>
+                <th class="client-check"><input type="checkbox" /></th>
+                <th class="client-info">Client Name</th>
+                <th class="client-location">Location</th>
+                <th class="client-phone">Phone</th>
+                <th class="client-date">Date</th>
+                <th class="client-status">Status</th>
+                <th class="client-actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var client in Model)
+                {
+                    <tr>
+                        <td class="client-check"><input type="checkbox" /></td>
+                        <td class="client-info">
+                            @if (!string.IsNullOrEmpty(client.ImageUrl))
+                            {
+                                <img class="client-image" src="@client.ImageUrl" alt="@client.ClientName" />
+                            }
+                            else
+                            {
+                                <img class="client-image" src="~/images/Avatar_male_1.svg" alt="@client.ClientName" />
+                            }
+                            <div class="client-details">
+                                <div class="client-name">@client.ClientName</div>
+                                <div class="client-email">@client.Email</div>
+                            </div>
+                        </td>
+                        <td class="client-location">@client.Location</td>
+                        <td class="client-phone">@client.Phone</td>
+                        <td class="client-date">@DateTime.Now.ToString("dd-MM-yy")</td>
+                        <td class="client-status">
+                            <div class="badge @(client.IsActive ? "success" : "danger")">
+                                @(client.IsActive ? "active" : "inactive")
+                            </div>
+                        </td>
+                        <td class="client-actions">
+                            <div class="dropdown">
+                                <i class="fa-regular fa-ellipsis dropdown-toggle" data-client-id="@client.Id"></i>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-item edit-client" data-modal="true" data-target="#editClientModal"
+                                        data-client-id="@client.Id">
+                                        <i class="fa-regular fa-pen-to-square"></i> Edit Client
+                                    </div>
+                                    <div class="dropdown-item delete-client" data-client-id="@client.Id"
+                                        data-client-name="@client.ClientName">
+                                        <i class="fa-regular fa-trash"></i> Delete Client
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center">No clients found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteClientModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Delete Client</h3>
+            <button class="btn-close" data-close="true"></button>
+        </div>
+        <div class="modal-body text-center">
+            <p>Are you sure you want to delete <strong id="deleteClientName"></strong>?</p>
+            <p>This action cannot be undone.</p>
+
+            <form method="post" asp-controller="Clients" asp-action="DeleteClient" id="deleteClientForm">
+                <input type="hidden" name="id" id="deleteClientId" />
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" data-close="true">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/clientList.js"></script>

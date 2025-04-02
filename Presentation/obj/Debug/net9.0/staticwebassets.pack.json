@@ -1,0 +1,121 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/css/site.css",
+      "PackagePath": "staticwebassets/css/site.css"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/favicon.ico",
+      "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Avatar.png",
+      "PackagePath": "staticwebassets/images/Avatar.png"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Avatar_male_1.svg",
+      "PackagePath": "staticwebassets/images/Avatar_male_1.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Contacts.svg",
+      "PackagePath": "staticwebassets/images/Contacts.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Logo.svg",
+      "PackagePath": "staticwebassets/images/Logo.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Notification.svg",
+      "PackagePath": "staticwebassets/images/Notification.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Projects.svg",
+      "PackagePath": "staticwebassets/images/Projects.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Search.svg",
+      "PackagePath": "staticwebassets/images/Search.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Search2.svg",
+      "PackagePath": "staticwebassets/images/Search2.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Search_white.svg",
+      "PackagePath": "staticwebassets/images/Search_white.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/Setting.svg",
+      "PackagePath": "staticwebassets/images/Setting.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/admin/admin-background.jpg",
+      "PackagePath": "staticwebassets/images/admin/admin-background.jpg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/admin/eye-icon.svg",
+      "PackagePath": "staticwebassets/images/admin/eye-icon.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/admin/google-icon.svg",
+      "PackagePath": "staticwebassets/images/admin/google-icon.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/background.jpeg",
+      "PackagePath": "staticwebassets/images/background.jpeg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/badge.svg",
+      "PackagePath": "staticwebassets/images/badge.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/google-icon.svg",
+      "PackagePath": "staticwebassets/images/google-icon.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/more-options.svg",
+      "PackagePath": "staticwebassets/images/more-options.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/plus-icon.svg",
+      "PackagePath": "staticwebassets/images/plus-icon.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/images/project-icon.svg",
+      "PackagePath": "staticwebassets/images/project-icon.svg"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/js/clientList.js",
+      "PackagePath": "staticwebassets/js/clientList.js"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/js/projectList.js",
+      "PackagePath": "staticwebassets/js/projectList.js"
+    },
+    {
+      "Id": "/Users/kimhammerstad/RiderProjects/AlphaAdmin_Dashboard/Presentation/wwwroot/js/site.js",
+      "PackagePath": "staticwebassets/js/site.js"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.Presentation.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.Presentation.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.Presentation.props",
+      "PackagePath": "build\\Presentation.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.Presentation.props",
+      "PackagePath": "buildMultiTargeting\\Presentation.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.Presentation.props",
+      "PackagePath": "buildTransitive\\Presentation.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

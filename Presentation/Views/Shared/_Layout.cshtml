@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Alpha</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="https://kit.fontawesome.com/a576612222.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <div class="wrapper-portal">
+        <aside class="sidebar">
+            <partial name="Partials/_LinkLogoType" />
+            <partial name="Partials/_NavLinks" />
+        </aside>
+        <header class="header">
+            <div class="header-search">
+                <img src="~/images/Search.svg" alt="Search" class="search-icon" />
+                <input type="search" placeholder="Search anything..." class="search-input" />
+            </div>
+            <div class="header-actions">
+                <div class="icon-button">
+                    <img src="~/images/Notification.svg" alt="Notifications" />
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="icon-button" id="settingsButton">
+                    <img src="~/images/Setting.svg" alt="Settings" />
+                </div>
+                <div class="divider"></div>
+                <div class="user-profile">
+                    <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-small" />
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-content">
+                        <div class="user-info">
+                            <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-small" />
+                            <span class="user-name">
+                                @if (ViewBag.CurrentUser != null)
+                                {
+                                    @(ViewBag.CurrentUser.FirstName + " " + ViewBag.CurrentUser.LastName)
+                                }
+                                else
+                                {
+                                    <text>User</text>
+                                }
+                            </span>
+                        </div>
+
+                        <div class="dropdown-item">
+                            <i class="fa-regular fa-gear"></i>
+                            <span>Dark Mode</span>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <label for="darkModeToggle"></label>
+                            </div>
+                        </div>
+
+                        <div class="dropdown-item">
+                            <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                            <a asp-controller="Auth" asp-action="Logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>@TempData["Success"]</span>
+                    <button type="button" class="btn-close" data-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="fa-regular fa-circle-exclamation"></i>
+                    <span>@TempData["Error"]</span>
+                    <button type="button" class="btn-close" data-dismiss="alert"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
