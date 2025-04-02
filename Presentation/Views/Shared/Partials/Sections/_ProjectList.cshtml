@@ -5,6 +5,12 @@
     {
         @foreach (var project in Model)
         {
+            // Removed unnecessary @ symbol and extra brace
+            // Calculate days left
+            var daysLeft = (project.EndDate - DateTime.Today).Days;
+            var daysLeftText = daysLeft < 0 ? "Overdue" : $"{daysLeft} days left";
+            var daysLeftClass = daysLeft < 0 ? "overdue" : (daysLeft < 7 ? "urgent" : "normal");
+            // Removed extra closing brace
             <div class="project-card">
                 <div class="project-card-header">
                     <!-- Project Icon Container with Gradient -->
@@ -13,6 +19,10 @@
                         <img class="project-image"
                             src="@(string.IsNullOrEmpty(project.ImageUrl) ? "/images/Projects.svg" : project.ImageUrl)"
                             alt="@project.Name" />
+                    </div>
+                    <div class="project-title-group">
+                        <h3 class="project-name">@project.Name</h3>
+                        <p class="project-client">@project.ClientName</p>
                     </div>
                     <div class="dropdown">
                         <i class="fa-regular fa-ellipsis dropdown-toggle" data-project-id="@project.Id"></i>
@@ -29,29 +39,25 @@
                     </div>
                 </div>
                 <div class="project-card-body">
-                    <h3 class="project-name">@project.Name</h3>
-                    <p class="project-client">@project.ClientName</p>
                     <p class="project-description">@(project.Description?.Length > 100 ? project.Description.Substring(0, 97) +
                                         "..." : project.Description)</p>
-            <div class="project-meta">
-                <div class="project-budget">
-                    <i class="fa-regular fa-money-bill"></i> $@project.Budget.ToString("N0")
-                </div>
-                <div class="project-date">
-                    <i class="fa-regular fa-calendar"></i> @project.StartDate.ToString("MMM dd") -
-                    @project.EndDate.ToString("MMM dd, yyyy")
-                </div>
-            </div>
-            <div class="project-footer">
-                <div class="badge @(project.IsActive ? "success" : "danger")">
-                    @(project.IsActive ? "Active" : "Inactive")
-                </div>
-                <div class="project-members">
-                    <i class="fa-regular fa-users"></i> @project.MemberCount
-                </div>
-            </div>
         </div>
-    </div>
+        <div class="project-card-footer">
+            <div class="project-time-left @daysLeftClass">
+                <i class="fa-regular fa-clock"></i> @daysLeftText
+            </div>
+            <div class="project-member-avatars">
+                @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
+                        {
+                            <img src="@avatarUrl" alt="Member Avatar" class="member-avatar" />
+                        }
+                        @if (project.MemberAvatarUrls.Count > 3)
+                        {
+                            <span class="more-members">+@(project.MemberAvatarUrls.Count - 3)</span>
+                        }
+                    </div>
+                </div>
+            </div>
         }
     }
     else

@@ -87,6 +87,9 @@ public class AdminController : Controller
 
         // Get all projects for the list and counts
         var projects = await _projectService.GetAllProjectsAsync(); // This returns List<ProjectListItem>
+        Debug.WriteLine(
+            $"AdminController.Projects: Fetched {projects?.Count ?? 0} projects from service."
+        ); // Log fetched project count
 
         // Calculate counts for the filter bar
         var statusFilters = statuses
@@ -107,6 +110,9 @@ public class AdminController : Controller
             TotalProjectCount = projects.Count,
         };
 
+        Debug.WriteLine(
+            $"AdminController.Projects: Passing {viewModel.Projects?.Count() ?? 0} projects to the view via ViewModel."
+        ); // Log count passed to view
         return View(viewModel); // Pass the ViewModel to the view
     }
 

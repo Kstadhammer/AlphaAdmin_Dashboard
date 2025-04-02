@@ -1679,3 +1679,136 @@ main.main > section {
   object-fit: contain; /* Ensure icon scales nicely */
   border-radius: 0; /* Remove border-radius if applied directly to image */
 }
+
+/* Updated Project Card Styles */
+.project-card {
+  background-color: var(--white-100);
+  border-radius: 1rem; /* Match screenshot */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Space between sections */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.project-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.project-card-header {
+  display: flex;
+  align-items: center; /* Vertically align icon, title group, dropdown */
+  gap: 1rem;
+}
+
+.project-title-group {
+  flex-grow: 1; /* Allow title group to take space */
+}
+
+.project-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.project-client {
+  font-size: 0.9rem;
+  color: var(--text-muted-color);
+  margin: 0.1rem 0 0 0;
+}
+
+.project-card-body {
+  /* Styles for description if needed */
+}
+
+.project-description {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.project-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* Push footer to bottom if card height varies */
+  padding-top: 1rem; /* Space above footer */
+  border-top: 1px solid var(--gray-100); /* Separator line */
+}
+
+.project-time-left {
+  display: inline-flex; /* Use inline-flex */
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.8rem; /* Make it pill-shaped */
+  font-weight: 500;
+}
+
+.project-time-left.normal {
+  background-color: var(--info-bg-color);
+  color: var(--info-text-color);
+}
+
+.project-time-left.urgent {
+  background-color: var(--warning-bg-color);
+  color: var(--warning-text-color);
+}
+
+.project-time-left.overdue {
+  background-color: var(--danger-bg-color);
+  color: var(--danger-text-color);
+}
+
+.project-time-left i {
+  font-size: 0.9em; /* Slightly smaller icon */
+}
+
+.project-member-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.member-avatar {
+  width: 28px; /* Adjust size */
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-color); /* Overlap effect */
+  margin-left: -8px; /* Overlap amount */
+  background-color: var(--gray-200); /* Fallback bg */
+  object-fit: cover;
+}
+
+.member-avatar:first-child {
+  margin-left: 0;
+}
+
+.more-members {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  color: var(--text-muted-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: -8px;
+  border: 2px solid var(--surface-color);
+}
+
+/* Remove old project meta/footer styles if they conflict */
+.project-meta,
+.project-footer {
+  /* Remove or comment out old styles if needed */
+}
+
+/* Adjustments for project icon container */
+.project-icon-container {
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}

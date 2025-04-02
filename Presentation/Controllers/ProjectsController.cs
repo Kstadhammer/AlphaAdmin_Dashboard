@@ -43,7 +43,7 @@ public class ProjectsController : Controller
 
     [HttpGet]
     [Route("GetProject/{id}")]
-    public async Task<IActionResult> GetProject(int id)
+    public async Task<IActionResult> GetProject(string id) // Change parameter type to string
     {
         var project = await _projectService.GetProjectForEditAsync(id);
 
