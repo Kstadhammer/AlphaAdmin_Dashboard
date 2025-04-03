@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
               // Set the hidden select values
               for (let i = 0; i < memberSelect.options.length; i++) {
                 const isSelected = data.project.memberIds.includes(
-                  parseInt(memberSelect.options[i].value)
+                  memberSelect.options[i].value
                 );
                 memberSelect.options[i].selected = isSelected;
 

@@ -144,6 +144,20 @@ public class ProjectService : IProjectService
                 return null; // Return null if not found
             }
 
+            // Load project members from the ProjectMembers table
+            var memberIds = await _dbContext
+                .ProjectMembers.Where(pm => pm.ProjectId == id)
+                .Select(pm => pm.MemberId)
+                .ToListAsync();
+
+            // Load member details for each member ID
+            var members = await _userManager
+                .Users.Where(m => memberIds.Contains(m.Id))
+                .ToListAsync();
+
+            // Assign members to the project entity
+            result.Result.Members = members;
+
             return _projectFactory.CreateEditProjectForm(result.Result);
         }
         catch (Exception ex) // Declare exception variable ex

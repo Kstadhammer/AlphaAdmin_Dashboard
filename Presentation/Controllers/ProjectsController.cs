@@ -158,7 +158,7 @@ public class ProjectsController : Controller
         {
             TempData["Error"] = "Failed to update project. Please check the form and try again.";
             return RedirectToAction("Projects", "Admin");
-        }
+        }   
 
         var success = await _projectService.EditProjectAsync(form);
         if (!success)
