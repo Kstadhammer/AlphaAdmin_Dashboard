@@ -98,9 +98,24 @@
                                             style="background-color: @deadline.StatusColor">@deadline.StatusName</span>
                                     </div>
                                     <div class="deadline-date">
-                                        <div class="project-time-left @(deadline.DaysLeft <= 7 ? "urgent" : "normal")">
-                                            <i class="fa-regular fa-clock"></i>
-                                            <span>@(deadline.DaysLeft == 7 ? "1 week left" : $"{deadline.DaysLeft} days left")</span>
+                                        <div class="project-time-left-container">
+                                            <div class="project-time-left @(deadline.DaysLeft <= 7 ? "urgent" : "normal")">
+                                                <i class="fa-regular fa-clock"></i>
+                                                <span>@(deadline.DaysLeft == 7 ? "1 week left" : $"{deadline.DaysLeft} days left")</span>
+                                            </div>
+                                            @if (deadline.MemberAvatarUrls != null && deadline.MemberAvatarUrls.Any())
+                                            {
+                                                <div class="project-member-avatars time-left-avatars">
+                                                    @foreach (var avatarUrl in deadline.MemberAvatarUrls.Take(3))
+                                                    {
+                                                        <img src="@avatarUrl" alt="Member Avatar" class="member-avatar" />
+                                                    }
+                                                    @if (deadline.MemberAvatarUrls.Count > 3)
+                                                    {
+                                                        <span class="more-members">+@(deadline.MemberAvatarUrls.Count - 3)</span>
+                                                    }
+                                                </div>
+                                            }
                                         </div>
                                         <div class="end-date">@deadline.EndDate.ToString("MMM dd, yyyy")</div>
                                     </div>

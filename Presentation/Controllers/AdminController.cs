@@ -129,6 +129,8 @@ public class AdminController : Controller
                             StatusColor = statusDict.TryGetValue(p.StatusId, out var colorStatus)
                                 ? colorStatus.Color
                                 : "#cccccc",
+                            // Add member avatar URLs (using the same ones from the project list)
+                            MemberAvatarUrls = p.MemberAvatarUrls ?? new List<string>(),
                         })
                         .ToList()
                     : new List<ProjectDeadline>(),

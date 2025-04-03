@@ -42,6 +42,7 @@ public class ProjectDeadline
     public int DaysLeft { get; set; }
     public string StatusName { get; set; } = string.Empty;
     public string StatusColor { get; set; } = string.Empty;
+    public List<string> MemberAvatarUrls { get; set; } = new List<string>();
 }
 
 public class MemberWorkload

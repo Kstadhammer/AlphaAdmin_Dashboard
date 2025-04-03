@@ -43,19 +43,21 @@
                                         "..." : project.Description)</p>
         </div>
         <div class="project-card-footer">
-            <div class="project-time-left @daysLeftClass">
-                <i class="fa-regular fa-clock"></i>
-                <span>@daysLeftText</span>
-            </div>
-            <div class="project-member-avatars">
-                @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
-                        {
-                            <img src="@avatarUrl" alt="Member Avatar" class="member-avatar" />
-                        }
-                        @if (project.MemberAvatarUrls.Count > 3)
-                        {
-                            <span class="more-members">+@(project.MemberAvatarUrls.Count - 3)</span>
-                        }
+            <div class="project-time-left-container">
+                <div class="project-time-left @daysLeftClass">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>@daysLeftText</span>
+                </div>
+                <div class="project-member-avatars time-left-avatars">
+                    @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
+                            {
+                                <img src="@avatarUrl" alt="Member Avatar" class="member-avatar" />
+                            }
+                            @if (project.MemberAvatarUrls.Count > 3)
+                            {
+                                <span class="more-members">+@(project.MemberAvatarUrls.Count - 3)</span>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
