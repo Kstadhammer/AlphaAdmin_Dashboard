@@ -99,8 +99,7 @@ public class ProjectService : IProjectService
     // Removed unused CreateProjectAsync(AddProjectFormData formData) method
     public async Task<List<ProjectListItem>> GetAllProjectsAsync()
     {
-        // Include Members and Status navigation properties
-        // Include Status navigation property (Members is NotMapped)
+        // Include Status navigation property
         var result = await _projectRepository.GetAllAsync(include: query =>
             query.Include(p => p.Status)
         );
@@ -112,6 +111,21 @@ public class ProjectService : IProjectService
         var projects = new List<ProjectListItem>();
         foreach (var entity in result.Result)
         {
+            // For each project, load its members from the ProjectMembers table
+            var memberIds = await _dbContext
+                .ProjectMembers.Where(pm => pm.ProjectId == entity.Id)
+                .Select(pm => pm.MemberId)
+                .ToListAsync();
+
+            // Load member details for each member ID
+            var members = await _userManager
+                .Users.Where(m => memberIds.Contains(m.Id))
+                .ToListAsync();
+
+            // Assign members to the project entity
+            entity.Members = members;
+
+            // Add the project to the list
             projects.Add(_projectFactory.CreateProjectListItem(entity));
         }
 
@@ -222,6 +236,21 @@ public class ProjectService : IProjectService
 
             var result = await _projectRepository.AddAsync(entity);
 
+            // If project was added successfully and there are members to add
+            if (result.Succeeded && form.MemberIds != null && form.MemberIds.Any())
+            {
+                // Add project members to the join table
+                foreach (var memberId in form.MemberIds)
+                {
+                    await _dbContext.ProjectMembers.AddAsync(
+                        new ProjectMemberEntity { ProjectId = entity.Id, MemberId = memberId }
+                    );
+                }
+
+                // Save changes to the database
+                await _dbContext.SaveChangesAsync();
+            }
+
             return result.Succeeded;
         }
         catch (Exception ex)
@@ -248,10 +277,36 @@ public class ProjectService : IProjectService
             var updatedEntity = _projectFactory.UpdateProjectEntity(getResult.Result, form);
             var result = await _projectRepository.UpdateAsync(updatedEntity);
 
+            if (result.Succeeded)
+            {
+                // Update project members
+                // First, remove all existing project members
+                var existingMembers = await _dbContext
+                    .ProjectMembers.Where(pm => pm.ProjectId == form.Id)
+                    .ToListAsync();
+
+                _dbContext.ProjectMembers.RemoveRange(existingMembers);
+
+                // Then add the new members
+                if (form.MemberIds != null && form.MemberIds.Count > 0)
+                {
+                    foreach (var memberId in form.MemberIds)
+                    {
+                        await _dbContext.ProjectMembers.AddAsync(
+                            new ProjectMemberEntity { ProjectId = form.Id, MemberId = memberId }
+                        );
+                    }
+                }
+
+                // Save changes to the database
+                await _dbContext.SaveChangesAsync();
+            }
+
             return result.Succeeded;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error editing project: {ex.Message}");
             return false;
         }
     }
@@ -260,14 +315,24 @@ public class ProjectService : IProjectService
     {
         try
         {
-            // ID is already a string
-            var projectId = id;
-            var result = await _projectRepository.DeleteAsync(id); // Pass id directly
+            // First, delete all project members
+            var projectMembers = await _dbContext
+                .ProjectMembers.Where(pm => pm.ProjectId == id)
+                .ToListAsync();
+
+            if (projectMembers.Any())
+            {
+                _dbContext.ProjectMembers.RemoveRange(projectMembers);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            // Then delete the project
+            var result = await _projectRepository.DeleteAsync(id);
             return result.Succeeded;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Log error here if needed
+            Console.WriteLine($"Error deleting project: {ex.Message}");
             return false;
         }
     }
