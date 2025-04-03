@@ -171,6 +171,20 @@ public class AdminController : Controller
 
         // Prepare data for dropdowns (needed for Add/Edit modals)
         var members = await _memberService.GetAllMembers();
+
+        // Create a list of members with their details for the custom member selection component
+        ViewBag.MemberDetails = members
+            ?.Select(m => new
+            {
+                Id = m.Id,
+                Name = $"{m.FirstName} {m.LastName}",
+                Avatar = string.IsNullOrEmpty(m.ImageUrl)
+                    ? "/images/Avatar_male_1.svg"
+                    : m.ImageUrl,
+            })
+            .ToList();
+
+        // Keep the original SelectListItem collection for backward compatibility
         ViewBag.Members =
             members
                 ?.Select(m => new SelectListItem

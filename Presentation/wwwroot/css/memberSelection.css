@@ -1,0 +1,145 @@
+/* Member Selection Component Styles */
+
+.member-selection-container {
+  width: 100%;
+  position: relative;
+}
+
+.member-selection-input {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  min-height: 50px;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  background-color: var(--white-100);
+  cursor: text;
+}
+
+.member-selection-input:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(45, 153, 255, 0.1);
+}
+
+.member-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  background-color: var(--gray-100);
+  border-radius: 2rem;
+  max-width: 100%;
+}
+
+.member-tag-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--gray-200);
+}
+
+.member-tag-name {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: var(--gray-300);
+  color: var(--white-100);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.member-tag-remove:hover {
+  background-color: var(--red);
+}
+
+.member-selection-search {
+  flex: 1;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.member-selection-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--white-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+.member-selection-dropdown.show {
+  display: block;
+}
+
+.member-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.member-option:hover {
+  background-color: var(--gray-100);
+}
+
+.member-option.selected {
+  background-color: rgba(45, 153, 255, 0.1);
+}
+
+.member-option-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--gray-200);
+}
+
+.member-option-name {
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.member-search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-500);
+  margin-right: 0.25rem;
+}
+
+/* Hidden select for form submission */
+.member-selection-hidden {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  pointer-events: none;
+}

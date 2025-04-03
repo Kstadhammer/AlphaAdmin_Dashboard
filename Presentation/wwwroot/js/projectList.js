@@ -76,11 +76,72 @@ document.addEventListener("DOMContentLoaded", function () {
               document.getElementById("edit_MemberIds")
             ) {
               const memberSelect = document.getElementById("edit_MemberIds");
+
+              // First, clear any existing member tags
+              const memberSelectionInput = document.querySelector(
+                "#editProjectModal .member-selection-input"
+              );
+              if (memberSelectionInput) {
+                const existingTags =
+                  memberSelectionInput.querySelectorAll(".member-tag");
+                existingTags.forEach((tag) => tag.remove());
+              }
+
+              // Set the hidden select values
               for (let i = 0; i < memberSelect.options.length; i++) {
-                memberSelect.options[i].selected =
-                  data.project.memberIds.includes(
-                    parseInt(memberSelect.options[i].value)
+                const isSelected = data.project.memberIds.includes(
+                  parseInt(memberSelect.options[i].value)
+                );
+                memberSelect.options[i].selected = isSelected;
+
+                // If selected, add the member tag to the input
+                if (isSelected && memberSelectionInput) {
+                  const memberId = memberSelect.options[i].value;
+                  const memberName = memberSelect.options[i].text;
+
+                  // Find the member avatar from the member options
+                  const memberOption = document.querySelector(
+                    `#editProjectModal .member-option[data-id="${memberId}"]`
                   );
+                  let memberAvatar = "/images/Avatar_male_1.svg"; // Default avatar
+
+                  if (memberOption) {
+                    memberAvatar = memberOption.dataset.avatar;
+                  }
+
+                  // Create the member tag
+                  const tag = document.createElement("div");
+                  tag.className = "member-tag";
+                  tag.dataset.id = memberId;
+
+                  tag.innerHTML = `
+                    <img src="${memberAvatar}" alt="${memberName}" class="member-tag-avatar">
+                    <span class="member-tag-name">${memberName}</span>
+                    <span class="member-tag-remove">×</span>
+                  `;
+
+                  // Add remove event listener
+                  tag
+                    .querySelector(".member-tag-remove")
+                    .addEventListener("click", function (e) {
+                      e.stopPropagation();
+                      tag.remove();
+
+                      // Update the hidden select
+                      for (let j = 0; j < memberSelect.options.length; j++) {
+                        if (memberSelect.options[j].value === memberId) {
+                          memberSelect.options[j].selected = false;
+                          break;
+                        }
+                      }
+                    });
+
+                  // Insert before search input
+                  const searchInput = memberSelectionInput.querySelector(
+                    ".member-selection-search"
+                  );
+                  memberSelectionInput.insertBefore(tag, searchInput);
+                }
               }
             }
 

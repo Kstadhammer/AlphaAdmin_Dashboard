@@ -79,10 +79,35 @@
             <div class="form-group">
                 <label asp-for="MemberIds">Members</label>
                 <div class="field-group">
-                    <select asp-for="MemberIds" id="edit_MemberIds" asp-items="@ViewBag.Members" multiple
-                        class="member-select"></select>
+                    <!-- Custom Member Selection Component -->
+                    <div class="member-selection-container">
+                        <div class="member-selection-input">
+                            <div class="member-search-icon">
+                                <i class="fa-regular fa-search"></i>
+                            </div>
+                            <input type="text" class="member-selection-search" placeholder="Search members...">
+                        </div>
+
+                        <div class="member-selection-dropdown">
+                            @if (ViewBag.MemberDetails != null)
+                            {
+                                foreach (var member in ViewBag.MemberDetails)
+                                {
+                                    <div class="member-option" data-id="@member.Id" data-name="@member.Name"
+                                        data-avatar="@member.Avatar">
+                                        <img src="@member.Avatar" alt="@member.Name" class="member-option-avatar">
+                                        <span class="member-option-name">@member.Name</span>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <!-- Hidden select for form submission -->
+                        <select asp-for="MemberIds" id="edit_MemberIds" asp-items="@ViewBag.Members" multiple
+                            class="member-selection-hidden">
+                        </select>
+                    </div>
                     <span asp-validation-for="MemberIds"></span>
-                    <small class="help-text">Hold Ctrl (Windows) or Command (Mac) to select multiple members</small>
                 </div>
             </div>
 
