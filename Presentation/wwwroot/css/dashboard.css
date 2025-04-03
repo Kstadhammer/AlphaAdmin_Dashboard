@@ -1,0 +1,322 @@
+/* Dashboard Styles */
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background-color: var(--surface-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.summary-card .card-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* Icon background colors */
+.summary-card .card-icon.projects {
+  background-color: rgba(45, 153, 255, 0.1);
+  color: var(--blue);
+}
+
+.summary-card .card-icon.clients {
+  background-color: rgba(17, 155, 86, 0.1);
+  color: var(--green);
+}
+
+.summary-card .card-icon.members {
+  background-color: rgba(108, 97, 2, 0.1);
+  color: var(--yellow);
+}
+
+.summary-card .card-icon.budget {
+  background-color: rgba(222, 52, 52, 0.1);
+  color: var(--red);
+}
+
+.summary-card .card-content {
+  flex-grow: 1;
+}
+
+.summary-card .card-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.summary-card .card-label {
+  font-size: 0.875rem;
+  color: var(--text-muted-color);
+  margin-top: 0.25rem;
+}
+
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-card {
+  background-color: var(--surface-color);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-card-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.dashboard-card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+/* Project Status Distribution */
+.status-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.status-count {
+  font-size: 0.75rem;
+  color: var(--text-muted-color);
+  margin-left: 1.25rem;
+}
+
+.status-bar-container {
+  height: 6px;
+  background-color: var(--gray-100);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.status-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* Upcoming Deadlines */
+.deadline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.deadline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--gray-50);
+  transition: background-color 0.2s ease;
+}
+
+.deadline-item:hover {
+  background-color: var(--gray-100);
+}
+
+.deadline-project {
+  flex: 1;
+}
+
+.deadline-project h4 {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.deadline-project p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--text-muted-color);
+}
+
+.deadline-status {
+  margin: 0 1rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+.deadline-date {
+  text-align: right;
+  min-width: 100px;
+}
+
+/* Removed .days-left styles as we're now using .project-time-left */
+.deadline-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 120px;
+}
+
+.end-date {
+  font-size: 0.75rem;
+  color: var(--text-muted-color);
+  margin-top: 0.25rem;
+}
+
+/* Team Workload */
+.workload-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.workload-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 150px;
+}
+
+.member-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.member-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workload-bar-container {
+  flex: 1;
+  height: 8px;
+  background-color: var(--gray-100);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.workload-bar {
+  height: 100%;
+  background-color: var(--blue);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.project-count {
+  font-size: 0.75rem;
+  color: var(--text-muted-color);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Empty States */
+.no-deadlines,
+.no-workload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  color: var(--text-muted-color);
+  font-size: 0.9375rem;
+  text-align: center;
+  background-color: var(--gray-50);
+  border-radius: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workload-item {
+    flex-wrap: wrap;
+  }
+
+  .member-info {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-count {
+    width: 100%;
+    text-align: left;
+    margin-top: 0.5rem;
+  }
+}

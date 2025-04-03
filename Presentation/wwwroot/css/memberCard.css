@@ -1,0 +1,60 @@
+/* Member Card Specific Styling */
+.card.member {
+  position: relative;
+}
+
+.card.member .dropdown {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+/* Remove the old card-menu styling */
+.card-menu {
+  display: none;
+}
+
+/* Style the dropdown toggle to match the client/project dropdowns */
+.card.member .dropdown-toggle {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: inline-block;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.card.member .dropdown-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #000;
+}
+
+/* Styling for dropdown items */
+.card.member .dropdown-item.delete-member {
+  color: #e74c3c;
+}
+
+.card.member .dropdown-item.delete-member i {
+  color: #e74c3c;
+}
+
+.card.member .dropdown-menu {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  z-index: 1000;
+}
+
+.card.member .dropdown-item.delete-member {
+  color: #e74c3c;
+}
+
+.card.member .dropdown-item.delete-member i {
+  color: #e74c3c;
+}

@@ -65,6 +65,7 @@ public class ProjectsController : Controller
                     endDate = project.EndDate,
                     budget = project.Budget,
                     isActive = project.IsActive,
+                    statusId = project.StatusId,
                     memberIds = project.MemberIds,
                 },
             }

@@ -8,10 +8,10 @@
             // Removed unnecessary @ symbol and extra brace
             // Calculate days left
             var daysLeft = (project.EndDate - DateTime.Today).Days;
-            var daysLeftText = daysLeft < 0 ? "Overdue" : $"{daysLeft} days left";
-            var daysLeftClass = daysLeft < 0 ? "overdue" : (daysLeft < 7 ? "urgent" : "normal");
+            var daysLeftText = daysLeft < 0 ? "Overdue" : (daysLeft == 7 ? "1 week left" : $"{daysLeft} days left");
+            var daysLeftClass = daysLeft < 0 ? "overdue" : (daysLeft <= 7 ? "urgent" : "normal");
             // Removed extra closing brace
-            <div class="project-card">
+            <div class="project-card" data-status="@project.StatusId">
                 <div class="project-card-header">
                     <!-- Project Icon Container with Gradient -->
                     <div class="project-icon-container"
@@ -44,7 +44,8 @@
         </div>
         <div class="project-card-footer">
             <div class="project-time-left @daysLeftClass">
-                <i class="fa-regular fa-clock"></i> @daysLeftText
+                <i class="fa-regular fa-clock"></i>
+                <span>@daysLeftText</span>
             </div>
             <div class="project-member-avatars">
                 @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
@@ -66,6 +67,11 @@
             <p>No projects found</p>
         </div>
     }
+
+    <!-- This will show when filtering results in no matches -->
+    <div class="no-filtered-projects" style="display: none;">
+        <p>No projects match the selected filter</p>
+    </div>
 </div>
 
 <!-- Delete Confirmation Modal -->

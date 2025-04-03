@@ -31,6 +31,9 @@ public class EditProjectForm
 
     public List<string> MemberIds { get; set; } = new List<string>();
 
+    [Required(ErrorMessage = "Status is required")]
+    public string StatusId { get; set; } = string.Empty;
+
     [DataType(DataType.Upload)]
     public IFormFile? ProjectImage { get; set; }
 }

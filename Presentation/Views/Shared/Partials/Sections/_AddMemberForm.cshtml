@@ -1,0 +1,91 @@
+@model Business.Models.AddMemberForm
+
+<div id="addMemberModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add Member</h3>
+            <button class="btn-close" data-close="true"></button>
+        </div>
+        <form novalidate method="post" asp-action="AddMember" asp-controller="Members" enctype="multipart/form-data">
+            <!-- Profile Picture Upload Section -->
+            <div class="profile-upload-container">
+                <div class="profile-upload">
+                    <input asp-for="MemberImage" type="file" id="addMemberImage" class="profile-input" />
+                    <label for="addMemberImage" class="profile-label">
+                        <div class="camera-icon">
+                            <i class="fa-regular fa-camera"></i>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FirstName">First Name</label>
+                <div class="field-group">
+                    <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter first name" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName">Last Name</label>
+                <div class="field-group">
+                    <input asp-for="LastName" type="text" class="form-control" placeholder="Enter last name" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <div class="field-group">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <div class="field-group">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <div class="field-group">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="JobTitle">Job Title</label>
+                <div class="field-group">
+                    <input asp-for="JobTitle" type="text" class="form-control" placeholder="Enter job title" />
+                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone">Phone</label>
+                <div class="field-group">
+                    <input asp-for="Phone" type="tel" class="form-control" placeholder="Enter phone number" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-container">
+                    <input asp-for="IsActive" type="checkbox" id="addIsActive" />
+                    <label for="addIsActive">Active</label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" data-close="true">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Member</button>
+            </div>
+        </form>
+    </div>
+</div>

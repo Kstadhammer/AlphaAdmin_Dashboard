@@ -1,0 +1,67 @@
+/* Enhanced Project Filter Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 1.5rem; /* Space between tabs */
+  margin-bottom: 1.5rem; /* Space below tabs */
+  border-bottom: 1px solid var(--gray-200); /* Line below tabs */
+  overflow-x: auto; /* Allow horizontal scrolling on small screens */
+  padding-bottom: 2px; /* Small padding to prevent border cutoff */
+}
+
+.filter-tab {
+  padding: 0.5rem 0.25rem; /* Padding above/below text */
+  margin-bottom: -1px; /* Overlap border-bottom */
+  color: var(--text-muted-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-bottom: 2px solid transparent; /* Placeholder for active indicator */
+  transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  white-space: nowrap; /* Prevent wrapping */
+  cursor: pointer;
+}
+
+.filter-tab:hover {
+  color: var(--text-color);
+  border-bottom-color: var(--gray-400);
+}
+
+.filter-tab.active {
+  color: var(--primary-color, var(--blue));
+  border-bottom-color: var(--primary-color, var(--blue));
+  font-weight: 600;
+}
+
+/* Animation for project cards */
+.project-card {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Styling for no projects messages */
+.no-projects,
+.no-filtered-projects {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted-color);
+  font-size: 1.1rem;
+  background-color: var(--white-100);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.no-filtered-projects {
+  margin-top: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-tabs {
+    gap: 1rem;
+  }
+
+  .filter-tab {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.2rem;
+  }
+}

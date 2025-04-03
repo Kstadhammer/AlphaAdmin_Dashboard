@@ -1,5 +1,6 @@
 <nav class="nav-links">
-    <a class="nav-link @(Context.Request.Path == "/" ? "active" : "")" asp-controller="Admin" asp-action="Index">
+    <a class="nav-link @(Context.Request.Path == "/" || Context.Request.Path == "/dashboard" ? "active" : "")"
+        asp-controller="Admin" asp-action="Index">
         <i class="fa-duotone fa-solid fa-chart-tree-map"></i>
         <span>Dashboard</span>
     </a>

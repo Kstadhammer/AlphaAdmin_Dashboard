@@ -12,7 +12,11 @@ public static class MappingExtensions
         TDestination destination = Activator.CreateInstance<TDestination>()!;
 
         // Special case for UserEntity creation
-        if (typeof(TDestination).Name == "UserEntity" && source.GetType().Name == "SignUpFormData")
+        // Special case for MemberEntity creation from SignUpFormData
+        if (
+            typeof(TDestination).Name == "MemberEntity"
+            && source.GetType().Name == "SignUpFormData"
+        )
         {
             // Get Email property
             var emailProperty = source.GetType().GetProperty("Email");

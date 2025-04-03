@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Business.Interfaces;
 using Business.Models;
+using Data.Contexts; // Add using for AppDbContext
 using Data.Entities;
 using Data.Interfaces;
 using Domain.Extensions;
@@ -13,6 +14,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore; // Add for ToListAsync
+using Microsoft.EntityFrameworkCore; // Add for Include
 
 namespace Business.Services;
 
@@ -25,14 +28,17 @@ public class ProjectService : IProjectService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IWebHostEnvironment _webHostEnvironment; // For handling file uploads
 
-    // Removed IClientRepository dependency
+    private readonly IClientRepository _clientRepository; // Inject Client Repository
+    private readonly AppDbContext _dbContext; // Inject DbContext
 
     public ProjectService(
         IProjectRepository projectRepository,
         IProjectFactory projectFactory,
         UserManager<MemberEntity> userManager,
         IHttpContextAccessor httpContextAccessor,
-        IWebHostEnvironment webHostEnvironment
+        IWebHostEnvironment webHostEnvironment,
+        IClientRepository clientRepository, // Add Client Repository parameter
+        AppDbContext dbContext // Add DbContext parameter
     )
     {
         _projectRepository = projectRepository;
@@ -40,7 +46,8 @@ public class ProjectService : IProjectService
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
         _webHostEnvironment = webHostEnvironment; // Assign injected service
-        // Removed IClientRepository assignment
+        _clientRepository = clientRepository; // Assign Client Repository
+        _dbContext = dbContext; // Assign DbContext
     }
 
     public async Task<ProjectResult<Project>> GetProjectAsync(string id)
@@ -89,66 +96,14 @@ public class ProjectService : IProjectService
         };
     }
 
-    public async Task<ProjectResult> CreateProjectAsync(Business.Models.AddProjectFormData formData)
-    {
-        if (formData == null)
-        {
-            return new ProjectResult
-            {
-                Succeeded = false,
-                StatusCode = 400,
-                Error = "Form data cannot be null",
-            };
-        }
-
-        try
-        {
-            // Convert AddProjectFormData to AddProjectForm
-            var form = new AddProjectForm
-            {
-                Name = formData.Name,
-                // ClientName = formData.ClientName, // Removed as AddProjectForm no longer has ClientName
-                Description = formData.Description,
-                StartDate = formData.StartDate,
-                EndDate = formData.EndDate,
-                Budget = formData.Budget,
-                IsActive = true,
-            };
-
-            // TODO: This method needs review. It doesn't have access to the current user ID or image data.
-            // Passing string.Empty for userId and null for imageUrl to satisfy the compiler,
-            // but this is likely incorrect for actual use of this specific method.
-            var entity = _projectFactory.CreateProjectEntity(
-                form,
-                string.Empty /* userId */
-                ,
-                null /* imageUrl */
-            );
-            var result = await _projectRepository.AddAsync(entity);
-
-            return result.Succeeded
-                ? new ProjectResult { Succeeded = true, StatusCode = 201 }
-                : new ProjectResult
-                {
-                    Succeeded = false,
-                    StatusCode = result.StatusCode,
-                    Error = result.Error,
-                };
-        }
-        catch (Exception ex)
-        {
-            return new ProjectResult
-            {
-                Succeeded = false,
-                StatusCode = 500,
-                Error = ex.Message,
-            };
-        }
-    }
-
+    // Removed unused CreateProjectAsync(AddProjectFormData formData) method
     public async Task<List<ProjectListItem>> GetAllProjectsAsync()
     {
-        var result = await _projectRepository.GetAllAsync();
+        // Include Members and Status navigation properties
+        // Include Status navigation property (Members is NotMapped)
+        var result = await _projectRepository.GetAllAsync(include: query =>
+            query.Include(p => p.Status)
+        );
         if (!result.Succeeded)
         {
             return new List<ProjectListItem>();
@@ -163,25 +118,24 @@ public class ProjectService : IProjectService
         return projects;
     }
 
-    public async Task<EditProjectForm> GetProjectForEditAsync(int id)
+    public async Task<EditProjectForm?> GetProjectForEditAsync(string id) // Changed id to string, added nullable return
     {
         try
         {
-            // Convert the integer ID to string for the repository
-            var projectId = id.ToString();
-            var result = await _projectRepository.GetByIdAsync(projectId);
+            // ID is already a string
+            var result = await _projectRepository.GetByIdAsync(id); // Use id directly
 
             if (!result.Succeeded || result.Result == null)
             {
-                return null;
+                return null; // Return null if not found
             }
 
             return _projectFactory.CreateEditProjectForm(result.Result);
         }
-        catch (Exception)
+        catch (Exception ex) // Declare exception variable ex
         {
-            // Log error here if needed
-            return null;
+            Console.WriteLine($"Error in GetProjectForEditAsync: {ex.Message}"); // Basic logging
+            return null; // Return null on exception
         }
     }
 
@@ -198,7 +152,17 @@ public class ProjectService : IProjectService
                 return false; // User not found/logged in
             var userId = user.Id;
 
-            // Removed client lookup logic
+            // 1.5 Get Client Name from ClientId
+            if (string.IsNullOrWhiteSpace(form.ClientId))
+                return false; // No client selected
+            var clientResult = await _clientRepository.GetByIdAsync(form.ClientId);
+            if (!clientResult.Succeeded || clientResult.Result == null)
+            {
+                // Selected client not found in DB (shouldn't happen with dropdown)
+                Console.WriteLine($"Client not found for ID: {form.ClientId}");
+                return false;
+            }
+            var clientName = clientResult.Result.ClientName; // Get the name
             // 2. Handle Image Upload
             string? imageUrl = null;
             if (form.ProjectImage != null && form.ProjectImage.Length > 0)
@@ -230,9 +194,32 @@ public class ProjectService : IProjectService
 
             // 3. Create Entity using Factory (passing userId and imageUrl)
             // 3. Create Entity using Factory (passing userId, clientId, and imageUrl)
-            var entity = _projectFactory.CreateProjectEntity(form, userId, imageUrl); // Factory call expects (form, userId, imageUrl)
+            // 3. Create Entity using Factory (passing userId, clientName, and imageUrl)
+            var entity = _projectFactory.CreateProjectEntity(form, userId, clientName, imageUrl);
 
             // 4. Add Entity via Repository
+            Console.WriteLine(
+                $"--- Attempting to add project with: ClientId={entity.ClientId}, UserId={entity.UserId}, StatusId={entity.StatusId} ---"
+            );
+            // ### DIAGNOSTIC LOGGING: Check available Status IDs right before save ###
+            try
+            {
+                // We need the DbContext. Access it through one of the injected repositories.
+                // Use the injected DbContext directly
+                var dbContext = _dbContext;
+                var allStatuses = await _dbContext.Statuses.Select(s => s.Id).ToListAsync(); // Use DbSet directly
+                Console.WriteLine(
+                    $"--- Available Status IDs in DB before save: [{string.Join(", ", allStatuses)}] ---"
+                );
+            }
+            catch (Exception dbEx)
+            {
+                Console.WriteLine($"--- ERROR fetching Status IDs before save: {dbEx.Message} ---");
+            }
+            // ### END DIAGNOSTIC LOGGING ###
+
+
+
             var result = await _projectRepository.AddAsync(entity);
 
             return result.Succeeded;
@@ -269,13 +256,13 @@ public class ProjectService : IProjectService
         }
     }
 
-    public async Task<bool> DeleteProjectAsync(int id)
+    public async Task<bool> DeleteProjectAsync(string id) // Changed id to string
     {
         try
         {
-            // Convert the integer ID to string for the repository
-            var projectId = id.ToString();
-            var result = await _projectRepository.DeleteAsync(projectId);
+            // ID is already a string
+            var projectId = id;
+            var result = await _projectRepository.DeleteAsync(id); // Pass id directly
             return result.Succeeded;
         }
         catch (Exception)

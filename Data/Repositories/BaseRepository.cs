@@ -6,6 +6,7 @@ using Data.Contexts;
 using Data.Interfaces;
 using Domain.Models.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query; // Add for IIncludableQueryable
 
 namespace Data.Repositories;
 
@@ -48,12 +49,20 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity>
         }
     }
 
-    public async Task<BaseResult<IEnumerable<TEntity>>> GetAllAsync()
+    public async Task<BaseResult<IEnumerable<TEntity>>> GetAllAsync(
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null
+    )
     {
         try
         {
-            var entities = await _dbSet.ToListAsync();
+            IQueryable<TEntity> query = _dbSet;
 
+            if (include != null)
+            {
+                query = include(query); // Apply includes if provided
+            }
+
+            var entities = await query.ToListAsync();
             return new BaseResult<IEnumerable<TEntity>> { Succeeded = true, Result = entities };
         }
         catch (Exception ex)

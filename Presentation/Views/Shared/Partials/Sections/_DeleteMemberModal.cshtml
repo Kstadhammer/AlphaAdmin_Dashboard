@@ -1,0 +1,21 @@
+<!-- Delete Confirmation Modal -->
+<div id="deleteMemberModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Delete Member</h3>
+            <button class="btn-close" data-close="true"></button>
+        </div>
+        <div class="modal-body text-center">
+            <p>Are you sure you want to delete <strong id="deleteMemberName"></strong>?</p>
+            <p>This action cannot be undone.</p>
+
+            <form method="post" asp-controller="Members" asp-action="DeleteMember" id="deleteMemberForm">
+                <input type="hidden" name="id" id="deleteMemberId" />
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" data-close="true">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

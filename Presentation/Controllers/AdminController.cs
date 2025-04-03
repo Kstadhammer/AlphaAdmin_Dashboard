@@ -1,6 +1,7 @@
-using System.Diagnostics; // Add for Debug.WriteLine
-using System.Diagnostics; // Keep for logging
-using System.Linq; // Add for Linq methods like Count()
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Business.Interfaces;
 using Business.Models; // Contains ProjectListItem, Status
 using Data.Entities;
@@ -49,11 +50,118 @@ public class AdminController : Controller
         }
     }
 
-    // GET
+    // GET: /Admin/ or /
+    [Route("")] // Make this the default route for the controller
+    [Route("dashboard")] // Optional explicit route
     public async Task<IActionResult> Index()
     {
         await SetCurrentUserAsync();
-        return View();
+
+        // Fetch data for dashboard
+        var projects = await _projectService.GetAllProjectsAsync();
+        var clients = await _clientService.GetAllClientsAsync();
+        var members = await _memberService.GetAllMembers();
+        var statuses = await _statusService.GetStatusesAsync();
+
+        // Create status dictionary for easy lookup
+        var statusDict = new Dictionary<string, Business.Models.Status>();
+        if (statuses.Succeeded && statuses.Result != null)
+        {
+            foreach (var status in statuses.Result)
+            {
+                statusDict[status.Id] = status;
+            }
+        }
+
+        // Populate ViewModel
+        var viewModel = new DashboardViewModel
+        {
+            // Basic counts
+            TotalActiveProjects = projects?.Count(p => p.IsActive) ?? 0,
+            TotalClients = clients?.Count ?? 0,
+            TotalMembers = members?.Count ?? 0,
+
+            // Project status distribution
+            ProjectStatusDistribution =
+                projects != null
+                    ? projects
+                        .GroupBy(p => p.StatusId)
+                        .Select(g => new StatusCount
+                        {
+                            StatusId = g.Key,
+                            StatusName = statusDict.TryGetValue(g.Key, out var status)
+                                ? status.Name
+                                : "Unknown",
+                            StatusColor = statusDict.TryGetValue(g.Key, out var statusColor)
+                                ? statusColor.Color
+                                : "#cccccc",
+                            Count = g.Count(),
+                        })
+                        .OrderBy(s =>
+                        {
+                            statusDict.TryGetValue(s.StatusId, out var orderStatus);
+                            return orderStatus?.Order ?? 999;
+                        })
+                        .ToList()
+                    : new List<StatusCount>(),
+
+            // Upcoming deadlines (projects ending in the next 30 days)
+            UpcomingDeadlines =
+                projects != null
+                    ? projects
+                        .Where(p =>
+                            p.IsActive
+                            && (p.EndDate - DateTime.Now).TotalDays <= 30
+                            && (p.EndDate - DateTime.Now).TotalDays >= 0
+                        )
+                        .OrderBy(p => p.EndDate)
+                        .Take(5)
+                        .Select(p => new ProjectDeadline
+                        {
+                            ProjectId = p.Id,
+                            ProjectName = p.Name,
+                            ClientName = p.ClientName,
+                            EndDate = p.EndDate,
+                            DaysLeft = (int)(p.EndDate - DateTime.Now).TotalDays,
+                            StatusName = statusDict.TryGetValue(p.StatusId, out var nameStatus)
+                                ? nameStatus.Name
+                                : "Unknown",
+                            StatusColor = statusDict.TryGetValue(p.StatusId, out var colorStatus)
+                                ? colorStatus.Color
+                                : "#cccccc",
+                        })
+                        .ToList()
+                    : new List<ProjectDeadline>(),
+
+            // Team member workload
+            TeamWorkload =
+                members != null
+                    ? members
+                        .Select(m => new MemberWorkload
+                        {
+                            MemberId = m.Id,
+                            MemberName = $"{m.FirstName} {m.LastName}",
+                            ImageUrl = string.IsNullOrEmpty(m.ImageUrl)
+                                ? "/images/Avatar_male_1.svg"
+                                : m.ImageUrl,
+                            // Since ProjectListItem doesn't have Members property, we'll just count active projects
+                            // In a real implementation, you would need to fetch the project-member relationships
+                            ProjectCount = projects != null ? projects.Count(p => p.IsActive) : 0,
+                        })
+                        .OrderByDescending(m => m.ProjectCount)
+                        .Take(5)
+                        .ToList()
+                    : new List<MemberWorkload>(),
+
+            // Budget summary
+            TotalBudget = projects != null ? projects.Where(p => p.IsActive).Sum(p => p.Budget) : 0,
+            AverageBudget =
+                projects != null && projects.Any(p => p.IsActive)
+                    ? projects.Where(p => p.IsActive).Average(p => p.Budget)
+                    : 0,
+        };
+
+        return View(viewModel); // Pass ViewModel to the view
     }
 
     [Route("projects")]

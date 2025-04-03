@@ -82,7 +82,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"An error occurred while applying migrations: {ex.Message}");
-    // Optionally handle the error, e.g., stop the application
+    // Optionally handle the error, e.g., stop   the application
 }
 
 // Create roles if they don't exist

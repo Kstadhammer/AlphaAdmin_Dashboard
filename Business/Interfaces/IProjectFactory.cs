@@ -9,9 +9,9 @@ public interface IProjectFactory
     ProjectEntity CreateProjectEntity(
         AddProjectForm form,
         string userId,
-        // Removed clientId parameter
+        string clientName, // Added clientName parameter
         string? imageUrl = null
-    ); // Reverted: Removed clientId parameter
+    );
     ProjectEntity UpdateProjectEntity(
         ProjectEntity entity,
         EditProjectForm form,

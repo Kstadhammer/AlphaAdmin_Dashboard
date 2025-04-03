@@ -15,5 +15,11 @@ namespace Business.Models
         public string ImageUrl { get; set; }
         public int MemberCount { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string GradientCss { get; set; } = string.Empty;
+
+        public string StatusId { get; set; } = string.Empty;
+        public List<string> MemberAvatarUrls { get; set; } = new List<string>();
+
+        public string StatusName { get; set; } = string.Empty;
     }
 }

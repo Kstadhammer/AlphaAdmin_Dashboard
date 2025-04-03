@@ -1,3 +1,4 @@
+@model Presentation.ViewModels.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
 }
@@ -8,6 +9,147 @@
 
 <section id="dashboard">
     <div class="surface">
-        <!-- Dashboard content goes here -->
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="card-icon projects">
+                    <i class="fa-duotone fa-briefcase"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-value">@Model.TotalActiveProjects</div>
+                    <div class="card-label">Active Projects</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon clients">
+                    <i class="fa-duotone fa-handshake"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-value">@Model.TotalClients</div>
+                    <div class="card-label">Total Clients</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon members">
+                    <i class="fa-duotone fa-user-group"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-value">@Model.TotalMembers</div>
+                    <div class="card-label">Team Members</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="card-icon budget">
+                    <i class="fa-duotone fa-dollar-sign"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-value">$@Model.TotalBudget.ToString("N0")</div>
+                    <div class="card-label">Total Budget</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid Layout -->
+        <div class="dashboard-grid">
+            <!-- Project Status Distribution -->
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3>Project Status Distribution</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    <div class="status-distribution">
+                        @foreach (var status in Model.ProjectStatusDistribution)
+                        {
+                            <div class="status-item">
+                                <div class="status-label">
+                                    <span class="status-color" style="background-color: @status.StatusColor"></span>
+                                    <span class="status-name">@status.StatusName</span>
+                                </div>
+                                <div class="status-count">@status.Count</div>
+                                <div class="status-bar-container">
+                                    <div class="status-bar"
+                                        style="width: @(status.Count * 100 / Math.Max(1, Model.TotalActiveProjects))%; background-color: @status.StatusColor">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3>Upcoming Deadlines</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    @if (Model.UpcomingDeadlines.Any())
+                    {
+                        <div class="deadline-list">
+                            @foreach (var deadline in Model.UpcomingDeadlines)
+                            {
+                                <div class="deadline-item">
+                                    <div class="deadline-project">
+                                        <h4>@deadline.ProjectName</h4>
+                                        <p>@deadline.ClientName</p>
+                                    </div>
+                                    <div class="deadline-status">
+                                        <span class="status-badge"
+                                            style="background-color: @deadline.StatusColor">@deadline.StatusName</span>
+                                    </div>
+                                    <div class="deadline-date">
+                                        <div class="project-time-left @(deadline.DaysLeft <= 7 ? "urgent" : "normal")">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span>@(deadline.DaysLeft == 7 ? "1 week left" : $"{deadline.DaysLeft} days left")</span>
+                                        </div>
+                                        <div class="end-date">@deadline.EndDate.ToString("MMM dd, yyyy")</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-deadlines">
+                            <p>No upcoming deadlines in the next 30 days</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Team Workload -->
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3>Team Workload</h3>
+                </div>
+                <div class="dashboard-card-body">
+                    @if (Model.TeamWorkload.Any())
+                    {
+                        <div class="workload-list">
+                            @foreach (var member in Model.TeamWorkload)
+                            {
+                                <div class="workload-item">
+                                    <div class="member-info">
+                                        <img src="@member.ImageUrl" alt="@member.MemberName" class="member-avatar" />
+                                        <span class="member-name">@member.MemberName</span>
+                                    </div>
+                                    <div class="workload-bar-container">
+                                        <div class="workload-bar" style="width: @Math.Min(100, member.ProjectCount * 20)%;">
+                                        </div>
+                                    </div>
+                                    <div class="project-count">@member.ProjectCount projects</div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-workload">
+                            <p>No team members with active projects</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </section>

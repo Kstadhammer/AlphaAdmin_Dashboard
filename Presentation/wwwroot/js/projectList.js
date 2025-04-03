@@ -61,6 +61,15 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("edit_IsActive").checked =
               data.project.isActive;
 
+            // Set the status dropdown
+            if (
+              data.project.statusId &&
+              document.getElementById("edit_StatusId")
+            ) {
+              document.getElementById("edit_StatusId").value =
+                data.project.statusId;
+            }
+
             // Handle member selection if applicable
             if (
               data.project.memberIds &&

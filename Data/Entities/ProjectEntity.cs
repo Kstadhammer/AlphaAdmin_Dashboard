@@ -19,6 +19,7 @@ public class ProjectEntity
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsActive { get; set; }
+    public string GradientCss { get; set; } = string.Empty; // Store CSS for background gradient
 
     [NotMapped]
     public virtual ICollection<MemberEntity> Members { get; set; } = new List<MemberEntity>();

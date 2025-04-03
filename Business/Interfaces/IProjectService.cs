@@ -7,10 +7,11 @@ public interface IProjectService
 {
     Task<ProjectResult<Project>> GetProjectAsync(string id);
     Task<ProjectResult<IEnumerable<Project>>> GetProjectsAsync();
-    Task<ProjectResult> CreateProjectAsync(Business.Models.AddProjectFormData formData);
+
+    // Removed unused CreateProjectAsync(AddProjectFormData formData) signature
     Task<List<ProjectListItem>> GetAllProjectsAsync();
-    Task<EditProjectForm> GetProjectForEditAsync(int id);
+    Task<EditProjectForm?> GetProjectForEditAsync(string id); // Changed id to string, added nullable return
     Task<bool> AddProjectAsync(AddProjectForm form);
     Task<bool> EditProjectAsync(EditProjectForm form);
-    Task<bool> DeleteProjectAsync(int id);
+    Task<bool> DeleteProjectAsync(string id); // Changed id to string
 }

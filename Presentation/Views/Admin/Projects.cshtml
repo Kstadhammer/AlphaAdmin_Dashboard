@@ -12,6 +12,8 @@
     }
 }
 
+<link rel="stylesheet" href="~/css/projectFilter.css" />
+
 <partial name="Partials/Sections/_AddProjectForm" model="new Business.Models.AddProjectForm()" />
 <partial name="Partials/Sections/_EditProjectForm" model="new Business.Models.EditProjectForm()" />
 <div class="page-header">
@@ -21,10 +23,11 @@
 
 <!-- Status Filter Tabs -->
 <div class="filter-tabs">
-    <a href="#" class="filter-tab active">ALL [@Model.TotalProjectCount]</a>
+    <a href="#" class="filter-tab active" data-status="all">ALL [@Model.TotalProjectCount]</a>
     @foreach (var statusFilter in Model.StatusFilters)
     {
-        <a href="#" class="filter-tab">@statusFilter.StatusName.ToUpper() [@statusFilter.Count]</a>
+        <a href="#" class="filter-tab" data-status="@statusFilter.StatusId">@statusFilter.StatusName.ToUpper()
+            [@statusFilter.Count]</a>
     }
 </div>
 
@@ -33,3 +36,5 @@
         @await Html.PartialAsync("Partials/Sections/_ProjectList", Model.Projects)
     </div>
 </section>
+
+<script src="~/js/projectFilter.js"></script>

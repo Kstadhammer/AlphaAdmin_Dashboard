@@ -3,9 +3,13 @@
     ViewData["Title"] = "Team Members";
 }
 
-<div class="page-header"> <!-- Moved header outside section -->
+<partial name="Partials/Sections/_AddMemberForm" model="new Business.Models.AddMemberForm()" />
+<partial name="Partials/Sections/_EditMemberForm" model="new Business.Models.EditMemberForm()" />
+<partial name="Partials/Sections/_DeleteMemberModal" />
+
+<div class="page-header">
     <h1>@ViewData["Title"]</h1>
-    <button class="btn btn-add">Add Member</button>
+    <button type="button" class="btn btn-add" data-modal="true" data-target="#addMemberModal">Add Member</button>
 </div>
 <section id="members">
     <div class="surface">
@@ -15,17 +19,27 @@
                 @foreach (var member in Model)
                 {
                     <div class="card member">
-                        <div class="card-menu">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+                        <div class="dropdown">
+                            <i class="fa-regular fa-ellipsis dropdown-toggle" data-member-id="@member.Id"></i>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-item edit-member" data-modal="true" data-target="#editMemberModal"
+                                    data-member-id="@member.Id">
+                                    <i class="fa-regular fa-pen-to-square"></i> Edit Member
+                                </div>
+                                <div class="dropdown-item delete-member" data-member-id="@member.Id"
+                                    data-member-name="@member.FirstName @member.LastName">
+                                    <i class="fa-regular fa-trash"></i> Delete Member
+                                </div>
+                            </div>
                         </div>
                         <div class="avatar">
-                            <img src="~/images/Avatar_male_1.svg" alt="Profile Picture" />
+                            <img src="@(string.IsNullOrEmpty(member.ImageUrl) ? "/images/Avatar_male_1.svg" : member.ImageUrl)"
+                                alt="Profile Picture" />
                         </div>
                         <div class="name">@member.FirstName @member.LastName</div>
-                        <div class="jobtitle">@member.JobTitle Chief Executive Officer</div>
+                        <div class="jobtitle">@member.JobTitle</div>
                         <div class="email">@member.Email</div>
-                        <div class="phone">@member.Phone +46 70 123 45 67</div>
+                        <div class="phone">@member.Phone</div>
                         <div class="role"></div>
 
                         <button class="btn-message">
@@ -37,3 +51,6 @@
         </div>
     </div>
 </section>
+
+<link rel="stylesheet" href="~/css/memberCard.css" />
+<script src="~/js/memberList.js"></script>

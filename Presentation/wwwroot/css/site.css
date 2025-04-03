@@ -318,6 +318,8 @@ aside,
   border-right: 1px solid var(--border-color);
   padding: 1.5rem 2rem;
   width: 270px;
+  position: relative;
+  overflow: visible;
 }
 
 main,
@@ -365,6 +367,18 @@ main,
 nav .nav-link.active {
   color: var(--navlink-text-active-color);
   background-color: var(--navlink-background-active-color);
+  position: relative;
+}
+
+nav .nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  height: 100%;
+  background-color: var(--blue);
+  border-radius: 0 2px 2px 0;
 }
 
 .nav-link:hover {
@@ -1740,32 +1754,46 @@ main.main > section {
 }
 
 .project-time-left {
-  display: inline-flex; /* Use inline-flex */
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 0.8rem; /* Make it pill-shaped */
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem; /* More rounded pill shape */
   font-weight: 500;
 }
 
 .project-time-left.normal {
-  background-color: var(--info-bg-color);
-  color: var(--info-text-color);
+  background-color: #f2f4f7; /* Light gray background */
+  color: #4d5761; /* Dark gray text */
 }
 
 .project-time-left.urgent {
-  background-color: var(--warning-bg-color);
-  color: var(--warning-text-color);
+  background-color: #fff1f0; /* Light red/pink background */
+  color: #ff4d4f; /* Red text */
 }
 
 .project-time-left.overdue {
-  background-color: var(--danger-bg-color);
-  color: var(--danger-text-color);
+  background-color: #fff1f0; /* Light red/pink background */
+  color: #ff4d4f; /* Red text */
+  font-weight: 600;
 }
 
 .project-time-left i {
-  font-size: 0.9em; /* Slightly smaller icon */
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #d9d9d9; /* Gray circle for normal */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.project-time-left.urgent i,
+.project-time-left.overdue i {
+  background-color: #ffa39e; /* Light red circle for urgent/overdue */
+  color: #ff4d4f;
 }
 
 .project-member-avatars {
@@ -1811,4 +1839,69 @@ main.main > section {
 /* Adjustments for project icon container */
 .project-icon-container {
   flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Dashboard Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(200px, 1fr)
+  ); /* Responsive grid */
+  gap: 1.5rem;
+  margin-bottom: 2rem; /* Space below cards */
+}
+
+.summary-card {
+  background-color: var(--surface-color);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.summary-card .card-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem; /* Icon size */
+}
+
+/* Specific icon background colors (adjust as needed) */
+.summary-card .card-icon.projects {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.summary-card .card-icon.clients {
+  background-color: rgba(var(--success-rgb), 0.1);
+  color: var(--success-color);
+}
+
+.summary-card .card-icon.members {
+  background-color: rgba(var(--warning-rgb), 0.1);
+  color: var(--warning-color);
+}
+
+.summary-card .card-content {
+  flex-grow: 1;
+}
+
+.summary-card .card-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.summary-card .card-label {
+  font-size: 0.9rem;
+  color: var(--text-muted-color);
+  margin-top: 0.2rem;
 }

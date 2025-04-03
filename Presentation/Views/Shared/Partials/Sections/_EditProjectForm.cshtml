@@ -39,6 +39,17 @@
                 </div>
             </div>
 
+            <!-- Status Selection Dropdown -->
+            <div class="form-group">
+                <label asp-for="StatusId">Status</label>
+                <div class="field-group">
+                    <select asp-for="StatusId" id="edit_StatusId" asp-items="@ViewBag.Statuses" class="form-control">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                    <span asp-validation-for="StatusId"></span>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Description">Description</label>
                 <div class="field-group">
