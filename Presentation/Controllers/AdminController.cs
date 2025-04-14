@@ -16,6 +16,8 @@ namespace WebApp.Controllers;
 [Authorize]
 public class AdminController : Controller
 {
+    #region Fields & Constructor
+
     private readonly IMemberService _memberService;
     private readonly IClientService _clientService;
     private readonly IProjectService _projectService;
@@ -37,6 +39,10 @@ public class AdminController : Controller
         _userManager = userManager;
     }
 
+    #endregion
+
+    #region Helper Methods
+
     private async Task SetCurrentUserAsync()
     {
         var userId = _userManager.GetUserId(User);
@@ -49,6 +55,10 @@ public class AdminController : Controller
             }
         }
     }
+
+    #endregion
+
+    #region Dashboard
 
     // GET: /Admin/ or /
     [Route("")] // Make this the default route for the controller
@@ -166,6 +176,10 @@ public class AdminController : Controller
         return View(viewModel); // Pass ViewModel to the view
     }
 
+    #endregion
+
+    #region Projects
+
     [Route("projects")]
     public async Task<IActionResult> Projects()
     {
@@ -240,6 +254,10 @@ public class AdminController : Controller
         return View(viewModel); // Pass the ViewModel to the view
     }
 
+    #endregion
+
+    #region Members & Clients
+
     [Route("members")]
     public async Task<IActionResult> Members()
     {
@@ -255,4 +273,12 @@ public class AdminController : Controller
         var clients = await _clientService.GetAllClientsAsync();
         return View(clients);
     }
+
+    #endregion
+
+    #region External Authentication
+
+    // External Authentication methods would go here
+
+    #endregion
 }
