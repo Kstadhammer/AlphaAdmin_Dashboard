@@ -1,3 +1,4 @@
+using Business.Forms;
 using Business.Models;
 using Domain.Models;
 
@@ -5,8 +6,8 @@ namespace Business.Interfaces;
 
 public interface IProjectService
 {
-    Task<ProjectResult<Project>> GetProjectAsync(string id);
-    Task<ProjectResult<IEnumerable<Project>>> GetProjectsAsync();
+    Task<ServiceResult<Project>> GetProjectAsync(string id);
+    Task<ServiceResult<IEnumerable<Project>>> GetProjectsAsync();
 
     // Removed unused CreateProjectAsync(AddProjectFormData formData) signature
     Task<List<ProjectListItem>> GetAllProjectsAsync();

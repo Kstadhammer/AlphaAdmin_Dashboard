@@ -35,11 +35,11 @@ public class AuthService : IAuthService
         return result;
     }
 
-    public async Task<AuthResult> SignUpAsync(SignUpFormData formData)
+    public async Task<ServiceResult<object>> SignUpAsync(SignUpFormData formData)
     {
         if (formData == null)
         {
-            return new AuthResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 400,
@@ -49,8 +49,8 @@ public class AuthService : IAuthService
 
         var result = await _userService.CreateUserAsync(formData, "User");
         return result.Succeeded
-            ? new AuthResult { Succeeded = true, StatusCode = 201 }
-            : new AuthResult
+            ? new ServiceResult<object> { Succeeded = true, StatusCode = 201 }
+            : new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = result.StatusCode,
@@ -58,10 +58,10 @@ public class AuthService : IAuthService
             };
     }
 
-    public async Task<AuthResult> SignOutAsync()
+    public async Task<ServiceResult<object>> SignOutAsync()
     {
         await _signInManager.SignOutAsync();
-        return new AuthResult { Succeeded = true, StatusCode = 200 };
+        return new ServiceResult<object> { Succeeded = true, StatusCode = 200 };
     }
 
     // New methods to satisfy the interface

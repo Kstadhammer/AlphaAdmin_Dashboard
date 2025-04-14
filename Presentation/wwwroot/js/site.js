@@ -90,6 +90,102 @@
   }
 
   // We're now using our custom member selection component instead of Choices.js
+  // Contextual navbar search
+  const searchInput = document.querySelector(".search-input");
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+
+      if (path.includes("/projects")) {
+        if (typeof filterProjects === "function") {
+          filterProjects(query);
+        }
+      } else if (path.includes("/clients")) {
+        if (typeof filterClients === "function") {
+          filterClients(query);
+        }
+      } else if (path.includes("/members")) {
+        if (typeof filterMembers === "function") {
+          filterMembers(query);
+        }
+      }
+    });
+  }
+
+  // --- Quill Editor Initialization ---
+  let addQuill;
+  let editQuill;
+
+  const quillOptions = {
+    theme: "snow",
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ script: "sub" }, { script: "super" }],
+        [{ indent: "-1" }, { indent: "+1" }],
+        [{ direction: "rtl" }],
+        [{ size: ["small", false, "large", "huge"] }],
+        [{ color: [] }, { background: [] }],
+        [{ font: [] }],
+        [{ align: [] }],
+        ["link", "image"],
+        ["clean"],
+      ],
+    },
+  };
+
+  // Initialize Add Project Quill Editor
+  const addEditorContainer = document.getElementById("add-description-editor");
+  const addHiddenInput = document.getElementById("add-description-hidden");
+  if (addEditorContainer && addHiddenInput) {
+    try {
+      addQuill = new Quill(addEditorContainer, quillOptions);
+      addQuill.on("text-change", function (delta, oldDelta, source) {
+        if (source === "user") {
+          addHiddenInput.value = addQuill.root.innerHTML; // Store HTML content
+        }
+      });
+    } catch (error) {
+      console.error("Failed to initialize Add Project Quill editor:", error);
+    }
+  }
+
+  // Initialize Edit Project Quill Editor (content set when modal opens)
+  const editEditorContainer = document.getElementById(
+    "edit-description-editor"
+  );
+  const editHiddenInput = document.getElementById("edit-description-hidden");
+  if (editEditorContainer && editHiddenInput) {
+    try {
+      editQuill = new Quill(editEditorContainer, quillOptions);
+      editQuill.on("text-change", function (delta, oldDelta, source) {
+        if (source === "user") {
+          editHiddenInput.value = editQuill.root.innerHTML; // Store HTML content
+        }
+      });
+    } catch (error) {
+      console.error("Failed to initialize Edit Project Quill editor:", error);
+    }
+  }
+
+  // Function to set content in Edit Quill editor (called when modal opens)
+  window.initializeEditQuill = function (descriptionHtml) {
+    if (editQuill) {
+      try {
+        const delta = editQuill.clipboard.convert(descriptionHtml || "");
+        editQuill.setContents(delta, "silent"); // Set content without triggering text-change
+        editHiddenInput.value = descriptionHtml || ""; // Ensure hidden input is also set initially
+      } catch (error) {
+        console.error("Failed to set Edit Quill content:", error);
+        // Fallback: Try setting raw HTML if conversion fails
+        editQuill.root.innerHTML = descriptionHtml || "";
+        editHiddenInput.value = descriptionHtml || "";
+      }
+    }
+  };
 });
 
 // Add event listeners for close buttons
@@ -104,6 +200,22 @@ closeButtons.forEach((button) => {
       // Reset all forms in the modal
       modal.querySelectorAll("form").forEach((form) => {
         form.reset();
+        // Clear Quill editors if they exist in the modal
+        if (
+          modal.id === "addProjectModal" &&
+          typeof addQuill !== "undefined" &&
+          addQuill
+        ) {
+          addQuill.setContents([], "silent"); // Clear content using setContents with empty delta
+          if (addHiddenInput) addHiddenInput.value = "";
+        } else if (
+          modal.id === "editProjectModal" &&
+          typeof editQuill !== "undefined" &&
+          editQuill
+        ) {
+          editQuill.setContents([], "silent"); // Clear content
+          if (editHiddenInput) editHiddenInput.value = "";
+        }
 
         // Reset image preview
         const profileLabel = form.querySelector(".profile-label");

@@ -20,19 +20,25 @@ public class UserService(
     private readonly UserManager<MemberEntity> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
-    public async Task<UserResult> GetUsersAsync()
+    public async Task<ServiceResult<object>> GetUsersAsync()
     {
         var users = await _userManager.Users.ToListAsync();
 
         var result = await _userRepository.GetAllAsync();
-        return result.MapTo<UserResult>();
+        return new ServiceResult<object>
+        {
+            Succeeded = result.Succeeded,
+            StatusCode = result.StatusCode,
+            Error = result.Error,
+            Result = result.Result,
+        };
     }
 
-    public async Task<UserResult> AddUserToRole(string userId, string roleName)
+    public async Task<ServiceResult<object>> AddUserToRole(string userId, string roleName)
     {
         if (!await _roleManager.RoleExistsAsync(roleName))
         {
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 404,
@@ -43,7 +49,7 @@ public class UserService(
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null)
         {
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 404,
@@ -53,8 +59,8 @@ public class UserService(
 
         var result = await _userManager.AddToRoleAsync(user, roleName);
         return result.Succeeded
-            ? new UserResult { Succeeded = true, StatusCode = 200 }
-            : new UserResult
+            ? new ServiceResult<object> { Succeeded = true, StatusCode = 200 }
+            : new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 500,
@@ -62,12 +68,15 @@ public class UserService(
             };
     }
 
-    public async Task<UserResult> CreateUserAsync(SignUpFormData formData, string roleName)
+    public async Task<ServiceResult<object>> CreateUserAsync(
+        SignUpFormData formData,
+        string roleName
+    )
     {
         if (formData == null)
         {
             Debug.WriteLine("Form data is null");
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 400,
@@ -83,7 +92,7 @@ public class UserService(
         if (existsResult.Result)
         {
             Debug.WriteLine($"User with email {formData.Email} already exists");
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 409,
@@ -109,7 +118,7 @@ public class UserService(
                     Debug.WriteLine($"Error: {error.Code} - {error.Description}");
                 }
 
-                return new UserResult
+                return new ServiceResult<object>
                 {
                     Succeeded = false,
                     StatusCode = 400,
@@ -123,7 +132,7 @@ public class UserService(
                 if (!await _roleManager.RoleExistsAsync(roleName))
                 {
                     Debug.WriteLine($"Role {roleName} does not exist");
-                    return new UserResult
+                    return new ServiceResult<object>
                     {
                         Succeeded = false,
                         StatusCode = 500,
@@ -136,15 +145,15 @@ public class UserService(
                 Debug.WriteLine($"AddToRoleAsync result: {addToRoleResult.Succeeded}");
 
                 return addToRoleResult.Succeeded
-                    ? new UserResult { Succeeded = true, StatusCode = 201 }
-                    : new UserResult
+                    ? new ServiceResult<object> { Succeeded = true, StatusCode = 201 }
+                    : new ServiceResult<object>
                     {
                         Succeeded = false,
                         StatusCode = 201,
                         Error = "Failed to add user to role",
                     };
             }
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 500,
@@ -155,7 +164,7 @@ public class UserService(
         {
             Debug.WriteLine($"Exception in CreateUserAsync: {ex.Message}");
             Debug.WriteLine($"Stack trace: {ex.StackTrace}");
-            return new UserResult
+            return new ServiceResult<object>
             {
                 Succeeded = false,
                 StatusCode = 500,
@@ -164,7 +173,7 @@ public class UserService(
         }
     }
 
-    public Task<UserResult> GetUserByIdAsync(string userId)
+    public Task<ServiceResult<object>> GetUserByIdAsync(string userId)
     {
         throw new NotImplementedException();
     }

@@ -43,9 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("edit_Name").value = data.project.name;
             document.getElementById("edit_ClientName").value =
               data.project.clientName;
-            document.getElementById("edit_Description").value =
-              data.project.description || "";
-
+            // Initialize Quill editor with the description
+            if (typeof window.initializeEditQuill === "function") {
+              window.initializeEditQuill(data.project.description || "");
+            } else {
+              console.error(
+                "initializeEditQuill function not found. Make sure site.js is loaded correctly."
+              );
+              // Fallback or alternative handling if needed
+            }
             // Set dates (convert from ISO to input format)
             const startDate = new Date(data.project.startDate);
             const endDate = new Date(data.project.endDate);
@@ -189,3 +195,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 });
+
+function filterProjects(query) {
+  const projectCards = document.querySelectorAll(".project-grid .project-card");
+  projectCards.forEach((card) => {
+    const allText = Array.from(card.querySelectorAll("td, div"))
+      .map((el) => el.textContent.toLowerCase())
+      .join(" ");
+
+    if (allText.includes(query)) {
+      card.style.display = "";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}

@@ -1,3 +1,20 @@
+function filterClients(query) {
+  const clientCards = document.querySelectorAll(
+    ".client-grid .client-card, .client-list .client-card"
+  );
+  clientCards.forEach((card) => {
+    const allText = Array.from(card.querySelectorAll("td, div"))
+      .map((el) => el.textContent.toLowerCase())
+      .join(" ");
+
+    if (allText.includes(query)) {
+      card.style.display = "";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
 /**
  * Client List functionality including dropdown menu and delete confirmation
  */

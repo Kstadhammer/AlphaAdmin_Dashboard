@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Business.Forms;
 using Business.Interfaces;
 using Business.Models;
 using Data.Contexts; // Add using for AppDbContext
@@ -50,12 +51,12 @@ public class ProjectService : IProjectService
         _dbContext = dbContext; // Assign DbContext
     }
 
-    public async Task<ProjectResult<Project>> GetProjectAsync(string id)
+    public async Task<ServiceResult<Project>> GetProjectAsync(string id)
     {
         var result = await _projectRepository.GetByIdAsync(id);
         if (!result.Succeeded)
         {
-            return new ProjectResult<Project>
+            return new ServiceResult<Project>
             {
                 Succeeded = false,
                 StatusCode = result.StatusCode,
@@ -64,7 +65,7 @@ public class ProjectService : IProjectService
         }
 
         var project = _projectFactory.CreateProjectModel(result.Result);
-        return new ProjectResult<Project>
+        return new ServiceResult<Project>
         {
             Succeeded = true,
             StatusCode = 200,
@@ -72,12 +73,12 @@ public class ProjectService : IProjectService
         };
     }
 
-    public async Task<ProjectResult<IEnumerable<Project>>> GetProjectsAsync()
+    public async Task<ServiceResult<IEnumerable<Project>>> GetProjectsAsync()
     {
         var result = await _projectRepository.GetAllAsync();
         if (!result.Succeeded)
         {
-            return new ProjectResult<IEnumerable<Project>>
+            return new ServiceResult<IEnumerable<Project>>
             {
                 Succeeded = false,
                 StatusCode = result.StatusCode,
@@ -88,7 +89,7 @@ public class ProjectService : IProjectService
         var projects = result
             .Result.Select(entity => _projectFactory.CreateProjectModel(entity))
             .ToList();
-        return new ProjectResult<IEnumerable<Project>>
+        return new ServiceResult<IEnumerable<Project>>
         {
             Succeeded = true,
             StatusCode = 200,

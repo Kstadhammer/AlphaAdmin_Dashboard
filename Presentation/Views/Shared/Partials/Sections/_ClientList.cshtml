@@ -3,7 +3,7 @@
 <div class="client-list surface">
     <table>
         <thead>
-            <tr>
+            <tr class="client-card">
                 <th class="client-check"><input type="checkbox" /></th>
                 <th class="client-info">Client Name</th>
                 <th class="client-location">Location</th>
@@ -18,7 +18,7 @@
             {
                 @foreach (var client in Model)
                 {
-                    <tr>
+                    <tr class="client-card">
                         <td class="client-check"><input type="checkbox" /></td>
                         <td class="client-info">
                             @if (!string.IsNullOrEmpty(client.ImageUrl))
@@ -62,7 +62,7 @@
             }
             else
             {
-                <tr>
+                <tr class="client-card">
                     <td colspan="7" class="text-center">No clients found</td>
                 </tr>
             }

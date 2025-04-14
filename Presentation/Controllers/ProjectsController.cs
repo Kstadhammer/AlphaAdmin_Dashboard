@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Business.Forms;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -100,13 +101,16 @@ public class ProjectsController : Controller
                 foreach (var key in ModelState.Keys)
                 {
                     var state = ModelState[key];
-                    Console.WriteLine(
-                        $"Field: {key}, Valid: {state.ValidationState}, Errors: {state.Errors.Count}"
-                    );
-
-                    foreach (var error in state.Errors)
+                    if (state != null)
                     {
-                        Console.WriteLine($"  - Error: {error.ErrorMessage}");
+                        Console.WriteLine(
+                            $"Field: {key}, Valid: {state.ValidationState}, Errors: {state.Errors.Count}"
+                        );
+
+                        foreach (var error in state.Errors)
+                        {
+                            Console.WriteLine($"  - Error: {error.ErrorMessage}");
+                        }
                     }
                 }
             }
@@ -158,7 +162,7 @@ public class ProjectsController : Controller
         {
             TempData["Error"] = "Failed to update project. Please check the form and try again.";
             return RedirectToAction("Projects", "Admin");
-        }       
+        }
 
         var success = await _projectService.EditProjectAsync(form);
         if (!success)

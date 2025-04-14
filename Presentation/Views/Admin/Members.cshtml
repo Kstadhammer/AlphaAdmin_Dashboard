@@ -13,12 +13,12 @@
 </div>
 <section id="members">
     <div class="surface">
-        <div class="members-list">
+        <div class="members-list member-grid">
             @if (Model != null)
             {
                 @foreach (var member in Model)
                 {
-                    <div class="card member">
+                    <div class="card member member-card">
                         <div class="dropdown">
                             <i class="fa-regular fa-ellipsis dropdown-toggle" data-member-id="@member.Id"></i>
                             <div class="dropdown-menu">
@@ -36,8 +36,8 @@
                             <img src="@(string.IsNullOrEmpty(member.ImageUrl) ? "/images/Avatar_male_1.svg" : member.ImageUrl)"
                                 alt="Profile Picture" />
                         </div>
-                        <div class="name">@member.FirstName @member.LastName</div>
-                        <div class="jobtitle">@member.JobTitle</div>
+                        <div class="member-name">@member.FirstName @member.LastName</div>
+                        <div class="member-role">@member.JobTitle</div>
                         <div class="email">@member.Email</div>
                         <div class="phone">@member.Phone</div>
                         <div class="role"></div>

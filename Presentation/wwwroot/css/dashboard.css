@@ -57,6 +57,74 @@
 }
 
 .summary-card .card-content {
+  /* Upcoming Deadlines Card */
+  .deadline-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color, #eee);
+  }
+
+  .deadline-project {
+    flex: 1;
+  }
+
+  .deadline-status {
+    margin: 0 1rem;
+    flex-shrink: 0;
+  }
+
+  .deadline-date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .project-time-left-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .project-time-left {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    background-color: #f2f2f2;
+    font-size: 0.85rem;
+  }
+
+  .project-member-avatars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .member-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+  }
+
+  .end-date {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.25rem;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    color: #fff;
+    white-space: nowrap;
+  }
+
   flex-grow: 1;
 }
 

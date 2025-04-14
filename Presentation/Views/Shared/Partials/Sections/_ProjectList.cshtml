@@ -7,8 +7,9 @@
         {
             // Removed unnecessary @ symbol and extra brace
             // Calculate days left
-            var daysLeft = (project.EndDate - DateTime.Today).Days;
-            var daysLeftText = daysLeft < 0 ? "Overdue" : (daysLeft == 7 ? "1 week left" : $"{daysLeft} days left");
+            var daysLeft = (project.EndDate.Date - DateTime.Today).Days + 1;
+            var daysLeftText = daysLeft < 0 ? "Overdue" : (daysLeft == 0 ? "Due today" : (daysLeft == 7 ? "1 week left" :
+            $"{daysLeft} days left"));
             var daysLeftClass = daysLeft < 0 ? "overdue" : (daysLeft <= 7 ? "urgent" : "normal");
             // Removed extra closing brace
             <div class="project-card" data-status="@project.StatusId">

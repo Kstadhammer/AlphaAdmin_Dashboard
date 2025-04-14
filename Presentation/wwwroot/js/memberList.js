@@ -1,3 +1,18 @@
+function filterMembers(query) {
+  const memberCards = document.querySelectorAll(".member-grid .member-card");
+  memberCards.forEach((card) => {
+    const allText = Array.from(card.querySelectorAll("td, div"))
+      .map((el) => el.textContent.toLowerCase())
+      .join(" ");
+
+    if (allText.includes(query)) {
+      card.style.display = "";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
 /**
  * Member List functionality including dropdown menu and edit/delete operations
  */

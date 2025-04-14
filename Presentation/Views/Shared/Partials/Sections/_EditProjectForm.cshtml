@@ -1,4 +1,5 @@
-@model Business.Models.EditProjectForm
+@using Business.Forms
+@model Business.Forms.EditProjectForm
 
 <div id="editProjectModal" class="modal">
     <div class="modal-content">
@@ -53,7 +54,10 @@
             <div class="form-group">
                 <label asp-for="Description">Description</label>
                 <div class="field-group">
-                    <textarea asp-for="Description" id="edit_Description" rows="4"></textarea>
+                    <!-- Quill editor container -->
+                    <div id="edit-description-editor" style="height: 150px;"></div>
+                    <!-- Hidden input to store Quill content -->
+                    <input type="hidden" asp-for="Description" id="edit-description-hidden" />
                     <span asp-validation-for="Description"></span>
                 </div>
             </div>

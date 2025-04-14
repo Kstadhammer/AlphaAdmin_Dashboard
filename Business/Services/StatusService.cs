@@ -21,7 +21,7 @@ public class StatusService : IStatusService
         _statusFactory = statusFactory;
     }
 
-    public async Task<StatusResult<IEnumerable<Business.Models.Status>>> GetStatusesAsync()
+    public async Task<ServiceResult<IEnumerable<Business.Models.Status>>> GetStatusesAsync()
     {
         Debug.WriteLine("StatusService: Fetching all statuses from repository...");
         var result = await _statusRepository.GetAllAsync();
@@ -31,7 +31,7 @@ public class StatusService : IStatusService
 
         if (!result.Succeeded)
         {
-            return new StatusResult<IEnumerable<Business.Models.Status>>
+            return new ServiceResult<IEnumerable<Business.Models.Status>>
             {
                 Succeeded = false,
                 StatusCode = result.StatusCode,
@@ -44,7 +44,7 @@ public class StatusService : IStatusService
             .ToList();
         Debug.WriteLine($"StatusService: Mapped {statuses.Count} status models.");
 
-        return new StatusResult<IEnumerable<Business.Models.Status>>
+        return new ServiceResult<IEnumerable<Business.Models.Status>>
         {
             Succeeded = true,
             StatusCode = 200,
@@ -52,11 +52,11 @@ public class StatusService : IStatusService
         };
     }
 
-    public async Task<StatusResult<Business.Models.Status>> GetStatusByNameAsync(string statusName)
+    public async Task<ServiceResult<Business.Models.Status>> GetStatusByNameAsync(string statusName)
     {
         if (string.IsNullOrEmpty(statusName))
         {
-            return new StatusResult<Business.Models.Status>
+            return new ServiceResult<Business.Models.Status>
             {
                 Succeeded = false,
                 StatusCode = 400,
@@ -70,7 +70,7 @@ public class StatusService : IStatusService
             var result = await _statusRepository.GetAllAsync();
             if (!result.Succeeded)
             {
-                return new StatusResult<Business.Models.Status>
+                return new ServiceResult<Business.Models.Status>
                 {
                     Succeeded = false,
                     StatusCode = result.StatusCode,
@@ -83,7 +83,7 @@ public class StatusService : IStatusService
             );
             if (statusEntity == null)
             {
-                return new StatusResult<Business.Models.Status>
+                return new ServiceResult<Business.Models.Status>
                 {
                     Succeeded = false,
                     StatusCode = 404,
@@ -92,7 +92,7 @@ public class StatusService : IStatusService
             }
 
             var status = _statusFactory.CreateStatusModel(statusEntity);
-            return new StatusResult<Business.Models.Status>
+            return new ServiceResult<Business.Models.Status>
             {
                 Succeeded = true,
                 StatusCode = 200,
@@ -101,7 +101,7 @@ public class StatusService : IStatusService
         }
         catch (Exception ex)
         {
-            return new StatusResult<Business.Models.Status>
+            return new ServiceResult<Business.Models.Status>
             {
                 Succeeded = false,
                 StatusCode = 500,
@@ -110,7 +110,7 @@ public class StatusService : IStatusService
         }
     }
 
-    public async Task<StatusResult<Business.Models.Status>> GetStatusByIdAsync(int id)
+    public async Task<ServiceResult<Business.Models.Status>> GetStatusByIdAsync(int id)
     {
         try
         {
@@ -120,7 +120,7 @@ public class StatusService : IStatusService
 
             if (!result.Succeeded)
             {
-                return new StatusResult<Business.Models.Status>
+                return new ServiceResult<Business.Models.Status>
                 {
                     Succeeded = false,
                     StatusCode = result.StatusCode,
@@ -130,7 +130,7 @@ public class StatusService : IStatusService
 
             if (result.Result == null)
             {
-                return new StatusResult<Business.Models.Status>
+                return new ServiceResult<Business.Models.Status>
                 {
                     Succeeded = false,
                     StatusCode = 404,
@@ -139,7 +139,7 @@ public class StatusService : IStatusService
             }
 
             var status = _statusFactory.CreateStatusModel(result.Result);
-            return new StatusResult<Business.Models.Status>
+            return new ServiceResult<Business.Models.Status>
             {
                 Succeeded = true,
                 StatusCode = 200,
@@ -148,7 +148,7 @@ public class StatusService : IStatusService
         }
         catch (Exception ex)
         {
-            return new StatusResult<Business.Models.Status>
+            return new ServiceResult<Business.Models.Status>
             {
                 Succeeded = false,
                 StatusCode = 500,

@@ -1,10 +1,10 @@
-@model IEnumerable<Business.Models.ClientListItem>
+    @model IEnumerable<Business.Models.ClientListItem>
 @{
     ViewData["Title"] = "Clients";
 }
 
-<partial name="Partials/Sections/_AddClientForm" model="new Business.Models.AddClientForm()" />
-<partial name="Partials/Sections/_EditClientForm" model="new Business.Models.EditClientForm()" />
+<partial name="Partials/Sections/_AddClientForm" model="new Business.Forms.AddClientForm()" />
+<partial name="Partials/Sections/_EditClientForm" model="new Business.Forms.EditClientForm()" />
 <div class="page-header">
     <h1>@ViewData["Title"]</h1>
     <button type="button" class="btn btn-add" data-modal="true" data-target="#addClientModal">Add Client</button>

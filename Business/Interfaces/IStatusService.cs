@@ -4,7 +4,7 @@ namespace Business.Interfaces;
 
 public interface IStatusService
 {
-    Task<StatusResult<IEnumerable<Business.Models.Status>>> GetStatusesAsync();
-    Task<StatusResult<Business.Models.Status>> GetStatusByNameAsync(string statusName);
-    Task<StatusResult<Business.Models.Status>> GetStatusByIdAsync(int id);
+    Task<ServiceResult<IEnumerable<Business.Models.Status>>> GetStatusesAsync();
+    Task<ServiceResult<Business.Models.Status>> GetStatusByNameAsync(string statusName);
+    Task<ServiceResult<Business.Models.Status>> GetStatusByIdAsync(int id);
 }

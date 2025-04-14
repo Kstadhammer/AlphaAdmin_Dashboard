@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Business.Forms;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -26,10 +27,16 @@ public class ClientService : IClientService
         _projectRepository = projectRepository; // Assign Project Repository
     }
 
-    public async Task<ClientResult> GetClientsAsync()
+    public async Task<ServiceResult<object>> GetClientsAsync()
     {
         var result = await _clientRepository.GetAllAsync();
-        return result.MapTo<ClientResult>();
+        return new ServiceResult<object>
+        {
+            Succeeded = result.Succeeded,
+            StatusCode = result.StatusCode,
+            Error = result.Error,
+            Result = result.Result,
+        };
     }
 
     public async Task<List<ClientListItem>> GetAllClientsAsync()

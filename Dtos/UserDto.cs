@@ -1,4 +1,4 @@
-namespace Business.Dtos;
+namespace Dtos;
 
 public class UserDto
 {

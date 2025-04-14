@@ -5,8 +5,8 @@ namespace Business.Interfaces;
 
 public interface IUserService
 {
-    Task<UserResult> GetUsersAsync();
-    Task<UserResult> AddUserToRole(string userId, string roleName);
-    Task<UserResult> CreateUserAsync(SignUpFormData formData, string roleName);
-    Task<UserResult> GetUserByIdAsync(string userId);
+    Task<ServiceResult<object>> GetUsersAsync();
+    Task<ServiceResult<object>> AddUserToRole(string userId, string roleName);
+    Task<ServiceResult<object>> CreateUserAsync(SignUpFormData formData, string roleName);
+    Task<ServiceResult<object>> GetUserByIdAsync(string userId);
 }

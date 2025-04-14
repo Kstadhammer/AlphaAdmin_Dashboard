@@ -221,7 +221,7 @@ public class AdminController : Controller
             {
                 StatusId = s.Id,
                 StatusName = s.Name,
-                Count = projects.Count(p => p.StatusId == s.Id), // Calculate count using StatusId
+                Count = projects?.Count(p => p.StatusId == s.Id) ?? 0, // Safe null handling
                 // Removed duplicate placeholder Count assignment
             })
             .ToList();
@@ -229,9 +229,9 @@ public class AdminController : Controller
         // Create the ViewModel
         var viewModel = new ProjectIndexViewModel
         {
-            Projects = projects, // Pass the full list for now
+            Projects = projects ?? new List<ProjectListItem>(), // Avoid null assignment
             StatusFilters = statusFilters,
-            TotalProjectCount = projects.Count,
+            TotalProjectCount = projects?.Count ?? 0, // Safe null handling
         };
 
         Debug.WriteLine(
