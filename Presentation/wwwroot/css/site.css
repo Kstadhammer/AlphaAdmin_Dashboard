@@ -140,16 +140,18 @@
 /* Dark theme variables */
 [data-theme="dark"] {
   --background-color: #1a1d21;
-  --card-background: #2d3035;
+  --card-background-color: #2d3035; /* Used card-background-color for consistency */
+  --project-card-background: #202123; /* Specific for project cards if needed, or use --card-background-color */
   --text-color: #e4e6eb;
-  --text-secondary-color: #b0b3b8;
+  --text-muted-color: #b0b3b8; /* Changed from text-secondary-color for clarity */
+  --text-headline-color: #ffffff; /* Ensure headlines stand out */
   --border-color: #3e4042;
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.25);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
   --input-background: #3a3b3c;
   --header-background: #2d3035;
-  --sidebar-background: #2d3035;
+  --sidebar-background-color: #2d3035; /* Renamed for consistency */
 
   /* Navigation link dark mode colors */
   --navlink-text-color: var(--white-100);
@@ -160,6 +162,104 @@
   --search-background-color: #3a3b3c;
   --search-text-color: #e4e6eb;
   --search-placeholder-color: #b0b3b8;
+
+  /* Project Card Dark Mode Styles */
+  .project-card {
+    background-color: var(
+      --project-card-background
+    ); /* Use specific or general card bg */
+    box-shadow: var(--shadow-md);
+  }
+
+  .project-icon-container {
+    background: #3a3b3c; /* Darker background for icon container */
+  }
+
+  .project-name {
+    color: var(--text-headline-color); /* Brighter text for name */
+  }
+
+  .project-client,
+  .project-description {
+    color: var(--text-muted-color); /* Muted text for client/description */
+  }
+
+  .project-card-footer {
+    border-top-color: var(--border-color); /* Darker border */
+  }
+
+  .project-time-left.normal {
+    background-color: #3a3b3c; /* Darker gray background */
+    color: #b0b3b8; /* Light gray text */
+  }
+
+  /* Keep urgent/overdue colors as they provide visual warning */
+  .project-time-left.urgent,
+  .project-time-left.overdue {
+    /* Assuming existing light red works, otherwise define dark-mode specific warning colors */
+    background-color: #5c1f1e; /* Darker red background */
+    color: #ff817d; /* Lighter red text */
+  }
+
+  .project-time-left.urgent i,
+  .project-time-left.overdue i {
+    background-color: #ff817d; /* Lighter red circle */
+    color: #5c1f1e; /* Darker red icon */
+  }
+
+  .member-avatar,
+  .time-left-avatars .member-avatar {
+    border-color: var(
+      --project-card-background
+    ); /* Match card background for overlap */
+  }
+
+  .time-left-avatars .more-members,
+  .more-members {
+    background-color: #3a3b3c;
+    color: var(--text-muted-color);
+    border-color: var(--project-card-background);
+  }
+
+  /* Dropdown Menu Dark Mode */
+  .project-card .dropdown-toggle {
+    color: var(--text-muted-color);
+  }
+
+  .project-card .dropdown-toggle:hover {
+    color: var(--text-color);
+  }
+
+  .project-card .dropdown-menu {
+    background-color: #3a3b3c; /* Dark background for dropdown */
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+  }
+
+  .project-card .dropdown-item {
+    color: var(--text-color);
+  }
+
+  .project-card .dropdown-item i {
+    color: var(--text-muted-color);
+  }
+
+  .project-card .dropdown-item:hover {
+    background-color: rgba(
+      255,
+      255,
+      255,
+      0.1
+    ); /* Slight white overlay on hover */
+  }
+
+  .project-card .dropdown-item.delete-project {
+    color: #ff817d; /* Lighter red for delete */
+  }
+
+  .project-card .dropdown-item.delete-project i {
+    color: #ff817d;
+  }
 }
 
 #login {
@@ -1240,7 +1340,7 @@ form .field-validation-error {
   height: 12px;
   width: 12px;
   left: 2px;
-  bottom: 2px;
+  bottom: 3px;
   background-color: var(--white-100);
   border-radius: 50%;
   transition: 0.3s;
