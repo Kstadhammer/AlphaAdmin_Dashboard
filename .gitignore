@@ -120,7 +120,7 @@ Thumbs.db
 *.env
 appsettings.*.json
 !appsettings.json
-!appsettings.Development.json
+appsettings.Development.json
 
 # Task files
 tasks.json
