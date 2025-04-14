@@ -1,12 +1,10 @@
-<form asp-controller="Auth" asp-action="ExternalLogin" method="post">
-    <div class="form-group">
-        <button class="btn btn-google" type="submit" name="provider" value="Google">
-            <img src="~/images/google-icon.svg" alt="Google Logo" />
-            Login with Google
-        </button>
-        <button class="btn btn-github" type="submit" name="provider" value="GitHub">
-            <img src="~/images/github-mark-white.svg" alt="Github Logo" />
-            Login with Github
-        </button>
-    </div>
-</form>
+<div class="form-group">
+    <button formaction="/Auth/ExternalSignIn" class="btn btn-google" type="submit" name="provider" value="Google">
+        <img src="~/images/google-icon.svg" alt="Google Logo" />
+        Login with Google
+    </button>
+    <button formaction="/Auth/ExternalSignIn" class="btn btn-github" type="submit" name="provider" value="GitHub">
+        <img src="~/images/github-mark-white.svg" alt="Github Logo" />
+        Login with Github
+    </button>
+</div>

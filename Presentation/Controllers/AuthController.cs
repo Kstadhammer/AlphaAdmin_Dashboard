@@ -3,13 +3,20 @@ using Business.Interfaces;
 using Business.Models;
 using Business.Services;
 using Domain.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers;
 
 public class AuthController(IAuthService authService) : Controller
 {
+    #region Fields & Constructor
+
     private readonly IAuthService _authService = authService;
+
+    #endregion
+
+    #region Login
 
     public IActionResult Login(string returnUrl = "~/")
     {
@@ -35,6 +42,10 @@ public class AuthController(IAuthService authService) : Controller
         ViewBag.ErrorMessage = "Invalid email address or password";
         return View(form);
     }
+
+    #endregion
+
+    #region Registration
 
     public IActionResult SignUp()
     {
@@ -91,9 +102,26 @@ public class AuthController(IAuthService authService) : Controller
         return View(form);
     }
 
+    #endregion
+
+    #region Session Management
+
     public async Task<IActionResult> Logout()
     {
         await _authService.LogoutAsync();
         return LocalRedirect("~/");
     }
+
+    #endregion
+
+    #region External Authentication
+
+
+    [HttpPost]
+    public IActionResult ExternalSignIn(string provider, string returnUrl = null!)
+    {
+        return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, provider);
+    }
+
+    #endregion
 }

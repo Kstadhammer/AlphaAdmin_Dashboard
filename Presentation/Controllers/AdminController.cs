@@ -275,10 +275,4 @@ public class AdminController : Controller
     }
 
     #endregion
-
-    #region External Authentication
-
-    // External Authentication methods would go here
-
-    #endregion
 }
