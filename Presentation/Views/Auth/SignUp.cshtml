@@ -15,17 +15,11 @@
 
         }
 
-        <div class="form-group">
-            <button class="btn btn-google" type="submit">
-                <img src="~/images/google-icon.svg" alt="Google Logo" />
-                Sign Up with Google
-            </button>
-        </div>
+        @await Html.PartialAsync("~/Views/Shared/Partials/Sections/_ExternalAuthenticationPartial.cshtml")
 
         <div class="or-separator">
             <span>OR</span>
         </div>
-
 
         <div class="form-group">
             <label asp-for="FirstName"></label>

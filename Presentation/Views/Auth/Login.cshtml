@@ -9,12 +9,7 @@
         <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
         <h1>@ViewData["Title"]</h1>
 
-        <div class="form-group">
-            <button class="btn btn-google" type="submit">
-                <img src="~/images/google-icon.svg" alt="Google Logo" />
-                Login with Google
-            </button>
-        </div>
+        @await Html.PartialAsync("~/Views/Shared/Partials/Sections/_ExternalAuthenticationPartial.cshtml")
 
         <div class="or-separator">
             <span>OR</span>
