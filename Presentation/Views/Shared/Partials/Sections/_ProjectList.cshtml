@@ -40,17 +40,16 @@
                     </div>
                 </div>
                 <div class="project-card-body">
-                    <p class="project-description">@(project.Description?.Length > 100 ? project.Description.Substring(0, 97) +
-                                        "..." : project.Description)</p>
-        </div>
-        <div class="project-card-footer">
-            <div class="project-time-left-container">
-                <div class="project-time-left @daysLeftClass">
-                    <i class="fa-regular fa-clock"></i>
-                    <span>@daysLeftText</span>
+                    <p class="project-description">@Html.Raw(project.Description?.Length > 100 ? project.Description.Substring(0, 97) + "..." : project.Description)</p>
                 </div>
-                <div class="project-member-avatars time-left-avatars">
-                    @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
+                <div class="project-card-footer">
+                    <div class="project-time-left-container">
+                        <div class="project-time-left @daysLeftClass">
+                            <i class="fa-regular fa-clock"></i>
+                            <span>@daysLeftText</span>
+                        </div>
+                        <div class="project-member-avatars time-left-avatars">
+                            @foreach (var avatarUrl in project.MemberAvatarUrls.Take(3)) // Show max 3 avatars
                             {
                                 <img src="@avatarUrl" alt="Member Avatar" class="member-avatar" />
                             }
