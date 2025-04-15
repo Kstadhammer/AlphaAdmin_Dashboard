@@ -1734,8 +1734,8 @@ form .field-validation-error {
 .input-group {
   display: flex;
   align-items: center; /* Align items vertically */
-  border: 1px solid #ccc; /* Match input border */
-  border-radius: 4px; /* Match input border-radius */
+  border: 1px solid var(--border-color); /* Match input border */
+  border-radius: 10px; /* Match input border-radius */
   padding-left: 0.5rem;
 }
 
@@ -1828,10 +1828,6 @@ main.main > section {
   gap: 1rem; /* Space between sections */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s ease-in-out;
-}
-
-.project-card:hover {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .project-card-header {
@@ -1944,6 +1940,7 @@ main.main > section {
   height: 32px;
   border: 2px solid var(--white-100);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #9dceff 0%, #2d99ff 50%, #0066cc 100%);
 }
 
 .time-left-avatars .more-members {
@@ -2056,4 +2053,26 @@ main.main > section {
   font-size: 0.9rem;
   color: var(--text-muted-color);
   margin-top: 0.2rem;
+}
+
+[data-theme="dark"] .notification-icon {
+  content: url("/images/Notification-white.svg");
+}
+
+.ql-container {
+  border: 1px solid var(--border-color, #e8e8e8) !important;
+  border-radius: 10px !important;
+  font-family: inherit;
+  padding: 0.75rem 1rem !important;
+}
+
+.ql-toolbar {
+  border: 1px solid var(--border-color, #e8e8e8) !important;
+  border-radius: 10px 10px 0 0 !important;
+  font-family: inherit;
+}
+
+.ql-container.ql-snow {
+  border-top: none !important; /* Remove double border between toolbar and editor */
+  border-radius: 0 0 10px 10px !important;
 }
