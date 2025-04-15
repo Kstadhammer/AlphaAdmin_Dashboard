@@ -69,8 +69,18 @@ builder
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/auth/login";
+    options.AccessDeniedPath = "/Auth/AccessDenied"; // Add this line
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+});
+
+// Cookie Policy Configuration
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+    options.CheckConsentNeeded = context => true; // Always require consent
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+    // options.ConsentCookie.SecurePolicy = CookieSecurePolicy.Always; // Recommended for production (HTTPS)
 });
 
 builder.Services.AddControllersWithViews();
@@ -79,6 +89,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCookiePolicy(); // Add cookie policy middleware HERE
 
 app.UseAuthentication();
 app.UseAuthorization();

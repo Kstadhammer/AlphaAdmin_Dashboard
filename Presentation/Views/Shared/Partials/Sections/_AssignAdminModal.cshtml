@@ -1,0 +1,21 @@
+<!-- Assign Admin Confirmation Modal -->
+<div id="assignAdminModal" class="modal"> @* Changed ID *@
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Assign Admin Role</h3> @* Changed Title *@
+            <button class="btn-close" data-close="true"></button>
+        </div>
+        <div class="modal-body text-center">
+            <p>Are you sure you want to make <strong id="assignAdminMemberName"></strong> an Admin?</p> @* Changed ID *@
+            <p>This will grant them full administrative privileges.</p> @* Changed text *@
+
+            <form method="post" asp-controller="Members" asp-action="AssignAdminRole" id="assignAdminForm"> @* Changed action and ID *@
+                <input type="hidden" name="id" id="assignAdminMemberId" /> @* Changed ID *@
+                <div class="button-group">
+                    <button type="button" class="btn btn-cancel" data-close="true">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm</button> @* Changed button text and style *@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

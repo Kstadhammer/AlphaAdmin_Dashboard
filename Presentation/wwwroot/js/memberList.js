@@ -1,3 +1,11 @@
+// Helper function to get anti-forgery token
+function getAntiForgeryToken() {
+  const tokenInput = document.querySelector(
+    'input[name="__RequestVerificationToken"]'
+  );
+  return tokenInput ? tokenInput.value : null;
+}
+
 function filterMembers(query) {
   const memberCards = document.querySelectorAll(".member-grid .member-card");
   memberCards.forEach((card) => {
@@ -107,10 +115,47 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Handle close buttons for member list specific modals
+  // Handle Make Admin action (using modal)
+  const makeAdminButtons = document.querySelectorAll(".make-admin");
+  makeAdminButtons.forEach((button) => {
+    button.addEventListener("click", function (e) {
+      e.stopPropagation(); // Prevent dropdown from closing immediately
+
+      // Close other dropdowns first
+      document.querySelectorAll(".dropdown-menu.show").forEach((menu) => {
+        menu.classList.remove("show");
+      });
+
+      const memberId = this.getAttribute("data-member-id");
+      const memberName = this.getAttribute("data-member-name");
+
+      // Populate the modal
+      const assignAdminMemberIdInput = document.getElementById(
+        "assignAdminMemberId"
+      );
+      const assignAdminMemberNameSpan = document.getElementById(
+        "assignAdminMemberName"
+      );
+
+      if (assignAdminMemberIdInput) assignAdminMemberIdInput.value = memberId;
+      if (assignAdminMemberNameSpan)
+        assignAdminMemberNameSpan.textContent = memberName;
+
+      // Show the modal
+      const modal = document.getElementById("assignAdminModal");
+      if (modal) {
+        modal.style.display = "flex";
+      } else {
+        console.error("Assign Admin Modal not found!");
+        alert("Error: Assign Admin confirmation dialog not found."); // User feedback
+      }
+    });
+  });
+
+  // Handle close buttons for ALL modals used on this page
   document
     .querySelectorAll(
-      '#editMemberModal [data-close="true"], #deleteMemberModal [data-close="true"]'
+      '#editMemberModal [data-close="true"], #deleteMemberModal [data-close="true"], #assignAdminModal [data-close="true"]' // Added assignAdminModal
     )
     .forEach((button) => {
       button.addEventListener("click", function () {

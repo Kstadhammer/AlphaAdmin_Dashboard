@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -258,6 +259,47 @@ public class MembersController : Controller
         catch (Exception ex)
         {
             TempData["Error"] = $"An error occurred: {ex.Message}";
+        }
+
+        return RedirectToAction("Members", "Admin");
+    }
+
+    [HttpPost("AssignAdminRole")] // Expect ID from form body, not route
+    [Authorize(Roles = "Admin")] // Ensure only admins can perform this
+    public async Task<IActionResult> AssignAdminRole(string id) // Model binder will match 'id' from hidden input
+    {
+        if (string.IsNullOrEmpty(id))
+        {
+            TempData["Error"] = "Invalid member ID.";
+            return RedirectToAction("Members", "Admin");
+        }
+
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            TempData["Error"] = "Member not found.";
+            return RedirectToAction("Members", "Admin");
+        }
+
+        // Check if user is already an Admin
+        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+        if (isAdmin)
+        {
+            TempData["Warning"] = $"{user.FirstName} {user.LastName} is already an Admin.";
+            return RedirectToAction("Members", "Admin");
+        }
+
+        // Attempt to add to Admin role
+        var result = await _userManager.AddToRoleAsync(user, "Admin");
+        if (result.Succeeded)
+        {
+            TempData["Success"] =
+                $"Successfully assigned Admin role to {user.FirstName} {user.LastName}.";
+        }
+        else
+        {
+            TempData["Error"] =
+                $"Failed to assign Admin role: {string.Join(", ", result.Errors.Select(e => e.Description))}";
         }
 
         return RedirectToAction("Members", "Admin");

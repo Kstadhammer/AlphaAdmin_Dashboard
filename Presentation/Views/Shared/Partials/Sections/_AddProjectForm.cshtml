@@ -65,17 +65,26 @@
             <div class="form-row">
                 <div class="form-group half">
                     <label asp-for="StartDate">Start Date</label>
-                    <div class="field-group">
-                        <input asp-for="StartDate" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    <div class="field-group date-input-wrapper">
+                        <input asp-for="StartDate" type="text" class="date-display-input" readonly />
+                        <input asp-for="StartDate" type="date" class="date-actual-input"
+                            value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <div class="date-icon">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
                         <span asp-validation-for="StartDate"></span>
                     </div>
                 </div>
 
                 <div class="form-group half">
                     <label asp-for="EndDate">End Date</label>
-                    <div class="field-group">
-                        <input asp-for="EndDate" type="date"
+                    <div class="field-group date-input-wrapper">
+                        <input name="EndDateDisplay" type="text" class="date-display-input" readonly />
+                        <input asp-for="EndDate" type="date" class="date-actual-input"
                             value="@DateTime.Today.AddMonths(1).ToString("yyyy-MM-dd")" />
+                        <div class="date-icon">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
                         <span asp-validation-for="EndDate"></span>
                     </div>
                 </div>

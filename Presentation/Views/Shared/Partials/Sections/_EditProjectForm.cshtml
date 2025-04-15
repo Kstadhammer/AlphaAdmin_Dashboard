@@ -65,16 +65,24 @@
             <div class="form-row">
                 <div class="form-group half">
                     <label asp-for="StartDate">Start Date</label>
-                    <div class="field-group">
-                        <input asp-for="StartDate" id="edit_StartDate" type="date" />
+                    <div class="field-group date-input-wrapper">
+                        <input type="text" class="date-display-input" readonly />
+                        <input asp-for="StartDate" id="edit_StartDate" type="date" class="date-actual-input" />
+                        <div class="date-icon">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
                         <span asp-validation-for="StartDate"></span>
                     </div>
                 </div>
 
                 <div class="form-group half">
                     <label asp-for="EndDate">End Date</label>
-                    <div class="field-group">
-                        <input asp-for="EndDate" id="edit_EndDate" type="date" />
+                    <div class="field-group date-input-wrapper">
+                        <input type="text" class="date-display-input" readonly />
+                        <input asp-for="EndDate" id="edit_EndDate" type="date" class="date-actual-input" />
+                        <div class="date-icon">
+                            <i class="fa-regular fa-calendar-days"></i>
+                        </div>
                         <span asp-validation-for="EndDate"></span>
                     </div>
                 </div>

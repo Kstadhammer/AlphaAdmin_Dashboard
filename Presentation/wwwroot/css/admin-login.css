@@ -1,0 +1,211 @@
+/* Basic body styling if needed, assuming _Layout_CenterScreen handles some */
+body {
+  margin: 0;
+  font-family: sans-serif; /* Or your project's font */
+}
+
+.admin-login-container {
+  display: flex;
+  min-height: 100vh; /* Full viewport height */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-login-panel-left {
+  flex: 1 1 45%; /* Adjust flex-basis percentage as needed */
+  background: linear-gradient(
+    135deg,
+    #4a00e0,
+    #8e2de2
+  ); /* Example gradient - adjust colors */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  padding: 40px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.admin-login-panel-left .panel-content {
+  max-width: 400px; /* Limit width of text content */
+}
+
+.admin-login-panel-left h1 {
+  font-size: 2.5rem; /* Adjust size */
+  margin-bottom: 1rem;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.admin-login-panel-left h1 .highlight {
+  font-size: 3.5rem; /* Larger size for "Admin Panel" */
+  color: #ffa500; /* Orange color - adjust */
+  display: block; /* Make it appear on the next line */
+  margin-top: 0.5rem;
+}
+
+.admin-login-panel-left p {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.admin-login-panel-right {
+  flex: 1 1 55%; /* Adjust flex-basis percentage */
+  background-color: #f8f9fa; /* Light grey background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.admin-login-panel-right form {
+  width: 100%;
+  max-width: 400px; /* Max width for the form */
+  background-color: white; /* White background for form area if needed */
+  padding: 30px; /* Padding inside the form area */
+  border-radius: 8px; /* Optional rounded corners for form area */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+}
+
+.admin-login-panel-right h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+/* Basic form group styling (assuming some base styles exist) */
+.admin-login-panel-right .form-group {
+  margin-bottom: 1rem;
+}
+
+.admin-login-panel-right label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.admin-login-panel-right input[type="email"],
+.admin-login-panel-right input[type="password"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.admin-login-panel-right .remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-login-panel-right .remember-me {
+  display: flex;
+  align-items: center;
+}
+
+.admin-login-panel-right .remember-me input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.admin-login-panel-right .forgot-password {
+  color: #007bff; /* Blue link color */
+  text-decoration: none;
+}
+.admin-login-panel-right .forgot-password:hover {
+  text-decoration: underline;
+}
+
+.admin-login-panel-right .btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.admin-login-panel-right .btn-submit:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* OR Separator */
+.admin-login-panel-right .or-separator {
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #aaa;
+  position: relative;
+}
+
+.admin-login-panel-right .or-separator span {
+  background-color: white; /* Match form background */
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.admin-login-panel-right .or-separator::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd; /* Line color */
+  z-index: 0;
+}
+
+/* Style external auth button if needed */
+.admin-login-panel-right .external-auth-btn {
+  /* Assuming a class on the button/link */
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #f1f1f1; /* Light grey background */
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 1rem; /* Space before OR separator */
+}
+
+.admin-login-panel-right .external-auth-btn img {
+  /* Style for the Google icon */
+  height: 18px; /* Adjust size as needed */
+  margin-right: 10px; /* Space between icon and text */
+}
+
+.admin-login-panel-right .external-auth-btn:hover {
+  background-color: #e0e0e0; /* Slightly darker on hover */
+}
+
+/* Alert notification styling */
+.admin-login-panel-right .alert-notification {
+  padding: 10px;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.admin-login-panel-right .alert-notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}

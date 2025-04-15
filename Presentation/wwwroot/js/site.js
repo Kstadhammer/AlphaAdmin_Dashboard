@@ -10,6 +10,21 @@
     });
   });
 
+  // Function to close all modals/dropdowns
+  function closeAllModals() {
+    const modals = [
+      document.getElementById("userDropdown"),
+      document.getElementById("notificationDropdown"),
+      document.getElementById("profileSettingsModal"),
+    ];
+
+    modals.forEach((modal) => {
+      if (modal && modal.style.display === "block") {
+        modal.style.display = "none";
+      }
+    });
+  }
+
   // Add user dropdown functionality
   const settingsButton = document.getElementById("settingsButton");
   const userDropdown = document.getElementById("userDropdown");
@@ -17,15 +32,26 @@
   if (settingsButton && userDropdown) {
     settingsButton.addEventListener("click", (e) => {
       e.stopPropagation();
-      userDropdown.style.display =
-        userDropdown.style.display === "block" ? "none" : "block";
+
+      // If this dropdown is already open, just close it
+      if (userDropdown.style.display === "block") {
+        userDropdown.style.display = "none";
+        return;
+      }
+
+      // Close all modals before opening this one
+      closeAllModals();
+
+      // Open this dropdown
+      userDropdown.style.display = "block";
     });
 
     // Close dropdown when clicking outside
     document.addEventListener("click", (e) => {
       if (
         userDropdown.style.display === "block" &&
-        !userDropdown.contains(e.target)
+        !userDropdown.contains(e.target) &&
+        !settingsButton.contains(e.target)
       ) {
         userDropdown.style.display = "none";
       }
@@ -62,6 +88,93 @@
             notificationIcon.src = "/images/Notification.svg";
           localStorage.setItem("darkMode", "false");
         }
+      });
+    }
+  }
+
+  // Add notification dropdown functionality
+  const notificationButton = document.getElementById("notificationButton");
+  const notificationDropdown = document.getElementById("notificationDropdown");
+
+  if (notificationButton && notificationDropdown) {
+    notificationButton.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent click from immediately closing dropdown
+
+      // If this dropdown is already open, just close it
+      if (notificationDropdown.style.display === "block") {
+        notificationDropdown.style.display = "none";
+        return;
+      }
+
+      // Close all modals before opening this one
+      closeAllModals();
+
+      // Open this dropdown
+      notificationDropdown.style.display = "block";
+    });
+
+    // Close notification dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        notificationDropdown.style.display === "block" &&
+        !notificationDropdown.contains(e.target) &&
+        !notificationButton.contains(e.target) // Also check if click was on the button itself
+      ) {
+        notificationDropdown.style.display = "none";
+      }
+    });
+  }
+
+  // Add profile settings modal functionality
+  const profileButton = document.getElementById("profileButton");
+  const profileSettingsModal = document.getElementById("profileSettingsModal");
+
+  if (profileButton && profileSettingsModal) {
+    profileButton.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent click from immediately closing modal
+
+      // If this modal is already open, just close it
+      if (profileSettingsModal.style.display === "block") {
+        profileSettingsModal.style.display = "none";
+        return;
+      }
+
+      // Close all modals before opening this one
+      closeAllModals();
+
+      // Open this modal
+      profileSettingsModal.style.display = "block";
+    });
+
+    // Close profile settings modal when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        profileSettingsModal.style.display === "block" &&
+        !profileSettingsModal.contains(e.target) &&
+        !profileButton.contains(e.target) // Also check if click was on the button itself
+      ) {
+        profileSettingsModal.style.display = "none";
+      }
+    });
+
+    // Sync the dark mode toggle in the settings with the main toggle
+    const darkModeToggleSettings = document.getElementById(
+      "darkModeToggleSettings"
+    );
+    const darkModeToggle = document.getElementById("darkModeToggle");
+
+    if (darkModeToggleSettings && darkModeToggle) {
+      // Initialize the settings toggle to match the main toggle
+      darkModeToggleSettings.checked = darkModeToggle.checked;
+
+      // Keep the toggles in sync
+      darkModeToggleSettings.addEventListener("change", () => {
+        darkModeToggle.checked = darkModeToggleSettings.checked;
+        darkModeToggle.dispatchEvent(new Event("change"));
+      });
+
+      darkModeToggle.addEventListener("change", () => {
+        darkModeToggleSettings.checked = darkModeToggle.checked;
       });
     }
   }
@@ -196,6 +309,50 @@
       }
     }
   };
+
+  // Format date inputs with month name
+  function formatDateForDisplay(dateString) {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "2-digit" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  function initializeDateInputs() {
+    const dateInputs = document.querySelectorAll(".date-actual-input");
+
+    dateInputs.forEach((input) => {
+      const displayInput = input.parentElement.querySelector(
+        ".date-display-input"
+      );
+
+      // Set initial formatted value
+      if (input.value) {
+        displayInput.value = formatDateForDisplay(input.value);
+      }
+
+      // Update display when date changes
+      input.addEventListener("change", function () {
+        displayInput.value = formatDateForDisplay(this.value);
+      });
+
+      // Handle click on the display input (focus the actual input)
+      displayInput.addEventListener("click", function () {
+        input.showPicker();
+      });
+    });
+  }
+
+  // Initialize date inputs when DOM loads
+  initializeDateInputs();
+
+  // Initialize date inputs when add/edit project modals are opened
+  modalButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      setTimeout(initializeDateInputs, 100); // Short delay to ensure DOM is updated
+    });
+  });
 });
 
 // Add event listeners for close buttons

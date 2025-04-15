@@ -65,6 +65,12 @@ public class AdminController : Controller
     [Route("dashboard")] // Optional explicit route
     public async Task<IActionResult> Index()
     {
+        // Check if the user is an Admin. If not, redirect to Projects page.
+        if (!User.IsInRole("Admin"))
+        {
+            return RedirectToAction("Projects");
+        }
+
         await SetCurrentUserAsync();
 
         // Fetch data for dashboard
@@ -267,6 +273,7 @@ public class AdminController : Controller
     }
 
     [Route("clients")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Clients()
     {
         await SetCurrentUserAsync();

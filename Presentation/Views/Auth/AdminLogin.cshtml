@@ -1,0 +1,87 @@
+@model MemberLoginForm
+@{
+    Layout = "_Layout_FullScreen"; // Use the new full screen layout
+    ViewData["Title"] = "Admin Login";
+}
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-login.css" asp-append-version="true" />
+}
+
+@* Add custom CSS reference if needed for the split layout *@
+@* <link rel="stylesheet" href="~/css/admin-login.css" asp-append-version="true" /> *@
+
+<section id="admin-login" class="admin-login-container"> @* Add a container class for styling *@
+
+    @* Left Panel (from image) *@
+    <div class="admin-login-panel-left">
+        <div class="panel-content">
+            <h1>Welcome to <br /><span class="highlight">Admin Panel</span></h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis
+                elit fermentum pellentesque. Sed mollis velit facilisis viverra.</p>
+        </div>
+        @* Background image/gradient would be applied via CSS *@
+    </div>
+
+    @* Right Panel (Login Form) *@
+    <div class="admin-login-panel-right">
+        <form asp-controller="Auth" asp-action="AdminLogin" method="post" novalidate>
+            @* Keep ReturnUrl hidden if needed, though admin login might always redirect to dashboard *@
+            <input type="hidden" name="returnUrl" value="/" /> @* Default redirect to dashboard *@
+
+            <h2>Login</h2> @* Form title from image *@
+
+            @* External Auth (Google) - Assuming partial exists and is styled appropriately *@
+            @await Html.PartialAsync("~/Views/Shared/Partials/Sections/_ExternalAuthenticationPartial.cshtml")
+
+            <div class="or-separator">
+                <span>OR</span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" placeholder="Your email address" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group remember-forgot">
+                <div class="remember-me">
+                    @* Use form model property for RememberMe if it exists, otherwise use simple checkbox *@
+                    <input asp-for="RememberMe" />
+                    <label asp-for="RememberMe">Remember Me</label>
+                </div>
+                <a asp-controller="Auth" asp-action="ForgotPassword" class="forgot-password">Forgot Password?</a> @* Keep Forgot Password link *@
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag?.ErrorMessage))
+            {
+                <div class="alert-notification error">@ViewBag.ErrorMessage</div>
+            }
+            else if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert-notification error">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <span>@error.ErrorMessage</span>
+
+                        <br />
+                    }
+                </div>
+            }
+
+
+            <div class="form-group">
+                <button class="btn btn-submit" type="submit">Log In</button>
+            </div>
+
+            @* Removed the Sign Up link as per the image/admin context *@
+
+        </form>
+    </div>
+
+</section>

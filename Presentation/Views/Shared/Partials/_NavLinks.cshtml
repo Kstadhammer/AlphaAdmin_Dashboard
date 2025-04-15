@@ -1,9 +1,12 @@
 <nav class="nav-links">
-    <a class="nav-link @(Context.Request.Path == "/" || Context.Request.Path == "/dashboard" ? "active" : "")"
-        asp-controller="Admin" asp-action="Index">
-        <i class="fa-duotone fa-solid fa-chart-tree-map"></i>
-        <span>Dashboard</span>
-    </a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="nav-link @(Context.Request.Path == "/" || Context.Request.Path == "/dashboard" ? "active" : "")"
+            asp-controller="Admin" asp-action="Index">
+            <i class="fa-duotone fa-solid fa-chart-tree-map"></i>
+            <span>Dashboard</span>
+        </a>
+    }
     <a class="nav-link @(Context.Request.Path == "/projects" ? "active" : "")" asp-controller="Admin"
         asp-action="Projects">
         <i class="fa-duotone fa-solid fa-briefcase"></i>
@@ -14,10 +17,13 @@
         <i class="fa-duotone fa-solid fa-user-group"></i>
         <span>Team Members</span>
     </a>
-    <a class="nav-link @(Context.Request.Path == "/clients" ? "active" : "")" asp-controller="Admin"
-        asp-action="Clients">
-        <i class="fa-duotone fa-solid fa-handshake"></i>
-        <span>Clients</span>
-    </a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="nav-link @(Context.Request.Path == "/clients" ? "active" : "")" asp-controller="Admin"
+            asp-action="Clients">
+            <i class="fa-duotone fa-solid fa-handshake"></i>
+            <span>Clients</span>
+        </a>
+    }
 
 </nav>

@@ -6,6 +6,8 @@
 <partial name="Partials/Sections/_AddMemberForm" model="new Business.Models.AddMemberForm()" />
 <partial name="Partials/Sections/_EditMemberForm" model="new Business.Models.EditMemberForm()" />
 <partial name="Partials/Sections/_DeleteMemberModal" />
+<partial name="Partials/Sections/_AssignAdminModal" />
+
 
 <div class="page-header">
     <h1>@ViewData["Title"]</h1>
@@ -26,6 +28,14 @@
                                     data-member-id="@member.Id">
                                     <i class="fa-regular fa-pen-to-square"></i> Edit Member
                                 </div>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="dropdown-item make-admin" data-member-id="@member.Id"
+                                        data-member-name="@member.FirstName @member.LastName" style="cursor: pointer;"> @* Added pointer cursor *@
+                                        <i class="fa-regular fa-user-shield"></i> Make Admin
+                                    </div>
+                                }
+
                                 <div class="dropdown-item delete-member" data-member-id="@member.Id"
                                     data-member-name="@member.FirstName @member.LastName">
                                     <i class="fa-regular fa-trash"></i> Delete Member

@@ -16,6 +16,8 @@
 
 <body>
 
+    <partial name="_CookieConsentPartial" />
+
     <div class="wrapper-portal">
         <aside class="sidebar">
             <partial name="Partials/_LinkLogoType" />
@@ -27,7 +29,7 @@
                 <input type="search" placeholder="Search anything..." class="search-input" />
             </div>
             <div class="header-actions">
-                <div class="icon-button">
+                <div class="icon-button" id="notificationButton">
                     <img src="~/images/Notification.svg" alt="Notifications" class="notification-icon" />
                     <span class="notification-badge">3</span>
                 </div>
@@ -35,11 +37,89 @@
                     <img src="~/images/Setting.svg" alt="Settings" />
                 </div>
                 <div class="divider"></div>
-                <div class="user-profile">
+                <div class="user-profile" id="profileButton">
                     <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-small" />
+                </div>
+
+                <!-- Notification Dropdown -->
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="dropdown-content">
+                        <div class="notification-header">
+                            <h5>Notifications</h5>
+                            <span class="notification-count">3 new</span>
+                        </div>
+                        <div class="notification-list">
+                            <!-- Unread notification - Project -->
+                            <div class="notification-item unread">
+                                <div class="notification-icon project">
+                                    <i class="fa-regular fa-briefcase"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Project <strong>Website Redesign</strong> is due
+                                        tomorrow</p>
+                                    <span class="notification-time">45 minutes ago</span>
+                                </div>
+                                <span class="notification-status"></span>
+                            </div>
+
+                            <!-- Unread notification - Message -->
+                            <div class="notification-item unread">
+                                <div class="notification-icon message">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>John Smith</strong> sent you a message</p>
+                                    <span class="notification-time">2 hours ago</span>
+                                </div>
+                                <span class="notification-status"></span>
+                            </div>
+
+                            <!-- Unread notification - Client -->
+                            <div class="notification-item unread">
+                                <div class="notification-icon client">
+                                    <i class="fa-regular fa-handshake"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">New client <strong>Acme Corp</strong> added</p>
+                                    <span class="notification-time">5 hours ago</span>
+                                </div>
+                                <span class="notification-status"></span>
+                            </div>
+
+                            <!-- Read notification - Mention -->
+                            <div class="notification-item">
+                                <div class="notification-icon mention">
+                                    <i class="fa-regular fa-at"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text"><strong>Sarah Parker</strong> mentioned you in a
+                                        comment</p>
+                                    <span class="notification-time">Yesterday</span>
+                                </div>
+                            </div>
+
+                            <!-- Read notification - Project -->
+                            <div class="notification-item">
+                                <div class="notification-icon project">
+                                    <i class="fa-regular fa-briefcase"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="notification-text">Project <strong>Mobile App</strong> status changed to
+                                        In Progress</p>
+                                    <span class="notification-time">2 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="#" class="view-all">View all notifications</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="user-dropdown" id="userDropdown">
                     <div class="dropdown-content">
+                        <div class="dropdown-header">
+                            <h5>Settings</h5>
+                        </div>
                         <div class="user-info">
                             <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-small" />
                             <span class="user-name">
@@ -55,7 +135,7 @@
                         </div>
 
                         <div class="dropdown-item">
-                            <i class="fa-regular fa-gear"></i>
+                            <i class="fa-regular fa-moon"></i>
                             <span>Dark Mode</span>
                             <div class="toggle-switch">
                                 <input type="checkbox" id="darkModeToggle">
@@ -66,6 +146,143 @@
                         <div class="dropdown-item">
                             <i class="fa-regular fa-arrow-right-from-bracket"></i>
                             <a asp-controller="Auth" asp-action="Logout">Logout</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Settings Modal -->
+                <div class="profile-settings-modal" id="profileSettingsModal">
+                    <div class="modal-content">
+                        <div class="profile-header">
+                            <h5>Profile Settings</h5>
+                        </div>
+                        <div class="profile-content">
+                            <div class="profile-section">
+                                <div class="profile-info">
+                                    <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-large" />
+                                    <div class="profile-details">
+                                        <h4>
+                                            @if (ViewBag.CurrentUser != null)
+                                            {
+                                                @(ViewBag.CurrentUser.FirstName + " " + ViewBag.CurrentUser.LastName)
+                                            }
+                                            else
+                                            {
+                                                <text>Liz Hammerstad</text>
+                                            }
+                                        </h4>
+                                        <span class="profile-email">
+                                            @if (ViewBag.CurrentUser != null)
+                                            {
+                                                @ViewBag.CurrentUser.Email
+                                            }
+                                            else
+                                            {
+                                                <text>user@example.com</text>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-change-photo">Change Photo</button>
+                                <div class="total-budget">Total Budget</div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h6>Account Settings</h6>
+                                <div class="settings-item">
+                                    <div class="setting-label">
+                                        <i class="fa-regular fa-user"></i>
+                                        <span>Personal Information</span>
+                                    </div>
+                                    <i class="fa-regular fa-chevron-right"></i>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="setting-label">
+                                        <i class="fa-regular fa-lock"></i>
+                                        <span>Password & Security</span>
+                                    </div>
+                                    <i class="fa-regular fa-chevron-right"></i>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="setting-label">
+                                        <i class="fa-regular fa-bell"></i>
+                                        <span>Notifications</span>
+                                    </div>
+                                    <i class="fa-regular fa-chevron-right"></i>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h6>Team Workload</h6>
+                                <div class="team-member-item">
+                                    <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="member-avatar" />
+                                    <div class="member-info">
+                                        <span class="member-name">Liz Hammerstad</span>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="projects-count">5 projects</span>
+                                </div>
+                                <div class="team-member-item">
+                                    <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="member-avatar" />
+                                    <div class="member-info">
+                                        <span class="member-name">Liz Hammerstad</span>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 60%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="projects-count">5 projects</span>
+                                </div>
+                                <div class="team-member-item">
+                                    <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="member-avatar" />
+                                    <div class="member-info">
+                                        <span class="member-name">Georgi Sundberg</span>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 80%"></div>
+                                        </div>
+                                    </div>
+                                    <span class="projects-count">5 projects</span>
+                                </div>
+                            </div>
+
+                            <div class="settings-section">
+                                <h6>Appearance</h6>
+                                <div class="settings-item">
+                                    <div class="setting-label">
+                                        <i class="fa-regular fa-moon"></i>
+                                        <span>Dark Mode</span>
+                                    </div>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="darkModeToggleSettings">
+                                        <label for="darkModeToggleSettings"></label>
+                                    </div>
+                                </div>
+                                <div class="settings-item">
+                                    <div class="setting-label">
+                                        <i class="fa-regular fa-palette"></i>
+                                        <span>Theme</span>
+                                    </div>
+                                    <span class="theme-value">default</span>
+                                </div>
+                            </div>
+
+                            <div class="team-member-item">
+                                <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="member-avatar" />
+                                <div class="member-info">
+                                    <span class="member-name">Johnny Persson</span>
+                                    <div class="progress-bar">
+                                        <div class="progress" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                <span class="projects-count">5 projects</span>
+                            </div>
+
+                            <div class="settings-footer">
+                                <a asp-controller="Auth" asp-action="Logout" class="btn btn-primary logout-btn">
+                                    <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                                    Logout
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

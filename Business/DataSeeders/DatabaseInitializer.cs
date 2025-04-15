@@ -16,6 +16,8 @@ namespace Business.DataSeeders
         {
             await ApplyMigrationsAsync(serviceProvider);
             await CreateRolesAsync(serviceProvider);
+            await AssignAdminRoleAsync(serviceProvider, "kim.hammerstad@gmail.com"); // Assign Admin role
+
             await CreateDefaultStatusesAsync(serviceProvider);
         }
 
@@ -56,6 +58,51 @@ namespace Business.DataSeeders
                     {
                         await roleManager.CreateAsync(new IdentityRole(role));
                     }
+                }
+            }
+        }
+
+        private static async Task AssignAdminRoleAsync(
+            IServiceProvider serviceProvider,
+            string adminEmail
+        )
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<
+                    UserManager<MemberEntity>
+                >();
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+                if (adminUser != null)
+                {
+                    // Check if user is already in Admin role
+                    var isAdmin = await userManager.IsInRoleAsync(adminUser, "Admin");
+                    if (!isAdmin)
+                    {
+                        // Add user to Admin role
+                        var result = await userManager.AddToRoleAsync(adminUser, "Admin");
+                        if (result.Succeeded)
+                        {
+                            Console.WriteLine($"Successfully assigned Admin role to {adminEmail}");
+                        }
+                        else
+                        {
+                            Console.WriteLine(
+                                $"Error assigning Admin role to {adminEmail}: {string.Join(", ", result.Errors.Select(e => e.Description))}"
+                            );
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{adminEmail} is already in the Admin role.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"Admin user with email {adminEmail} not found. Cannot assign Admin role."
+                    );
                 }
             }
         }

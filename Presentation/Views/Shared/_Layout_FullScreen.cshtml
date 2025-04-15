@@ -14,13 +14,9 @@
 
 <body>
 
-    <div class="wrapper-centerscreen">
-
-        <main class="main">
-            @RenderBody()
-        </main>
-    </div>
-
+    @* Removed the wrapper-centerscreen div *@
+    @* Removed the main tag as admin-login.css handles the layout *@
+    @RenderBody()
 
 
     <script src="~/js/site.js" asp-append-version="true"></script>

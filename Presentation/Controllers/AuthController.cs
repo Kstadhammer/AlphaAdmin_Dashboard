@@ -8,24 +8,50 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers;
 
-public class AuthController(IAuthService authService) : Controller
+using Data.Entities; // Add this using
+using Microsoft.AspNetCore.Identity; // Add this using
+
+[Route("Auth")] // Add base route for the controller
+public class AuthController(
+    IAuthService authService,
+    UserManager<MemberEntity> userManager // Add UserManager
+) : Controller
 {
     #region Fields & Constructor
 
     private readonly IAuthService _authService = authService;
-
+    private readonly UserManager<MemberEntity> _userManager = userManager; // Add field
     #endregion
 
     #region Login
 
-    public IActionResult Login(string returnUrl = "~/")
+    [HttpGet("Login")] // Explicit route: /Auth/Login
+    public IActionResult Login(string returnUrl = "~/") // Default returnUrl might need adjustment now
     {
+        // Check if user is already authenticated
+        if (User.Identity?.IsAuthenticated ?? false)
+        {
+            // User is logged in, redirect based on role
+            if (User.IsInRole("Admin"))
+            {
+                // Redirect Admins to the main dashboard
+                return RedirectToAction("Index", "Admin");
+            }
+            else
+            {
+                // Redirect standard Users to the Projects page (or another default)
+                return RedirectToAction("Projects", "Admin");
+            }
+        }
+
+        // User is not authenticated, show the login page
         ViewBag.ErrorMessage = "";
-        ViewBag.ReturnUrl = returnUrl;
+        // If returnUrl is the root (~/), maybe default it to dashboard after login?
+        ViewBag.ReturnUrl = (returnUrl == "~/") ? Url.Action("Index", "Admin") : returnUrl;
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("Login")] // Explicit route: /Auth/Login (POST)
     public async Task<IActionResult> Login(MemberLoginForm form, string returnUrl = "~/")
     {
         ViewBag.ErrorMessage = "";
@@ -47,13 +73,14 @@ public class AuthController(IAuthService authService) : Controller
 
     #region Registration
 
+    [HttpGet("SignUp")] // Explicit route: /Auth/SignUp
     public IActionResult SignUp()
     {
         ViewBag.ErrorMessage = "";
         return View();
     }
 
-    [HttpPost]
+    [HttpPost("SignUp")] // Explicit route: /Auth/SignUp (POST)
     public async Task<IActionResult> SignUp(MemberSignUpForm form)
     {
         ViewBag.ErrorMessage = "";
@@ -104,12 +131,83 @@ public class AuthController(IAuthService authService) : Controller
 
     #endregion
 
+    [Route("/admin")] // Route for /admin
+    public IActionResult AdminRedirect()
+    {
+        // Simply redirect to the AdminLogin page
+        return RedirectToAction("AdminLogin");
+    }
+
+    #region Admin Login
+
+    [HttpGet("AdminLogin")] // Explicit route: /Auth/AdminLogin
+    public IActionResult AdminLogin(string returnUrl = "/") // Default return to dashboard
+    {
+        ViewBag.ErrorMessage = "";
+        ViewBag.ReturnUrl = returnUrl; // Keep returnUrl in case it's needed later
+        return View();
+    }
+
+    [HttpPost("AdminLogin")] // Explicit route: /Auth/AdminLogin (POST)
+    public async Task<IActionResult> AdminLogin(MemberLoginForm form, string returnUrl = "/")
+    {
+        ViewBag.ErrorMessage = "";
+
+        if (ModelState.IsValid)
+        {
+            var loginSucceeded = await _authService.LoginAsync(form);
+            if (loginSucceeded)
+            {
+                // Login succeeded, now check if the user is an Admin
+                var user = await _userManager.FindByEmailAsync(form.Email);
+                if (user != null && await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    // User is an Admin, proceed to the dashboard (or returnUrl)
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    // User logged in successfully but is NOT an Admin.
+                    // Log them out immediately and show an error.
+                    await _authService.LogoutAsync();
+                    ViewBag.ErrorMessage = "Access denied. This login is for administrators only.";
+                    // Return the specific AdminLogin view
+                    return View("AdminLogin", form);
+                }
+            }
+            else
+            {
+                // Login failed (invalid credentials)
+                ViewBag.ErrorMessage = "Invalid email address or password.";
+            }
+        }
+        else
+        {
+            // Model validation failed
+            ViewBag.ErrorMessage = "Please correct the errors below.";
+        }
+
+        // If we reach here, something went wrong (validation fail, login fail, or non-admin user)
+        // Return the specific AdminLogin view
+        return View("AdminLogin", form);
+    }
+
+    #endregion
+
+
     #region Session Management
 
+    [HttpGet("Logout")] // Explicit route: /Auth/Logout
     public async Task<IActionResult> Logout()
     {
         await _authService.LogoutAsync();
         return LocalRedirect("~/");
+    }
+
+    [HttpGet("AccessDenied")] // Explicit route: /Auth/AccessDenied
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 
     #endregion
@@ -117,7 +215,7 @@ public class AuthController(IAuthService authService) : Controller
     #region External Authentication
 
 
-    [HttpPost]
+    [HttpPost("ExternalSignIn")] // Explicit route: /Auth/ExternalSignIn
     public IActionResult ExternalSignIn(string provider, string returnUrl = null!)
     {
         return Challenge(new AuthenticationProperties { RedirectUri = returnUrl }, provider);
