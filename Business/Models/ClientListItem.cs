@@ -4,11 +4,11 @@ namespace Business.Models;
 
 public class ClientListItem
 {
-    public string Id { get; set; }
-    public string ClientName { get; set; }
-    public string Email { get; set; }
-    public string Location { get; set; }
-    public string Phone { get; set; }
-    public string ImageUrl { get; set; }
+    public string Id { get; set; } = null!;
+    public string ClientName { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Location { get; set; } = null!;
+    public string Phone { get; set; } = null!;
+    public string ImageUrl { get; set; } = null!;
     public bool IsActive { get; set; }
 }

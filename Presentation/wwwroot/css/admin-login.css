@@ -167,19 +167,28 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.admin-login-panel-right .remember-me {
+.admin-login-panel-right .remember-me-container {
   display: flex;
   align-items: center;
+  margin-bottom: 0;
+  cursor: pointer;
 }
 
-.admin-login-panel-right .remember-me input[type="checkbox"] {
+.admin-login-panel-right .remember-me-container input[type="checkbox"] {
   margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.admin-login-panel-right .remember-me-text {
+  font-weight: normal;
+  vertical-align: middle;
 }
 
 .admin-login-panel-right .forgot-password {
-  color: #007bff; /* Blue link color */
+  color: #007bff;
   text-decoration: none;
 }
+
 .admin-login-panel-right .forgot-password:hover {
   text-decoration: underline;
 }

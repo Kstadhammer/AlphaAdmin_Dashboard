@@ -39,8 +39,13 @@ public class ClientsController : Controller
 
     [HttpGet]
     [Route("[controller]/GetClient/{id}")]
-    public async Task<IActionResult> GetClient(int id)
+    public async Task<IActionResult> GetClient(string id)
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            return Json(new { success = false, error = "Invalid client ID" });
+        }
+
         var client = await _clientService.GetClientForEditAsync(id);
 
         if (client == null)
@@ -103,8 +108,14 @@ public class ClientsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteClient(int id)
+    public async Task<IActionResult> DeleteClient(string id)
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            TempData["Error"] = "Invalid client ID.";
+            return RedirectToAction("Clients", "Admin");
+        }
+
         var success = await _clientService.DeleteClientAsync(id);
         if (!success)
         {

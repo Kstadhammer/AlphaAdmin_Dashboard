@@ -47,22 +47,89 @@ document.addEventListener("DOMContentLoaded", function () {
   editClientButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const clientId = this.getAttribute("data-client-id");
-      document.getElementById("editClientId").value = clientId;
 
-      // Fetch client data and populate the form
+      // Get the modal and show it
+      const modal = document.getElementById("editClientModal");
+      modal.style.display = "flex";
+
+      // Set the ID in the hidden field
+      const idField = document.getElementById("editClientId");
+      if (idField) {
+        idField.value = clientId;
+      }
+
+      // Fetch client data
       fetch(`/Clients/GetClient/${clientId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            document.getElementById("ClientName").value =
-              data.client.clientName;
-            document.getElementById("Email").value = data.client.email;
-            document.getElementById("Location").value =
-              data.client.location || "";
-            document.getElementById("Phone").value = data.client.phone || "";
+            // Get form and inputs
+            const form = modal.querySelector("form");
+            const inputs = form.querySelectorAll(
+              'input:not([type="hidden"]):not([type="file"])'
+            );
+
+            // Populate form fields using placeholder text to identify fields
+            inputs.forEach((input) => {
+              const placeholder = input.getAttribute("placeholder") || "";
+
+              if (
+                placeholder.includes("Client Name") ||
+                placeholder.includes("Enter Client Name")
+              ) {
+                input.value = data.client.clientName;
+              } else if (
+                placeholder.includes("Email") ||
+                placeholder.includes("Enter Email")
+              ) {
+                input.value = data.client.email;
+              } else if (
+                placeholder.includes("Location") ||
+                placeholder.includes("Enter Location")
+              ) {
+                input.value = data.client.location || "";
+              } else if (
+                placeholder.includes("Phone") ||
+                placeholder.includes("Enter Phone")
+              ) {
+                input.value = data.client.phone || "";
+              }
+            });
+
+            // Additional approach - try to find by label text if needed
+            if (!inputs.length) {
+              const labels = form.querySelectorAll("label");
+              labels.forEach((label) => {
+                const labelText = label.textContent.trim();
+
+                // Find the nearest input after this label
+                let input = null;
+                let el = label.nextElementSibling;
+                while (el && !input) {
+                  input = el.querySelector(
+                    'input:not([type="hidden"]):not([type="file"])'
+                  );
+                  if (!input) el = el.nextElementSibling;
+                }
+
+                if (input) {
+                  if (labelText.includes("Client Name")) {
+                    input.value = data.client.clientName;
+                  } else if (labelText.includes("Email")) {
+                    input.value = data.client.email;
+                  } else if (labelText.includes("Location")) {
+                    input.value = data.client.location || "";
+                  } else if (labelText.includes("Phone")) {
+                    input.value = data.client.phone || "";
+                  }
+                }
+              });
+            }
           }
         })
-        .catch((error) => console.error("Error fetching client data:", error));
+        .catch((error) => {
+          console.error("Error fetching client data:", error);
+        });
     });
   });
 

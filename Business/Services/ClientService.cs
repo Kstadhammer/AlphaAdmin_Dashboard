@@ -56,13 +56,11 @@ public class ClientService : IClientService
         return clients;
     }
 
-    public async Task<EditClientForm> GetClientForEditAsync(int id)
+    public async Task<EditClientForm?> GetClientForEditAsync(string id)
     {
         try
         {
-            // Convert the integer ID to string for the repository
-            var clientId = id.ToString();
-            var result = await _clientRepository.GetByIdAsync(clientId);
+            var result = await _clientRepository.GetByIdAsync(id);
 
             if (!result.Succeeded || result.Result == null)
             {
@@ -106,39 +104,35 @@ public class ClientService : IClientService
         return result.Succeeded;
     }
 
-    public async Task<bool> DeleteClientAsync(int id)
+    public async Task<bool> DeleteClientAsync(string id)
     {
-        var clientId = id.ToString(); // Convert int ID to string
-
         try
         {
             // Check if any projects are associated with this client
-            var projectsExistResult = await _projectRepository.ExistsAsync(p =>
-                p.ClientId == clientId
-            );
+            var projectsExistResult = await _projectRepository.ExistsAsync(p => p.ClientId == id);
 
             if (projectsExistResult.Succeeded && projectsExistResult.Result)
             {
                 // Found associated projects, prevent deletion
-                Console.WriteLine($"Attempted to delete client {clientId} with existing projects."); // Optional logging
+                Console.WriteLine($"Attempted to delete client {id} with existing projects."); // Optional logging
                 return false; // Indicate failure because projects exist
             }
             else if (!projectsExistResult.Succeeded)
             {
                 // Handle error during project check
                 Console.WriteLine(
-                    $"Error checking projects for client {clientId}: {projectsExistResult.Error}"
+                    $"Error checking projects for client {id}: {projectsExistResult.Error}"
                 ); // Optional logging
                 return false; // Indicate failure due to error
             }
 
             // No associated projects found (or check failed but we proceed cautiously), attempt deletion
-            var deleteResult = await _clientRepository.DeleteAsync(clientId);
+            var deleteResult = await _clientRepository.DeleteAsync(id);
             return deleteResult.Succeeded;
         }
         catch (Exception ex) // Catch potential exceptions during the process
         {
-            Console.WriteLine($"Error deleting client {clientId}: {ex.Message}"); // Log error
+            Console.WriteLine($"Error deleting client {id}: {ex.Message}"); // Log error
             return false;
         }
     }

@@ -50,6 +50,14 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* Dark mode styling for no projects messages */
+[data-theme="dark"] .no-projects,
+[data-theme="dark"] .no-filtered-projects {
+  background-color: var(--card-background-color, #2d3035);
+  color: var(--text-muted-color, #b0b3b8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .no-filtered-projects {
   margin-top: 1rem;
 }
