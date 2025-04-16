@@ -10,15 +10,15 @@ public class ClientEntity
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
-    public string ClientName { get; set; }
+    public string ClientName { get; set; } = null!;
 
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
 
-    public string Location { get; set; }
+    public string Location { get; set; } = null!;
 
-    public string Phone { get; set; }
+    public string Phone { get; set; } = null!;
 
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 

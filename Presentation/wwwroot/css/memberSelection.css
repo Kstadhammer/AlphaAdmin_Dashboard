@@ -143,3 +143,56 @@
   width: 0;
   pointer-events: none;
 }
+
+/* Dark Mode Styles for Member Selection */
+[data-theme="dark"] .member-selection-input {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-selection-search {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-selection-search::placeholder {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .member-search-icon {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .member-selection-dropdown {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .member-option {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .member-option.selected {
+  background-color: rgba(45, 153, 255, 0.2);
+}
+
+[data-theme="dark"] .member-option-name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-tag {
+  background-color: #4e5052;
+}
+
+[data-theme="dark"] .member-tag-name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-tag-remove {
+  background-color: #6c6d70;
+}

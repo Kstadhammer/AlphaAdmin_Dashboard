@@ -9,13 +9,13 @@ public class ProjectEntity
 {
     [Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string Name { get; set; }
-    public string ClientName { get; set; }
-    public string Description { get; set; }
+    public string Name { get; set; } = null!;
+    public string ClientName { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public decimal? Budget { get; set; }
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public bool IsActive { get; set; }

@@ -766,50 +766,35 @@ nav .nav-link.active::after {
 }
 
 .member {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add consistent spacing between elements */
 }
 
 .member .name {
-  color: var(--text-headline-color);
-  text-align: center;
-  font-family: var(--font-standard);
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
+  margin-bottom: 5px;
 }
 
 .member .jobtitle {
-  display: inline-flex;
-  padding: 7px 14px;
-  justify-content: center;
-  align-items: center;
-  padding: 0.2rem 0.5rem;
-  margin: 0.5rem 0 2rem;
-  border-radius: 10px;
-  background: var(--gray-200);
+  background-color: var(--blue-light);
+  color: var(--blue-dark);
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 30px;
+  display: inline-block;
+  margin: 5px auto;
+  font-size: 0.9rem;
+  border: none;
 }
 
-.member .email {
-  color: var(--text-muted-color);
-  text-align: center;
-  font-family: var(--font-standard);
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
+.member .email,
 .member .phone {
-  color: var(--text-muted-color);
-  text-align: center;
-  font-family: var(--font-standard);
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  padding: 0.2rem 0.5rem;
-  margin: 0.5rem 0 2rem;
+  margin: 5px 0;
+  padding: 0 15px;
+}
+
+.btn-message {
+  margin-top: 15px;
 }
 
 .btn-message {
@@ -2189,6 +2174,71 @@ main.main > section {
 
 [data-theme="dark"] .notification-icon {
   content: url("/images/Notification-white.svg");
+  background-color: transparent !important; /* Fix white background in dark mode */
+}
+
+/* Also add styles for notification badge in dark mode */
+[data-theme="dark"] .notification-badge {
+  background-color: #e53935; /* A darker red that works better with dark mode */
+  color: #ffffff;
+}
+
+/* Add dark mode styling for dropdown content */
+[data-theme="dark"] .notification-dropdown .dropdown-content,
+[data-theme="dark"] .user-dropdown .dropdown-content {
+  background-color: #2d3035;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .notification-header,
+[data-theme="dark"] .user-info,
+[data-theme="dark"] .dropdown-header {
+  background-color: #202123;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .notification-header h5,
+[data-theme="dark"] .dropdown-header h5,
+[data-theme="dark"] .user-name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .notification-item {
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .notification-text,
+[data-theme="dark"] .dropdown-item {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .notification-time {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .notification-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .notification-footer {
+  border-color: #3e4042;
+}
+
+/* Fix for moon icon and logout elements in dark mode */
+[data-theme="dark"] .dropdown-item i.fa-moon,
+[data-theme="dark"] .dropdown-item i.fa-arrow-right-from-bracket {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .dropdown-item span,
+[data-theme="dark"] .dropdown-item a {
+  color: #ffffff;
+}
+
+/* Make toggle labels more visible in dark mode */
+[data-theme="dark"] .setting-label i,
+[data-theme="dark"] .setting-label span {
+  color: #e4e6eb;
 }
 
 .ql-container {
@@ -2233,14 +2283,15 @@ main.main > section {
 
 /* Profile Settings Modal */
 .profile-settings-modal {
-  position: absolute;
-  top: 60px;
+  position: fixed; /* Change from absolute to fixed */
+  top: 70px; /* Adjust top position to ensure it's visible */
   right: 10px;
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   width: 400px;
+  max-height: calc(100vh - 100px); /* Set max height relative to viewport */
   z-index: 1000;
   display: none;
   border: 1px solid var(--border-color);
@@ -2250,12 +2301,18 @@ main.main > section {
 .profile-settings-modal .modal-content {
   padding: 0;
   border-radius: 15px;
+  max-height: calc(100vh - 100px); /* Match container max-height */
+  overflow-y: auto; /* Make content scrollable */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .profile-header {
+  position: sticky; /* Make header sticky */
+  top: 0; /* Stick to top */
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
   background-color: #f9f9f9;
+  z-index: 2; /* Ensure header stays on top of scrolling content */
 }
 
 .profile-header h5 {
@@ -2522,4 +2579,410 @@ main.main > section {
 .date-icon i {
   font-size: 20px;
   color: #333;
+}
+
+/* Profile Settings Modal Dark Mode Styling */
+[data-theme="dark"] .profile-settings-modal {
+  background-color: #2d3035;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .profile-settings-modal .modal-content {
+  background-color: #2d3035;
+}
+
+[data-theme="dark"] .profile-header {
+  background-color: #202123;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .profile-header h5 {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .profile-details h4,
+[data-theme="dark"] h6,
+[data-theme="dark"] .member-name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .profile-email,
+[data-theme="dark"] .total-budget,
+[data-theme="dark"] .projects-count {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .profile-section,
+[data-theme="dark"] .settings-section {
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .settings-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .settings-item i.fa-chevron-right {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .progress-bar {
+  background-color: #3a3b3c;
+}
+
+[data-theme="dark"] .progress {
+  background-color: #2196f3;
+}
+
+/* Style the buttons in dark mode */
+[data-theme="dark"] .btn-change-photo {
+  background-color: #2d99ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-change-photo:hover {
+  background-color: #2d7dcc;
+}
+
+/* Add/Edit Project Modal Dark Mode Styling */
+[data-theme="dark"] .modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] #addProjectModal .modal-content,
+[data-theme="dark"] #editProjectModal .modal-content {
+  background-color: #2d3035;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .modal-header {
+  background-color: #2d3035;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .modal-header h3 {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .btn-close {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] label {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] select::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .profile-label {
+  background-color: #3a3b3c;
+  border-color: #4e5052;
+}
+
+[data-theme="dark"] .camera-icon {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .input-group {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] .input-group .input-group-text {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .input-group input.form-control {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] option {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .btn-submit {
+  background-color: #2d99ff;
+}
+
+/* Quill Editor Dark Mode Styling */
+[data-theme="dark"] .ql-toolbar {
+  background-color: #3a3b3c;
+  border-color: #4e5052 !important;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-stroke {
+  stroke: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-fill {
+  fill: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-picker {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-picker-options {
+  background-color: #3a3b3c;
+  border-color: #4e5052;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-picker-item {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-toolbar button:hover .ql-stroke,
+[data-theme="dark"] .ql-toolbar .ql-picker-label:hover .ql-stroke {
+  stroke: #2d99ff;
+}
+
+[data-theme="dark"] .ql-toolbar button:hover .ql-fill,
+[data-theme="dark"] .ql-toolbar .ql-picker-label:hover .ql-fill {
+  fill: #2d99ff;
+}
+
+[data-theme="dark"] .ql-toolbar .ql-picker-label:hover {
+  color: #2d99ff;
+}
+
+[data-theme="dark"] .ql-container {
+  background-color: #2d3035;
+  border-color: #4e5052 !important;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-editor p {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .ql-editor.ql-blank::before {
+  color: #b0b3b8;
+}
+
+/* Date picker dark mode styling */
+[data-theme="dark"] .date-display-input {
+  background-color: #3a3b3c;
+  border-color: #3e4042;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .date-icon i {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .flatpickr-calendar {
+  background-color: #2d3035;
+  border-color: #3e4042;
+  box-shadow: 0 3px 13px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .flatpickr-months,
+[data-theme="dark"] .flatpickr-weekdays {
+  background-color: #2d3035;
+}
+
+[data-theme="dark"] .flatpickr-day {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .flatpickr-day.selected,
+[data-theme="dark"] .flatpickr-day.startRange,
+[data-theme="dark"] .flatpickr-day.endRange {
+  background-color: #2d99ff;
+  border-color: #2d99ff;
+}
+
+[data-theme="dark"] .flatpickr-day.inRange,
+[data-theme="dark"] .flatpickr-day.prevMonthDay.inRange,
+[data-theme="dark"] .flatpickr-day.nextMonthDay.inRange {
+  background-color: rgba(45, 153, 255, 0.3);
+  border-color: rgba(45, 153, 255, 0.3);
+}
+
+[data-theme="dark"] .flatpickr-current-month .flatpickr-monthDropdown-months,
+[data-theme="dark"] .flatpickr-current-month input.cur-year,
+[data-theme="dark"] .flatpickr-months .flatpickr-month {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .flatpickr-months .flatpickr-prev-month svg,
+[data-theme="dark"] .flatpickr-months .flatpickr-next-month svg {
+  fill: #e4e6eb;
+}
+
+/* Additionally fix any calendar icons in standard inputs */
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+/* Member Card and Dropdown Dark Mode Styling */
+[data-theme="dark"] .card {
+  background-color: #2d3035;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .member .name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member .jobtitle {
+  background-color: #3a3b3c;
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .member .email,
+[data-theme="dark"] .member .phone {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .btn-message {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .btn-message span {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .btn-message:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Member dropdown menu styling */
+[data-theme="dark"] .dropdown-menu,
+[data-theme="dark"] .member-dropdown {
+  background-color: #fff;
+  background-color: #2d3035;
+  border-color: #3e4042;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .dropdown-item,
+[data-theme="dark"] .dropdown-item a {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .dropdown-item i {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Keep delete action red */
+[data-theme="dark"] .dropdown-item.delete-member,
+[data-theme="dark"] .dropdown-item.delete-member i {
+  color: #ff6b6b;
+}
+
+/* Add Member Button */
+[data-theme="dark"] .btn-add-member {
+  background-color: #2d99ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-add-member:hover {
+  background-color: #2480d6;
+}
+
+/* Edit Member Modal */
+[data-theme="dark"] #editMemberModal .modal-content,
+[data-theme="dark"] #addMemberModal .modal-content {
+  background-color: #2d3035;
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] #editMemberModal .modal-header,
+[data-theme="dark"] #addMemberModal .modal-header {
+  border-color: #3e4042;
+}
+
+[data-theme="dark"] #editMemberModal h3,
+[data-theme="dark"] #addMemberModal h3 {
+  color: #e4e6eb;
+}
+
+/* Keep delete action red for member/client */
+[data-theme="dark"] .dropdown-item.delete-member,
+[data-theme="dark"] .dropdown-item.delete-member i,
+[data-theme="dark"] .dropdown-item.delete-client,
+[data-theme="dark"] .dropdown-item.delete-client i {
+  color: #ff6b6b;
+}
+
+/* Ensure Delete Client is red in light mode too */
+.dropdown-item.delete-client {
+  color: #de3434;
+}
+
+.dropdown-item.delete-client i {
+  color: #de3434;
+}
+
+/* Further improvements for team member cards in dark mode */
+[data-theme="dark"] .jobtitle {
+  background-color: #3a3b3c !important;
+  color: #e4e6eb !important;
+  border: 1px solid #4e5052;
+}
+
+[data-theme="dark"] .member .email,
+[data-theme="dark"] .member .phone {
+  color: #e4e6eb !important;
+}
+
+[data-theme="dark"] .member .name {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Improved message button styling */
+[data-theme="dark"] .btn-message {
+  background-color: #2d3035;
+  border: 1px solid #4e5052;
+}
+
+[data-theme="dark"] .btn-message:hover {
+  background-color: #3a3b3c;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .btn-message span {
+  color: #e4e6eb !important;
+  font-weight: 500;
+}
+
+/* Member dropdown menu in dark mode */
+[data-theme="dark"] .member-dropdown,
+[data-theme="dark"] .dropdown-menu {
+  background-color: #2d3035 !important;
+  border: 1px solid #4e5052;
+}
+
+/* Member card menu */
+[data-theme="dark"] .card-menu .dot {
+  background-color: #e4e6eb;
+}
+
+/* Dark mode specific jobtitle enhancement */
+[data-theme="dark"] .jobtitle {
+  background-color: rgba(45, 153, 255, 0.2) !important;
+  color: var(--blue-semilight) !important;
+  font-weight: 500;
+  border: 1px solid rgba(45, 153, 255, 0.3);
 }
