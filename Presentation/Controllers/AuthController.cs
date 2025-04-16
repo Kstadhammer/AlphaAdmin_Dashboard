@@ -222,4 +222,41 @@ public class AuthController(
     }
 
     #endregion
+
+    #region Password Reset
+
+    [HttpGet("ForgotPassword")]
+    public IActionResult ForgotPassword()
+    {
+        ViewBag.ErrorMessage = "";
+        ViewBag.SuccessMessage = "";
+        return View();
+    }
+
+    [HttpPost("ForgotPassword")]
+    public IActionResult ForgotPassword(ForgotPasswordForm form)
+    {
+        ViewBag.ErrorMessage = "";
+        ViewBag.SuccessMessage = "";
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.ErrorMessage = "Please enter a valid email address.";
+            return View(form);
+        }
+
+        // This is a dummy implementation that just shows a success message
+        // In a real implementation, you would:
+        // 1. Check if the email exists in the database
+        // 2. Generate a password reset token
+        // 3. Store the token with an expiration time
+        // 4. Send an email with a link to reset the password
+
+        // Simulate success
+        ViewBag.SuccessMessage =
+            "If an account exists with this email, you will receive password reset instructions.";
+        return View();
+    }
+
+    #endregion
 }

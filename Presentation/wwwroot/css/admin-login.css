@@ -1,48 +1,46 @@
-/* Basic body styling if needed, assuming _Layout_CenterScreen handles some */
+/* Admin Login Split Layout */
 body {
   margin: 0;
-  font-family: sans-serif; /* Or your project's font */
+  font-family: var(--font-standard);
+  background-color: var(--background-color);
 }
 
 .admin-login-container {
   display: flex;
-  min-height: 100vh; /* Full viewport height */
+  min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
 }
 
+/* Left Panel with Gradient */
 .admin-login-panel-left {
-  flex: 1 1 45%; /* Adjust flex-basis percentage as needed */
-  background: linear-gradient(
-    135deg,
-    #4a00e0,
-    #8e2de2
-  ); /* Example gradient - adjust colors */
+  flex: 1 1 45%;
+  background: linear-gradient(135deg, #4a00e0, #8e2de2);
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center content vertically */
-  align-items: center; /* Center content horizontally */
+  justify-content: center;
+  align-items: center;
   padding: 40px;
   box-sizing: border-box;
   text-align: center;
 }
 
 .admin-login-panel-left .panel-content {
-  max-width: 400px; /* Limit width of text content */
+  max-width: 400px;
 }
 
 .admin-login-panel-left h1 {
-  font-size: 2.5rem; /* Adjust size */
+  font-size: 2.5rem;
   margin-bottom: 1rem;
   font-weight: bold;
   line-height: 1.2;
 }
 
 .admin-login-panel-left h1 .highlight {
-  font-size: 3.5rem; /* Larger size for "Admin Panel" */
-  color: #ffa500; /* Orange color - adjust */
-  display: block; /* Make it appear on the next line */
+  font-size: 3.5rem;
+  color: #ffa500;
+  display: block;
   margin-top: 0.5rem;
 }
 
@@ -52,9 +50,10 @@ body {
   opacity: 0.8;
 }
 
+/* Right Panel with Form */
 .admin-login-panel-right {
-  flex: 1 1 55%; /* Adjust flex-basis percentage */
-  background-color: #f8f9fa; /* Light grey background */
+  flex: 1 1 55%;
+  background-color: var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,13 +61,73 @@ body {
   box-sizing: border-box;
 }
 
+.admin-form-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 0;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .admin-login-panel-right {
+  background-color: var(--background-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-login-container {
+    flex-direction: column;
+  }
+
+  .admin-login-panel-left {
+    flex: none;
+    padding: 30px;
+    min-height: 200px;
+  }
+
+  .admin-login-panel-right {
+    flex: none;
+    padding: 20px;
+  }
+}
+
 .admin-login-panel-right form {
   width: 100%;
-  max-width: 400px; /* Max width for the form */
-  background-color: white; /* White background for form area if needed */
-  padding: 30px; /* Padding inside the form area */
-  border-radius: 8px; /* Optional rounded corners for form area */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  max-width: 480px; /* Increased width for admin login */
+  background-color: white;
+  padding: 40px; /* Increased padding */
+  border-radius: 12px; /* Slightly rounder corners */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode support for form */
+[data-theme="dark"] .admin-login-panel-right form {
+  background-color: var(--card-background-color, #2d3035);
+  color: var(--text-color, #e4e6eb);
+  border-color: var(--border-color, #3e4042);
+}
+
+[data-theme="dark"] .admin-login-panel-right label {
+  color: var(--text-color, #e4e6eb);
+}
+
+[data-theme="dark"] .admin-login-panel-right input[type="email"],
+[data-theme="dark"] .admin-login-panel-right input[type="password"] {
+  background-color: var(--input-background, #3a3b3c);
+  border-color: var(--border-color, #3e4042);
+  color: var(--text-color, #e4e6eb);
+}
+
+[data-theme="dark"] .admin-login-panel-right .or-separator span {
+  background-color: var(--card-background-color, #2d3035);
+  color: var(--text-muted-color, #b0b3b8);
+}
+
+[data-theme="dark"] .admin-login-panel-right .or-separator::before {
+  background-color: var(--border-color, #3e4042);
+}
+
+[data-theme="dark"] .admin-login-panel-right .btn-submit {
+  background-color: var(--blue);
 }
 
 .admin-login-panel-right h2 {

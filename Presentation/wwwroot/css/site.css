@@ -748,53 +748,138 @@ nav .nav-link.active::after {
   justify-items: center;
 }
 
+/* Updated member card styling to match reference image */
 .card {
-  color: var(--card-text-color);
-  background-color: var(--card-background-color);
-  padding: 4rem;
-  box-shadow: 0px 20px 30px -18px rgba(4, 15, 21, 0.1);
-  text-align: center;
-  border-radius: 14px;
-  padding: 2rem;
-  position: relative;
-  width: 300px;
-  height: 456px;
-}
-.card:hover {
-  transform: translateY(-10px);
-  transition: 0.1s ease-in-out, transform 0.1s ease-in-out;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 2rem 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .member {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Add consistent spacing between elements */
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .member .name {
-  margin-bottom: 5px;
+  font-size: 28px; /* Increased from 24px */
+  font-weight: 600;
+  color: #333333;
+  margin: 0.5rem 0 0.25rem;
+  line-height: 1.2;
 }
 
 .member .jobtitle {
-  background-color: var(--blue-light);
-  color: var(--blue-dark);
+  background-color: #f0f1f3; /* Lighter gray background to match image */
+  color: #666666;
   font-weight: 500;
-  padding: 8px 16px;
-  border-radius: 30px;
+  padding: 10px 32px; /* Increased padding */
+  border-radius: 50px;
   display: inline-block;
-  margin: 5px auto;
-  font-size: 0.9rem;
+  margin: 0.5rem auto 1.5rem;
+  font-size: 1rem; /* Slightly larger font size */
   border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  min-width: 200px; /* Ensure minimum width */
 }
 
 .member .email,
 .member .phone {
-  margin: 5px 0;
+  margin: 0.25rem 0;
   padding: 0 15px;
+  color: #666666;
+  font-size: 0.9rem;
 }
 
 .btn-message {
-  margin-top: 15px;
+  background-color: #f2f2f2;
+  color: #333333;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 80%;
+}
+
+.btn-message span {
+  color: #333333;
+  font-weight: 500;
+}
+
+.btn-message:hover {
+  background-color: #e8e8e8;
+  transform: translateY(-2px);
+}
+
+.card-menu {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.card-menu .dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #999999;
+}
+
+/* Dark mode specific styling */
+[data-theme="dark"] .card {
+  background-color: #2d3035;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .member .name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .member .jobtitle {
+  background-color: rgba(45, 153, 255, 0.2);
+  color: #9dceff;
+  border: 1px solid rgba(45, 153, 255, 0.3);
+}
+
+[data-theme="dark"] .member .email,
+[data-theme="dark"] .member .phone {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .btn-message {
+  background-color: #3a3b3c;
+  color: #e4e6eb;
+  border: 1px solid #4e5052;
+}
+
+[data-theme="dark"] .btn-message span {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .btn-message:hover {
+  background-color: #4e5052;
+}
+
+[data-theme="dark"] .card-menu .dot {
+  background-color: #e4e6eb;
 }
 
 .btn-message {
@@ -2985,4 +3070,53 @@ main.main > section {
   color: var(--blue-semilight) !important;
   font-weight: 500;
   border: 1px solid rgba(45, 153, 255, 0.3);
+}
+
+.admin-login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.admin-btn {
+  font-size: 0.8rem;
+  color: #9e9e9e;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 15px;
+  background-color: #f5f5f5;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.admin-btn:hover {
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+/* Dark mode styles for admin button */
+[data-theme="dark"] .admin-btn {
+  background-color: #3a3b3c;
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .admin-btn:hover {
+  background-color: #4e5052;
+  color: #e4e6eb;
+}
+
+.admin-login-note {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.admin-login-note p {
+  font-size: 0.85rem;
+  color: #757575;
+  font-style: italic;
+}
+
+/* Dark mode styles for admin login note */
+[data-theme="dark"] .admin-login-note p {
+  color: #b0b3b8;
 }
