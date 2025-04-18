@@ -46,10 +46,10 @@
                             <img src="@(string.IsNullOrEmpty(member.ImageUrl) ? "/images/Avatar_male_1.svg" : member.ImageUrl)"
                                 alt="Profile Picture" />
                         </div>
-                        <div class="member-name">@member.FirstName @member.LastName</div>
-                        <div class="member-role">@member.JobTitle</div>
-                        <div class="email">@member.Email</div>
-                        <div class="phone">@member.Phone</div>
+                        <div class="member-text-name">@member.FirstName @member.LastName</div>
+                        <div class="member-text-jobtitle">@member.JobTitle</div>
+                        <div class="member-text-email">@member.Email</div>
+                        <div class="member-text-phone">@member.Phone</div>
                         <div class="role"></div>
 
                         <button class="btn-message">

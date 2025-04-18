@@ -774,6 +774,47 @@ nav .nav-link.active::after {
   overflow: hidden;
 }
 
+.member-text-name {
+  border-radius: 24px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  color: #1a1926;
+}
+
+.member-text-jobtitle {
+  color: #1a1926;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: inline-flex;
+  padding: 7px 14px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: var(--Grey-200, #f0f1f5);
+}
+
+.member-text-email {
+  color: var(--Body-Dark, #28263b);
+  text-align: center;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.member-text-phone {
+  color: var(--Body-Dark, #28263b);
+  text-align: center;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
 .member .name {
   font-size: 28px; /* Increased from 24px */
   font-weight: 600;
@@ -1677,6 +1718,7 @@ form .field-validation-error {
   background-color: #f8f9fa;
   color: #333;
   border: 1px solid #ddd;
+  border-radius: 14px;
 }
 
 .btn-danger {
@@ -2519,7 +2561,7 @@ main.main > section {
   background-color: #2196f3;
   color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 14px;
   padding: 10px 20px;
   font-weight: 500;
   transition: background-color 0.2s;
