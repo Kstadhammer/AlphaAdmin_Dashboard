@@ -9,7 +9,7 @@
 }
 
 .summary-card {
-  background-color: var(--surface-color);
+  background-color: var(--card-background-color);
   border-radius: 0.75rem;
   padding: 1.5rem;
   display: flex;
@@ -160,6 +160,7 @@
 .dashboard-card-header {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-background-color);
 }
 
 .dashboard-card-header h3 {
@@ -172,6 +173,7 @@
 .dashboard-card-body {
   padding: 1.5rem;
   flex-grow: 1;
+  background-color: var(--card-background-color);
 }
 
 /* Project Status Distribution */
@@ -233,12 +235,10 @@
 }
 
 .deadline-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   padding: 0.75rem;
   border-radius: 0.5rem;
-  background-color: var(--gray-50);
   transition: background-color 0.2s ease;
 }
 
@@ -300,20 +300,20 @@
 .workload-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .workload-item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1.5fr 2fr auto;
   align-items: center;
   gap: 1rem;
 }
 
-.member-info {
+.member-info-list {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: 150px;
 }
 
 .member-avatar {

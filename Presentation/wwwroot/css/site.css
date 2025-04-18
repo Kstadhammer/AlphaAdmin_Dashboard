@@ -737,7 +737,8 @@ nav .nav-link.active::after {
 #members {
   display: grid;
   gap: 2rem;
-  max-width: 1280px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -763,7 +764,7 @@ nav .nav-link.active::after {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .avatar {
@@ -1688,10 +1689,16 @@ form .field-validation-error {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
+.dropdown-item:first-child:hover {
+  cursor: pointer;
+}
 
 .dropdown-item:last-child {
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+}
+.dropdown-item:last-child:hover {
+  cursor: pointer;
 }
 
 .dropdown-item:hover {
@@ -2411,7 +2418,7 @@ main.main > section {
 /* Profile Settings Modal */
 .profile-settings-modal {
   position: fixed; /* Change from absolute to fixed */
-  top: 70px; /* Adjust top position to ensure it's visible */
+  top: 60px; /* Adjust top position to ensure it's visible */
   right: 10px;
   background-color: #fff;
   border-radius: 15px;
@@ -2977,8 +2984,8 @@ main.main > section {
 }
 
 [data-theme="dark"] .btn-message {
-  background-color: #3a3b3c;
-  color: #e4e6eb;
+  background-color: #1a1d21;
+  color: var(--text-headline-color);
 }
 
 [data-theme="dark"] .btn-message span {
@@ -3080,8 +3087,9 @@ main.main > section {
 
 /* Improved message button styling */
 [data-theme="dark"] .btn-message {
-  background-color: #2d3035;
-  border: 1px solid #4e5052;
+  background-color: #3a3b3c;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] .btn-message:hover {
@@ -3161,4 +3169,21 @@ main.main > section {
 /* Dark mode styles for admin login note */
 [data-theme="dark"] .admin-login-note p {
   color: #b0b3b8;
+}
+
+[data-theme="dark"] .member-text-email {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .member-text-phone {
+  color: #b0b3b8;
+}
+
+[data-theme="dark"] .member-text-name {
+  color: #e4e6eb;
+}
+
+[data-theme="dark"] .member-text-jobtitle {
+  color: #b0b3b8;
+  background-color: #3a3b3c;
 }
