@@ -11,4 +11,5 @@ public interface IAuthService
     Task<bool> LoginAsync(MemberLoginForm form);
     Task<bool> SignUpAsync(MemberSignUpForm form);
     Task LogoutAsync();
+    Task<IdentityResult> RegisterUserAsync(string email, string password);
 }

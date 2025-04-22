@@ -7,9 +7,13 @@
             <button class="btn-close" data-close="true"></button>
         </div>
         <form novalidate method="post" asp-action="AddMember" asp-controller="Members" enctype="multipart/form-data">
+            <input type="hidden" name="ImageUrl" id="addMemberImageUrl" />
+
             <!-- Profile Picture Upload Section -->
             <div class="profile-upload-container">
                 <div class="profile-upload">
+                    <img id="addCurrentAvatar" src="/images/Avatar_male_1.svg" alt="Current Avatar"
+                        class="current-avatar" />
                     <input asp-for="MemberImage" type="file" id="addMemberImage" class="profile-input" />
                     <label for="addMemberImage" class="profile-label">
                         <div class="camera-icon">
@@ -17,6 +21,32 @@
                         </div>
                     </label>
                 </div>
+            </div>
+
+            <!-- Avatar Selection Gallery -->
+            <div class="avatar-gallery">
+                <h4>Select Avatar</h4>
+                <div class="avatar-options">
+                    <div class="avatar-option" data-avatar="/images/Avatar_male_1.svg">
+                        <img src="/images/Avatar_male_1.svg" alt="Default Avatar" />
+                    </div>
+                    <div class="avatar-option" data-avatar="/images/avatars/avatars1.png">
+                        <img src="/images/avatars/avatars1.png" alt="Avatar 1" />
+                    </div>
+                    <div class="avatar-option" data-avatar="/images/avatars/avatars2.png">
+                        <img src="/images/avatars/avatars2.png" alt="Avatar 2" />
+                    </div>
+                    <div class="avatar-option" data-avatar="/images/avatars/avatars3.png">
+                        <img src="/images/avatars/avatars3.png" alt="Avatar 3" />
+                    </div>
+                    <div class="avatar-option" data-avatar="/images/avatars/avatars4.png">
+                        <img src="/images/avatars/avatars4.png" alt="Avatar 4" />
+                    </div>
+                    <div class="avatar-option" data-avatar="/images/avatars/avatars5.png">
+                        <img src="/images/avatars/avatars5.png" alt="Avatar 5" />
+                    </div>
+                </div>
+                <p class="avatar-help-text">Click an avatar to select, or upload your own image above</p>
             </div>
 
             <div class="form-group">
@@ -54,7 +84,8 @@
             <div class="form-group">
                 <label asp-for="ConfirmPassword">Confirm Password</label>
                 <div class="field-group">
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                    <input asp-for="ConfirmPassword" type="password" class="form-control"
+                        placeholder="Confirm password" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
             </div>

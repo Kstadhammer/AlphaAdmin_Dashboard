@@ -25,6 +25,22 @@ function filterMembers(query) {
  * Member List functionality including dropdown menu and edit/delete operations
  */
 document.addEventListener("DOMContentLoaded", function () {
+  // Handle avatar selection
+  initializeAvatarSelection(
+    "#addMemberModal",
+    "#addCurrentAvatar",
+    "#addMemberImageUrl"
+  );
+  initializeAvatarSelection(
+    "#editMemberModal",
+    "#currentAvatar",
+    "#editMemberImageUrl"
+  );
+
+  // File input preview for avatar upload
+  initializeAvatarUploadPreview("#addMemberImage", "#addCurrentAvatar");
+  initializeAvatarUploadPreview("#memberImage", "#currentAvatar");
+
   // Toggle dropdown when clicking on the ellipsis icon
   const dropdownToggles = document.querySelectorAll(
     ".card.member .dropdown-toggle"
@@ -79,6 +95,25 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(
               "#editMemberModal [name='IsActive']"
             ).checked = data.member.isActive;
+
+            // Set current avatar if available
+            if (data.member.imageUrl) {
+              document.querySelector("#currentAvatar").src =
+                data.member.imageUrl;
+              document.querySelector("#editMemberImageUrl").value =
+                data.member.imageUrl;
+
+              // Mark the corresponding avatar option as selected
+              const avatarOptions = document.querySelectorAll(
+                "#editMemberModal .avatar-option"
+              );
+              avatarOptions.forEach((option) => {
+                option.classList.remove("selected");
+                if (option.dataset.avatar === data.member.imageUrl) {
+                  option.classList.add("selected");
+                }
+              });
+            }
 
             // Show edit modal
             const modal = document.getElementById("editMemberModal");
@@ -166,3 +201,66 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 });
+
+/**
+ * Initialize avatar selection in member forms
+ * @param {string} modalSelector - Selector for the modal containing the avatar options
+ * @param {string} previewSelector - Selector for the avatar preview image
+ * @param {string} inputSelector - Selector for the hidden input to store the avatar URL
+ */
+function initializeAvatarSelection(
+  modalSelector,
+  previewSelector,
+  inputSelector
+) {
+  const modal = document.querySelector(modalSelector);
+  if (!modal) return;
+
+  const avatarOptions = modal.querySelectorAll(".avatar-option");
+  const previewImg = modal.querySelector(previewSelector);
+  const hiddenInput = modal.querySelector(inputSelector);
+
+  avatarOptions.forEach((option) => {
+    option.addEventListener("click", function () {
+      // Remove selected class from all options
+      avatarOptions.forEach((opt) => opt.classList.remove("selected"));
+
+      // Add selected class to clicked option
+      this.classList.add("selected");
+
+      // Update preview image and hidden input
+      const avatarUrl = this.dataset.avatar;
+      previewImg.src = avatarUrl;
+      hiddenInput.value = avatarUrl;
+    });
+  });
+}
+
+/**
+ * Initialize avatar upload preview
+ * @param {string} fileInputSelector - Selector for the file input element
+ * @param {string} previewSelector - Selector for the preview image element
+ */
+function initializeAvatarUploadPreview(fileInputSelector, previewSelector) {
+  const fileInput = document.querySelector(fileInputSelector);
+  const previewImg = document.querySelector(previewSelector);
+
+  if (!fileInput || !previewImg) return;
+
+  fileInput.addEventListener("change", function () {
+    if (this.files && this.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+
+        // Deselect any avatar options
+        const modal = fileInput.closest(".modal");
+        const avatarOptions = modal.querySelectorAll(".avatar-option");
+        avatarOptions.forEach((opt) => opt.classList.remove("selected"));
+      };
+
+      reader.readAsDataURL(this.files[0]);
+    }
+  });
+}

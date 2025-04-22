@@ -104,6 +104,11 @@ public class MembersController : Controller
                 // Update the form with the image URL
                 form.ImageUrl = $"/images/members/{uniqueFileName}";
             }
+            // If no image is uploaded but an avatar is selected
+            else if (!string.IsNullOrEmpty(form.ImageUrl))
+            {
+                // ImageUrl is already set correctly from the form, no action needed
+            }
 
             var success = await _memberService.EditMemberAsync(form);
             if (!success)
@@ -136,28 +141,22 @@ public class MembersController : Controller
 
         try
         {
-            // Convert AddMemberForm to MemberSignUpForm
-            var signUpForm = new MemberSignUpForm
-            {
-                FirstName = form.FirstName,
-                LastName = form.LastName,
-                Email = form.Email,
-                Password = form.Password,
-                ConfirmPassword = form.ConfirmPassword,
-            };
+            // Perform registration operation using AuthService
+            var result = await _authService.RegisterUserAsync(form.Email, form.Password);
 
-            var success = await _authService.SignUpAsync(signUpForm);
-            if (success)
+            if (result.Succeeded)
             {
-                // Update additional fields like JobTitle, Phone, etc.
-                // Find the newly created user by email
+                // Get the newly created user
                 var newUser = await _userManager.FindByEmailAsync(form.Email);
+
                 if (newUser != null)
                 {
                     // Update the additional fields
                     newUser.JobTitle = form.JobTitle;
                     newUser.PhoneNumber = form.Phone;
                     newUser.IsActive = form.IsActive;
+                    newUser.FirstName = form.FirstName;
+                    newUser.LastName = form.LastName;
 
                     // Handle image upload if provided
                     if (form.MemberImage != null && form.MemberImage.Length > 0)
@@ -196,9 +195,14 @@ public class MembersController : Controller
                             Console.WriteLine($"Error saving member image: {ex.Message}");
                         }
                     }
+                    // If an avatar was selected but no image uploaded
+                    else if (!string.IsNullOrEmpty(form.ImageUrl))
+                    {
+                        newUser.ImageUrl = form.ImageUrl;
+                    }
                     else
                     {
-                        // Set default avatar if no image was uploaded
+                        // Set default avatar if no image was uploaded or selected
                         newUser.ImageUrl = "/images/Avatar_male_1.svg";
                     }
 

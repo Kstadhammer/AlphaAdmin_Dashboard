@@ -11,11 +11,17 @@ public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
     private readonly SignInManager<MemberEntity> _signInManager;
+    private readonly UserManager<MemberEntity> _userManager;
 
-    public AuthService(IUserService userService, SignInManager<MemberEntity> signInManager)
+    public AuthService(
+        IUserService userService,
+        SignInManager<MemberEntity> signInManager,
+        UserManager<MemberEntity> userManager
+    )
     {
         _userService = userService;
         _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public async Task<SignInResult> SignInAsync(SignInFormData formData)
@@ -110,5 +116,36 @@ public class AuthService : IAuthService
     public async Task LogoutAsync()
     {
         await _signInManager.SignOutAsync();
+    }
+
+    public async Task<IdentityResult> RegisterUserAsync(string email, string password)
+    {
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        {
+            return IdentityResult.Failed(
+                new IdentityError { Description = "Email and password cannot be empty" }
+            );
+        }
+
+        // Create a new user with the minimum required properties
+        var userEntity = new MemberEntity
+        {
+            UserName = email,
+            Email = email,
+            NormalizedEmail = email.ToUpper(),
+            NormalizedUserName = email.ToUpper(),
+            EmailConfirmed = true,
+        };
+
+        // Use UserManager to create the user with the provided password
+        var result = await _userManager.CreateAsync(userEntity, password);
+
+        if (result.Succeeded)
+        {
+            // Add the user to the "User" role
+            await _userManager.AddToRoleAsync(userEntity, "User");
+        }
+
+        return result;
     }
 }
