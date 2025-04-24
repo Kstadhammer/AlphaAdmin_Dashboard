@@ -9,4 +9,5 @@ public class Member
     public string JobTitle { get; set; } = null!;
     public string Phone { get; set; } = null!;
     public string? ImageUrl { get; set; }
+    public bool IsAdmin { get; set; } = false;
 }

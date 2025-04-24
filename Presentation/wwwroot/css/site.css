@@ -134,6 +134,9 @@
   --table-header-background-color: var(--white-100);
   --table-header-text-color: var(--gray-800);
   --table-tbody-tr-background-hover-color: var(--blue-dark);
+
+  --color-purple: #9933ff;
+  --color-purple-light: #f0e6ff;
 }
 
 /* Dark theme variables */
@@ -3258,4 +3261,87 @@ main.main > section {
 .profile-label {
   z-index: 2;
   position: relative;
+}
+
+/* Admin Members section */
+.admin-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-member-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: var(--surface-secondary);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.admin-member-item:hover {
+  background-color: var(--surface-hover);
+}
+
+.admin-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-left: 8px;
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.member-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.member-email {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.member-title {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-purple-light);
+  color: var(--color-purple);
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.admin-badge i {
+  font-size: 0.9rem;
+}
+
+.no-admins {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 12px;
+}
+
+.card-icon.admins {
+  color: var(--color-purple);
+  background-color: var(--color-purple-light);
 }

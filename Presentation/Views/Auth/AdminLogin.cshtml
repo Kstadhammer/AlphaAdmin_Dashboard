@@ -26,6 +26,12 @@
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
             <h1>@ViewData["Title"]</h1>
 
+            <div class="default-admin-notice">
+                <p><strong>Default Admin Access:</strong></p>
+                <p>Email: admin@admin.se</p>
+                <p>Password: Admin123!</p>
+            </div>
+
             @await Html.PartialAsync("~/Views/Shared/Partials/Sections/_ExternalAuthenticationPartial.cshtml")
 
             <div class="or-separator">

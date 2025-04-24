@@ -77,6 +77,7 @@ public class AdminController : Controller
         var projects = await _projectService.GetAllProjectsAsync();
         var clients = await _clientService.GetAllClientsAsync();
         var members = await _memberService.GetAllMembers();
+        var adminMembers = await _memberService.GetAdminMembers();
         var statuses = await _statusService.GetStatusesAsync();
 
         // Create status dictionary for easy lookup
@@ -96,6 +97,8 @@ public class AdminController : Controller
             TotalActiveProjects = projects?.Count(p => p.IsActive) ?? 0,
             TotalClients = clients?.Count ?? 0,
             TotalMembers = members?.Count ?? 0,
+            TotalAdmins = adminMembers?.Count ?? 0,
+            AdminMembers = adminMembers ?? new List<Domain.Models.Member>(),
 
             // Project status distribution
             ProjectStatusDistribution =

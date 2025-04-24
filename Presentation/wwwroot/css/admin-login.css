@@ -277,3 +277,29 @@ body {
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
+
+.default-admin-notice {
+  background-color: #f0e6ff;
+  border: 1px solid #9933ff;
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin: 15px 0 25px;
+  color: #4a00e0;
+  font-size: 0.9rem;
+}
+
+.default-admin-notice p {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.default-admin-notice p strong {
+  font-weight: 600;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .default-admin-notice {
+  background-color: rgba(153, 51, 255, 0.15);
+  border-color: rgba(153, 51, 255, 0.3);
+  color: #b388ff;
+}

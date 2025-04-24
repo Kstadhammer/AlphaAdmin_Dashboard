@@ -16,6 +16,7 @@ namespace Business.DataSeeders
         {
             await ApplyMigrationsAsync(serviceProvider);
             await CreateRolesAsync(serviceProvider);
+            await CreateDefaultAdminAsync(serviceProvider);
             await AssignAdminRoleAsync(serviceProvider, "kim.hammerstad@gmail.com"); // Assign Admin role
 
             await CreateDefaultStatusesAsync(serviceProvider);
@@ -57,6 +58,73 @@ namespace Business.DataSeeders
                     if (!await roleManager.RoleExistsAsync(role))
                     {
                         await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                }
+            }
+        }
+
+        private static async Task CreateDefaultAdminAsync(IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<
+                    UserManager<MemberEntity>
+                >();
+
+                const string defaultAdminEmail = "admin@admin.se";
+                var adminUser = await userManager.FindByEmailAsync(defaultAdminEmail);
+
+                if (adminUser == null)
+                {
+                    Console.WriteLine(
+                        $"Default admin user not found. Creating admin user: {defaultAdminEmail}"
+                    );
+
+                    var defaultAdmin = new MemberEntity
+                    {
+                        UserName = defaultAdminEmail,
+                        Email = defaultAdminEmail,
+                        NormalizedUserName = defaultAdminEmail.ToUpper(),
+                        NormalizedEmail = defaultAdminEmail.ToUpper(),
+                        EmailConfirmed = true,
+                        FirstName = "Admin",
+                        LastName = "User",
+                        JobTitle = "System Administrator",
+                        IsActive = true,
+                    };
+
+                    var result = await userManager.CreateAsync(defaultAdmin, "Admin123!");
+                    if (result.Succeeded)
+                    {
+                        Console.WriteLine("Default admin user created successfully");
+                        await userManager.AddToRoleAsync(defaultAdmin, "Admin");
+                        Console.WriteLine("Assigned Admin role to default admin user");
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            $"Failed to create default admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}"
+                        );
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Default admin user already exists");
+
+                    // Ensure admin has the Admin role
+                    if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+                    {
+                        var roleResult = await userManager.AddToRoleAsync(adminUser, "Admin");
+                        if (roleResult.Succeeded)
+                        {
+                            Console.WriteLine("Assigned Admin role to existing default admin user");
+                        }
+                        else
+                        {
+                            Console.WriteLine(
+                                $"Failed to assign Admin role: {string.Join(", ", roleResult.Errors.Select(e => e.Description))}"
+                            );
+                        }
                     }
                 }
             }

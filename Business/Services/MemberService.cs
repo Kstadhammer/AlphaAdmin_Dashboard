@@ -13,10 +13,15 @@ namespace Business.Services;
 public class MemberService : IMemberService
 {
     private readonly UserManager<MemberEntity> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
-    public MemberService(UserManager<MemberEntity> userManager)
+    public MemberService(
+        UserManager<MemberEntity> userManager,
+        RoleManager<IdentityRole> roleManager
+    )
     {
         _userManager = userManager;
+        _roleManager = roleManager;
     }
 
     public async Task<Member> GetCurrentUserAsync(string userId)
@@ -29,6 +34,8 @@ public class MemberService : IMemberService
         if (user == null)
             return null;
 
+        var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
         // Use null-coalescing operator (??) to provide defaults for potentially null strings
         return new Member
         {
@@ -39,26 +46,40 @@ public class MemberService : IMemberService
             JobTitle = user.JobTitle ?? string.Empty,
             Phone = user.PhoneNumber ?? string.Empty,
             ImageUrl = user.ImageUrl,
+            IsAdmin = isAdmin,
         };
     }
 
     public async Task<List<Member>> GetAllMembers()
     {
         var users = await _userManager.Users.ToListAsync();
+        var members = new List<Member>();
 
-        return users
-            .Select(user => new Member
-            {
-                // Use null-coalescing operator (??) for potentially null strings
-                Id = user.Id,
-                FirstName = user.FirstName ?? string.Empty,
-                LastName = user.LastName ?? string.Empty,
-                Email = user.Email ?? string.Empty,
-                JobTitle = user.JobTitle ?? string.Empty,
-                Phone = user.PhoneNumber ?? string.Empty,
-                ImageUrl = user.ImageUrl,
-            })
-            .ToList();
+        foreach (var user in users)
+        {
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            members.Add(
+                new Member
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName ?? string.Empty,
+                    LastName = user.LastName ?? string.Empty,
+                    Email = user.Email ?? string.Empty,
+                    JobTitle = user.JobTitle ?? string.Empty,
+                    Phone = user.PhoneNumber ?? string.Empty,
+                    ImageUrl = user.ImageUrl,
+                    IsAdmin = isAdmin,
+                }
+            );
+        }
+
+        return members;
+    }
+
+    public async Task<List<Member>> GetAdminMembers()
+    {
+        var allMembers = await GetAllMembers();
+        return allMembers.Where(m => m.IsAdmin).ToList();
     }
 
     public async Task<EditMemberForm?> GetMemberForEditAsync(string id)

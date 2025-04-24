@@ -39,6 +39,15 @@
                 </div>
             </div>
             <div class="summary-card">
+                <div class="card-icon admins">
+                    <i class="fa-duotone fa-shield-check"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-value">@Model.TotalAdmins</div>
+                    <div class="card-label">Administrators</div>
+                </div>
+            </div>
+            <div class="summary-card">
                 <div class="card-icon budget">
                     <i class="fa-duotone fa-dollar-sign"></i>
                 </div>
@@ -161,6 +170,47 @@
                     {
                         <div class="no-workload">
                             <p>No team members with active projects</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Admin Members -->
+            <div class="dashboard-card">
+                <div class="dashboard-card-header">
+                    <h3>Admin Members</h3>
+                    <span class="admin-count">@Model.TotalAdmins administrator@(Model.TotalAdmins != 1 ? "s" : "")</span>
+                </div>
+                <div class="dashboard-card-body">
+                    @if (Model.AdminMembers.Any())
+                    {
+                        <div class="admin-members-list">
+                            @foreach (var admin in Model.AdminMembers)
+                            {
+                                <div class="admin-member-item">
+                                    <div class="member-info">
+                                        <img src="@(string.IsNullOrEmpty(admin.ImageUrl) ? "/images/avatars/default.png" : admin.ImageUrl)" alt="@admin.FirstName @admin.LastName" class="member-avatar" />
+                                        <div class="member-details">
+                                            <span class="member-name">@admin.FirstName @admin.LastName</span>
+                                            <span class="member-email">@admin.Email</span>
+                                            @if (!string.IsNullOrEmpty(admin.JobTitle))
+                                            {
+                                                <span class="member-title">@admin.JobTitle</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="admin-badge">
+                                        <i class="fa-solid fa-shield-check"></i>
+                                        <span>Admin</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-admins">
+                            <p>No admin members found</p>
                         </div>
                     }
                 </div>

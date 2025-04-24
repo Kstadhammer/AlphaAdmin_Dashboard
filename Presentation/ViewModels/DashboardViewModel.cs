@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Business.Models;
+using Domain.Models;
 
 namespace Presentation.ViewModels;
 
@@ -10,6 +11,7 @@ public class DashboardViewModel
     public int TotalActiveProjects { get; set; }
     public int TotalClients { get; set; }
     public int TotalMembers { get; set; }
+    public int TotalAdmins { get; set; }
 
     // Project status distribution
     public List<StatusCount> ProjectStatusDistribution { get; set; } = new List<StatusCount>();
@@ -19,6 +21,9 @@ public class DashboardViewModel
 
     // Team member workload
     public List<MemberWorkload> TeamWorkload { get; set; } = new List<MemberWorkload>();
+
+    // Admin members
+    public List<Member> AdminMembers { get; set; } = new List<Member>();
 
     // Budget summary
     public decimal TotalBudget { get; set; }
@@ -32,8 +37,6 @@ public class StatusCount
     public string StatusColor { get; set; } = string.Empty;
     public int Count { get; set; }
 }
-
-
 
 public class ProjectDeadline
 {

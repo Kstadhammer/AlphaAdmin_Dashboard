@@ -143,3 +143,12 @@ This project is part of an educational assignment for EC-Utbildning.
 ---
 
 _Note: This project was created as an assignment for the ASP.NET course at EC-Utbildning._
+
+# Default Login Credentials
+
+When you first run the application with a fresh database, a default administrator account is automatically created:
+
+- **Email:** admin@admin.se
+- **Password:** Admin123!
+
+You can use these credentials to log in to the admin panel. It's recommended to change the password or create a new admin account after the first login.
