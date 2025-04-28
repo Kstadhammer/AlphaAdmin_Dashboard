@@ -9,6 +9,4 @@ public class UserRepository : BaseRepository<UserEntity>, IUserRepository
 {
     public UserRepository(AppDbContext context)
         : base(context) { }
-
-    // Add user-specific repository methods here
 }

@@ -13,6 +13,10 @@ using Presentation.ViewModels; // Add using for ViewModel
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controller for administrative views like the main dashboard, project list, member list, and client list.
+/// Most actions require authorization, and some require the 'Admin' role.
+/// </summary>
 [Authorize]
 public class AdminController : Controller
 {
@@ -24,6 +28,14 @@ public class AdminController : Controller
     private readonly IStatusService _statusService; // Add Status Service field
     private readonly UserManager<MemberEntity> _userManager;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AdminController"/> class.
+    /// </summary>
+    /// <param name="memberService">Service for member data.</param>
+    /// <param name="clientService">Service for client data.</param>
+    /// <param name="projectService">Service for project data.</param>
+    /// <param name="statusService">Service for status data.</param>
+    /// <param name="userManager">ASP.NET Core Identity UserManager.</param>
     public AdminController(
         IMemberService memberService,
         IClientService clientService,
@@ -43,6 +55,10 @@ public class AdminController : Controller
 
     #region Helper Methods
 
+    /// <summary>
+    /// Sets the current user information in ViewBag for layout display.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task SetCurrentUserAsync()
     {
         var userId = _userManager.GetUserId(User);
@@ -60,6 +76,12 @@ public class AdminController : Controller
 
     #region Dashboard
 
+    /// <summary>
+    /// Displays the main administrative dashboard (GET: /Admin/ or /Admin/dashboard).
+    /// Requires Admin role; redirects non-admins to the Projects page.
+    /// Gathers data for various dashboard widgets (project counts, deadlines, workload, etc.).
+    /// </summary>
+    /// <returns>The dashboard view populated with a <see cref="DashboardViewModel"/>.</returns>
     // GET: /Admin/ or /
     [Route("")] // Make this the default route for the controller
     [Route("dashboard")] // Optional explicit route
@@ -189,6 +211,11 @@ public class AdminController : Controller
 
     #region Projects
 
+    /// <summary>
+    /// Displays the project list page (GET: /Admin/projects).
+    /// Gathers project data, status filters, and data for Add/Edit modals.
+    /// </summary>
+    /// <returns>The projects view populated with a <see cref="ProjectIndexViewModel"/>.</returns>
     [Route("projects")]
     public async Task<IActionResult> Projects()
     {
@@ -267,6 +294,10 @@ public class AdminController : Controller
 
     #region Members & Clients
 
+    /// <summary>
+    /// Displays the team members list page (GET: /Admin/members).
+    /// </summary>
+    /// <returns>The members view populated with a list of <see cref="Domain.Models.Member"/>.</returns>
     [Route("members")]
     public async Task<IActionResult> Members()
     {
@@ -275,6 +306,11 @@ public class AdminController : Controller
         return View(members);
     }
 
+    /// <summary>
+    /// Displays the clients list page (GET: /Admin/clients).
+    /// Requires Admin role.
+    /// </summary>
+    /// <returns>The clients view populated with a list of <see cref="ClientListItem"/>.</returns>
     [Route("clients")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Clients()

@@ -10,12 +10,22 @@ using Domain.Models;
 
 namespace Business.Services;
 
+/// <summary>
+/// Service responsible for managing client data, including retrieval, creation, updates, and deletion.
+/// It ensures business rules are followed, such as preventing deletion of clients with associated projects.
+/// </summary>
 public class ClientService : IClientService
 {
     private readonly IClientRepository _clientRepository;
     private readonly IProjectRepository _projectRepository; // Inject Project Repository
     private readonly IClientFactory _clientFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ClientService"/> class.
+    /// </summary>
+    /// <param name="clientRepository">Repository for client data access.</param>
+    /// <param name="clientFactory">Factory for creating client-related objects.</param>
+    /// <param name="projectRepository">Repository for project data access (used for deletion check).</param>
     public ClientService(
         IClientRepository clientRepository,
         IClientFactory clientFactory,
@@ -27,6 +37,10 @@ public class ClientService : IClientService
         _projectRepository = projectRepository; // Assign Project Repository
     }
 
+    /// <summary>
+    /// Retrieves all clients as raw entities.
+    /// </summary>
+    /// <returns>A <see cref="ServiceResult{T}"/> containing the client entities or an error.</returns>
     public async Task<ServiceResult<object>> GetClientsAsync()
     {
         var result = await _clientRepository.GetAllAsync();
@@ -39,6 +53,10 @@ public class ClientService : IClientService
         };
     }
 
+    /// <summary>
+    /// Retrieves all clients formatted as list items suitable for display.
+    /// </summary>
+    /// <returns>A list of <see cref="ClientListItem"/> objects.</returns>
     public async Task<List<ClientListItem>> GetAllClientsAsync()
     {
         var result = await _clientRepository.GetAllAsync();
@@ -56,6 +74,11 @@ public class ClientService : IClientService
         return clients;
     }
 
+    /// <summary>
+    /// Retrieves client details formatted for an edit form.
+    /// </summary>
+    /// <param name="id">The unique identifier of the client to edit.</param>
+    /// <returns>An <see cref="EditClientForm"/> populated with client data, or null if not found or on error.</returns>
     public async Task<EditClientForm?> GetClientForEditAsync(string id)
     {
         try
@@ -76,6 +99,11 @@ public class ClientService : IClientService
         }
     }
 
+    /// <summary>
+    /// Adds a new client based on the submitted form data.
+    /// </summary>
+    /// <param name="form">The form containing the new client information.</param>
+    /// <returns>True if the client was added successfully, false otherwise.</returns>
     public async Task<bool> AddClientAsync(AddClientForm form)
     {
         if (form == null)
@@ -87,6 +115,11 @@ public class ClientService : IClientService
         return result.Succeeded;
     }
 
+    /// <summary>
+    /// Updates an existing client's details based on the submitted form data.
+    /// </summary>
+    /// <param name="form">The form containing the updated client information.</param>
+    /// <returns>True if the update was successful, false otherwise.</returns>
     public async Task<bool> EditClientAsync(EditClientForm form)
     {
         if (form == null)
@@ -104,6 +137,11 @@ public class ClientService : IClientService
         return result.Succeeded;
     }
 
+    /// <summary>
+    /// Deletes a client, but only if they have no associated projects.
+    /// </summary>
+    /// <param name="id">The unique identifier of the client to delete.</param>
+    /// <returns>True if the deletion was successful, false if the client has projects or an error occurred.</returns>
     public async Task<bool> DeleteClientAsync(string id)
     {
         try

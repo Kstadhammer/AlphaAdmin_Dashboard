@@ -9,6 +9,4 @@ public class ProjectRepository : BaseRepository<ProjectEntity>, IProjectReposito
 {
     public ProjectRepository(AppDbContext context)
         : base(context) { }
-
-    // Add project-specific repository methods here
 }

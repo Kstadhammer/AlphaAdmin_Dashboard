@@ -10,11 +10,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
 
+/// <summary>
+/// Service for managing team members (users) using ASP.NET Core Identity.
+/// Handles retrieval, update, and deletion of member information.
+/// </summary>
 public class MemberService : IMemberService
 {
     private readonly UserManager<MemberEntity> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MemberService"/> class.
+    /// </summary>
+    /// <param name="userManager">The ASP.NET Core Identity UserManager.</param>
+    /// <param name="roleManager">The ASP.NET Core Identity RoleManager.</param>
     public MemberService(
         UserManager<MemberEntity> userManager,
         RoleManager<IdentityRole> roleManager
@@ -24,6 +33,11 @@ public class MemberService : IMemberService
         _roleManager = roleManager;
     }
 
+    /// <summary>
+    /// Retrieves the details of the currently logged-in user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>A <see cref="Member"/> object representing the user, or null if not found.</returns>
     public async Task<Member> GetCurrentUserAsync(string userId)
     {
         if (string.IsNullOrEmpty(userId))
@@ -50,6 +64,10 @@ public class MemberService : IMemberService
         };
     }
 
+    /// <summary>
+    /// Retrieves a list of all registered members.
+    /// </summary>
+    /// <returns>A list of <see cref="Member"/> objects.</returns>
     public async Task<List<Member>> GetAllMembers()
     {
         var users = await _userManager.Users.ToListAsync();
@@ -76,12 +94,21 @@ public class MemberService : IMemberService
         return members;
     }
 
+    /// <summary>
+    /// Retrieves a list of all members who have the 'Admin' role.
+    /// </summary>
+    /// <returns>A list of <see cref="Member"/> objects with admin privileges.</returns>
     public async Task<List<Member>> GetAdminMembers()
     {
         var allMembers = await GetAllMembers();
         return allMembers.Where(m => m.IsAdmin).ToList();
     }
 
+    /// <summary>
+    /// Retrieves member details formatted for an edit form.
+    /// </summary>
+    /// <param name="id">The unique identifier of the member to edit.</param>
+    /// <returns>An <see cref="EditMemberForm"/> object populated with member data, or null if not found.</returns>
     public async Task<EditMemberForm?> GetMemberForEditAsync(string id)
     {
         if (string.IsNullOrEmpty(id))
@@ -104,6 +131,11 @@ public class MemberService : IMemberService
         };
     }
 
+    /// <summary>
+    /// Updates an existing member's details based on the submitted form data.
+    /// </summary>
+    /// <param name="form">The form containing the updated member information.</param>
+    /// <returns>True if the update was successful, false otherwise.</returns>
     public async Task<bool> EditMemberAsync(EditMemberForm form)
     {
         if (form == null || string.IsNullOrEmpty(form.Id))
@@ -134,6 +166,11 @@ public class MemberService : IMemberService
         return result.Succeeded;
     }
 
+    /// <summary>
+    /// Deletes a member from the system.
+    /// </summary>
+    /// <param name="id">The unique identifier of the member to delete.</param>
+    /// <returns>True if the deletion was successful, false otherwise.</returns>
     public async Task<bool> DeleteMemberAsync(string id)
     {
         if (string.IsNullOrEmpty(id))

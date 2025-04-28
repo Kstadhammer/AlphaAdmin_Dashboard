@@ -4,8 +4,20 @@ using System.Reflection;
 
 namespace Domain.Extensions;
 
+/// <summary>
+/// Provides extension methods for object mapping.
+/// </summary>
 public static class MappingExtensions
 {
+    /// <summary>
+    /// Maps properties from a source object to a new destination object of type <typeparamref name="TDestination"/>.
+    /// Copies properties with matching names and types.
+    /// Includes special handling for mapping <c>SignUpFormData</c> to <c>MemberEntity</c> to set both Email and UserName.
+    /// </summary>
+    /// <typeparam name="TDestination">The type of the destination object to create.</typeparam>
+    /// <param name="source">The source object whose properties will be copied.</param>
+    /// <returns>A new object of type <typeparamref name="TDestination"/> with mapped properties.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the source object is null.</exception>
     public static TDestination MapTo<TDestination>(this object source)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));

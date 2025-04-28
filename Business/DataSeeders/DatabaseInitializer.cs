@@ -10,8 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Business.DataSeeders
 {
+    /// <summary>
+    /// Static class responsible for initializing the database on application startup.
+    /// Includes applying migrations, seeding default roles, statuses, and an administrator account.
+    /// </summary>
     public static class DatabaseInitializer
     {
+        /// <summary>
+        /// Initializes the database by applying migrations and seeding essential data.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <returns>A task representing the asynchronous initialization process.</returns>
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
             await ApplyMigrationsAsync(serviceProvider);
@@ -22,6 +31,11 @@ namespace Business.DataSeeders
             await CreateDefaultStatusesAsync(serviceProvider);
         }
 
+        /// <summary>
+        /// Applies any pending Entity Framework Core migrations to the database.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <returns>A task representing the asynchronous migration process.</returns>
         private static async Task ApplyMigrationsAsync(IServiceProvider serviceProvider)
         {
             try
@@ -44,6 +58,11 @@ namespace Business.DataSeeders
             }
         }
 
+        /// <summary>
+        /// Creates the default roles ("Admin", "User") if they don't already exist.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <returns>A task representing the asynchronous role creation process.</returns>
         private static async Task CreateRolesAsync(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
@@ -63,6 +82,12 @@ namespace Business.DataSeeders
             }
         }
 
+        /// <summary>
+        /// Creates a default administrator user if one doesn't exist with the predefined credentials.
+        /// Ensures the default admin user is assigned the "Admin" role.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <returns>A task representing the asynchronous admin creation process.</returns>
         private static async Task CreateDefaultAdminAsync(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
@@ -130,6 +155,12 @@ namespace Business.DataSeeders
             }
         }
 
+        /// <summary>
+        /// Assigns the "Admin" role to a specific user identified by email, if they exist and are not already an admin.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <param name="adminEmail">The email address of the user to grant admin privileges.</param>
+        /// <returns>A task representing the asynchronous role assignment process.</returns>
         private static async Task AssignAdminRoleAsync(
             IServiceProvider serviceProvider,
             string adminEmail
@@ -175,6 +206,11 @@ namespace Business.DataSeeders
             }
         }
 
+        /// <summary>
+        /// Creates default project statuses ("Not Started", "In Progress", etc.) if they don't already exist.
+        /// </summary>
+        /// <param name="serviceProvider">The application's service provider.</param>
+        /// <returns>A task representing the asynchronous status seeding process.</returns>
         private static async Task CreateDefaultStatusesAsync(IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())

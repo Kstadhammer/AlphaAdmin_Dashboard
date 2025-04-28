@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.Controllers;
 
+/// <summary>
+/// Controller responsible for handling actions related to team members (users),
+/// including adding, editing, deleting, and assigning roles.
+/// Requires authorization for most actions.
+/// </summary>
 [Route("[controller]")]
 public class MembersController : Controller
 {
@@ -19,6 +24,13 @@ public class MembersController : Controller
     private readonly IAuthService _authService;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MembersController"/> class.
+    /// </summary>
+    /// <param name="memberService">Service for member data operations.</param>
+    /// <param name="userManager">ASP.NET Core Identity UserManager.</param>
+    /// <param name="authService">Service for authentication operations (used for adding members).</param>
+    /// <param name="webHostEnvironment">Provides information about the web hosting environment.</param>
     public MembersController(
         IMemberService memberService,
         UserManager<MemberEntity> userManager,
@@ -32,6 +44,10 @@ public class MembersController : Controller
         _webHostEnvironment = webHostEnvironment;
     }
 
+    /// <summary>
+    /// Helper method to set the current user information in ViewBag.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task SetCurrentUserAsync()
     {
         var userId = _userManager.GetUserId(User);
@@ -45,6 +61,11 @@ public class MembersController : Controller
         }
     }
 
+    /// <summary>
+    /// API endpoint to retrieve member details for editing (GET: /Members/GetMember/{id}).
+    /// </summary>
+    /// <param name="id">The unique identifier of the member.</param>
+    /// <returns>JSON response containing member details or an error message.</returns>
     [HttpGet]
     [Route("GetMember/{id}")]
     public async Task<IActionResult> GetMember(string id)
@@ -63,6 +84,12 @@ public class MembersController : Controller
         return Json(new { success = true, member });
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request to edit an existing member's details (POST: /Members/EditMember).
+    /// Includes handling for image uploads.
+    /// </summary>
+    /// <param name="form">The form containing updated member information.</param>
+    /// <returns>Redirects to the members list page with a status message.</returns>
     [HttpPost]
     [Route("EditMember")]
     public async Task<IActionResult> EditMember(EditMemberForm form)
@@ -127,6 +154,12 @@ public class MembersController : Controller
         }
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request to add a new member (POST: /Members/AddMember).
+    /// Creates the user account and updates additional profile details, including image upload.
+    /// </summary>
+    /// <param name="form">The form containing the new member's information.</param>
+    /// <returns>Redirects to the members list page with a status message.</returns>
     [HttpPost]
     [Route("AddMember")]
     public async Task<IActionResult> AddMember(AddMemberForm form)
@@ -236,6 +269,11 @@ public class MembersController : Controller
         return RedirectToAction("Members", "Admin");
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request to delete a member (POST: /Members/DeleteMember).
+    /// </summary>
+    /// <param name="id">The unique identifier of the member to delete.</param>
+    /// <returns>Redirects to the members list page with a status message.</returns>
     [HttpPost]
     [Route("DeleteMember")]
     public async Task<IActionResult> DeleteMember(string id)
@@ -268,6 +306,12 @@ public class MembersController : Controller
         return RedirectToAction("Members", "Admin");
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request to assign the 'Admin' role to a member (POST: /Members/AssignAdminRole).
+    /// Requires the user performing the action to have the 'Admin' role.
+    /// </summary>
+    /// <param name="id">The unique identifier of the member to assign the role to.</param>
+    /// <returns>Redirects to the members list page with a status message.</returns>
     [HttpPost("AssignAdminRole")] // Expect ID from form body, not route
     [Authorize(Roles = "Admin")] // Ensure only admins can perform this
     public async Task<IActionResult> AssignAdminRole(string id) // Model binder will match 'id' from hidden input

@@ -10,17 +10,30 @@ using Data.Interfaces;
 
 namespace Business.Services;
 
+/// <summary>
+/// Service responsible for retrieving project status information.
+/// Currently only supports reading statuses; management (Create, Update, Delete) is not implemented.
+/// </summary>
 public class StatusService : IStatusService
 {
     private readonly IStatusRepository _statusRepository;
     private readonly IStatusFactory _statusFactory;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StatusService"/> class.
+    /// </summary>
+    /// <param name="statusRepository">Repository for status data access.</param>
+    /// <param name="statusFactory">Factory for creating status models.</param>
     public StatusService(IStatusRepository statusRepository, IStatusFactory statusFactory)
     {
         _statusRepository = statusRepository;
         _statusFactory = statusFactory;
     }
 
+    /// <summary>
+    /// Retrieves all available project statuses.
+    /// </summary>
+    /// <returns>A <see cref="ServiceResult{T}"/> containing a collection of <see cref="Status"/> models or an error.</returns>
     public async Task<ServiceResult<IEnumerable<Business.Models.Status>>> GetStatusesAsync()
     {
         Debug.WriteLine("StatusService: Fetching all statuses from repository...");
@@ -52,6 +65,11 @@ public class StatusService : IStatusService
         };
     }
 
+    /// <summary>
+    /// Retrieves a specific project status by its name (case-insensitive).
+    /// </summary>
+    /// <param name="statusName">The name of the status to retrieve.</param>
+    /// <returns>A <see cref="ServiceResult{T}"/> containing the <see cref="Status"/> model or an error.</returns>
     public async Task<ServiceResult<Business.Models.Status>> GetStatusByNameAsync(string statusName)
     {
         if (string.IsNullOrEmpty(statusName))
@@ -110,6 +128,11 @@ public class StatusService : IStatusService
         }
     }
 
+    /// <summary>
+    /// Retrieves a specific project status by its unique identifier.
+    /// </summary>
+    /// <param name="id">The integer ID of the status to retrieve.</param>
+    /// <returns>A <see cref="ServiceResult{T}"/> containing the <see cref="Status"/> model or an error.</returns>
     public async Task<ServiceResult<Business.Models.Status>> GetStatusByIdAsync(int id)
     {
         try

@@ -9,6 +9,11 @@ using Domain.Models;
 
 namespace Business.Factories
 {
+    /// <summary>
+    /// Factory responsible for creating and mapping Project-related objects
+    /// (Entities, Models, Forms, ListItems) between different layers.
+    /// Handles default image assignment and random gradient selection for new projects.
+    /// </summary>
     public class ProjectFactory : IProjectFactory
     {
         // List of predefined gradient styles
@@ -22,6 +27,15 @@ namespace Business.Factories
         };
         private static readonly Random _random = new Random();
 
+        /// <summary>
+        /// Creates a new <see cref="ProjectEntity"/> from an <see cref="AddProjectForm"/>.
+        /// Assigns default image and random gradient if not provided.
+        /// </summary>
+        /// <param name="form">The form data for the new project.</param>
+        /// <param name="userId">The ID of the user creating the project.</param>
+        /// <param name="clientName">The name of the client associated with the project.</param>
+        /// <param name="imageUrl">Optional URL of an uploaded image for the project.</param>
+        /// <returns>A new <see cref="ProjectEntity"/> instance.</returns>
         public ProjectEntity CreateProjectEntity(
             AddProjectForm form,
             string userId,
@@ -62,6 +76,13 @@ namespace Business.Factories
             };
         }
 
+        /// <summary>
+        /// Updates an existing <see cref="ProjectEntity"/> with data from an <see cref="EditProjectForm"/>.
+        /// </summary>
+        /// <param name="entity">The existing project entity to update.</param>
+        /// <param name="form">The form data containing updates.</param>
+        /// <param name="imageUrl">Optional new image URL if the image was updated.</param>
+        /// <returns>The updated <see cref="ProjectEntity"/> instance.</returns>
         public ProjectEntity UpdateProjectEntity(
             ProjectEntity entity,
             EditProjectForm form,
@@ -87,6 +108,12 @@ namespace Business.Factories
             return entity;
         }
 
+        /// <summary>
+        /// Creates a <see cref="ProjectListItem"/> suitable for display in lists from a <see cref="ProjectEntity"/>.
+        /// Requires `Status` and `Members` navigation properties to be loaded on the entity.
+        /// </summary>
+        /// <param name="entity">The project data entity (with Status and Members loaded).</param>
+        /// <returns>A new <see cref="ProjectListItem"/> instance.</returns>
         public ProjectListItem CreateProjectListItem(ProjectEntity entity)
         {
             return new ProjectListItem
@@ -114,6 +141,12 @@ namespace Business.Factories
             };
         }
 
+        /// <summary>
+        /// Creates an <see cref="EditProjectForm"/> from a <see cref="ProjectEntity"/> for editing purposes.
+        /// Requires the `Members` navigation property to be loaded on the entity.
+        /// </summary>
+        /// <param name="entity">The project data entity (with Members loaded).</param>
+        /// <returns>A new <see cref="EditProjectForm"/> instance.</returns>
         public EditProjectForm CreateEditProjectForm(ProjectEntity entity)
         {
             return new EditProjectForm
@@ -131,6 +164,12 @@ namespace Business.Factories
             };
         }
 
+        /// <summary>
+        /// Creates a <see cref="Project"/> business model from a <see cref="ProjectEntity"/>.
+        /// Requires the `Members` navigation property to be loaded on the entity.
+        /// </summary>
+        /// <param name="entity">The project data entity (with Members loaded).</param>
+        /// <returns>A new <see cref="Project"/> business model instance.</returns>
         public Project CreateProjectModel(ProjectEntity entity)
         {
             return new Project

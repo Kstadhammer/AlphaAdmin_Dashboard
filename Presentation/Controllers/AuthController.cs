@@ -11,6 +11,12 @@ namespace WebApp.Controllers;
 using Data.Entities; // Add this using
 using Microsoft.AspNetCore.Identity; // Add this using
 
+/// <summary>
+/// Controller responsible for handling user authentication, registration, and related actions like
+/// password reset and external logins.
+/// </summary>
+/// <param name="authService">Service for authentication logic.</param>
+/// <param name="userManager">ASP.NET Core Identity UserManager.</param>
 [Route("Auth")] // Add base route for the controller
 public class AuthController(
     IAuthService authService,
@@ -25,6 +31,12 @@ public class AuthController(
 
     #region Login
 
+    /// <summary>
+    /// Displays the standard login page (GET: /Auth/Login).
+    /// Redirects already authenticated users based on role.
+    /// </summary>
+    /// <param name="returnUrl">The URL to redirect to after successful login.</param>
+    /// <returns>The login view or a redirect result.</returns>
     [HttpGet("Login")] // Explicit route: /Auth/Login
     public IActionResult Login(string returnUrl = "~/") // Default returnUrl might need adjustment now
     {
@@ -51,6 +63,12 @@ public class AuthController(
         return View();
     }
 
+    /// <summary>
+    /// Handles the standard login form submission (POST: /Auth/Login).
+    /// </summary>
+    /// <param name="form">The submitted login form data.</param>
+    /// <param name="returnUrl">The URL to redirect to after successful login.</param>
+    /// <returns>Redirects to the returnUrl on success, otherwise redisplays the login view with errors.</returns>
     [HttpPost("Login")] // Explicit route: /Auth/Login (POST)
     public async Task<IActionResult> Login(MemberLoginForm form, string returnUrl = "~/")
     {
@@ -73,6 +91,10 @@ public class AuthController(
 
     #region Registration
 
+    /// <summary>
+    /// Displays the user registration page (GET: /Auth/SignUp).
+    /// </summary>
+    /// <returns>The sign-up view.</returns>
     [HttpGet("SignUp")] // Explicit route: /Auth/SignUp
     public IActionResult SignUp()
     {
@@ -80,6 +102,11 @@ public class AuthController(
         return View();
     }
 
+    /// <summary>
+    /// Handles the user registration form submission (POST: /Auth/SignUp).
+    /// </summary>
+    /// <param name="form">The submitted sign-up form data.</param>
+    /// <returns>Redirects to the login page on success, otherwise redisplays the sign-up view with errors.</returns>
     [HttpPost("SignUp")] // Explicit route: /Auth/SignUp (POST)
     public async Task<IActionResult> SignUp(MemberSignUpForm form)
     {
@@ -131,6 +158,10 @@ public class AuthController(
 
     #endregion
 
+    /// <summary>
+    /// Redirects requests to the root admin path (/) to the AdminLogin page.
+    /// </summary>
+    /// <returns>A redirect to the AdminLogin action.</returns>
     [Route("/admin")] // Route for /admin
     public IActionResult AdminRedirect()
     {
@@ -140,6 +171,11 @@ public class AuthController(
 
     #region Admin Login
 
+    /// <summary>
+    /// Displays the administrator-specific login page (GET: /Auth/AdminLogin).
+    /// </summary>
+    /// <param name="returnUrl">The URL to redirect to after successful admin login.</param>
+    /// <returns>The admin login view.</returns>
     [HttpGet("AdminLogin")] // Explicit route: /Auth/AdminLogin
     public IActionResult AdminLogin(string returnUrl = "/") // Default return to dashboard
     {
@@ -148,6 +184,13 @@ public class AuthController(
         return View();
     }
 
+    /// <summary>
+    /// Handles the administrator login form submission (POST: /Auth/AdminLogin).
+    /// Verifies credentials and checks if the user has the 'Admin' role.
+    /// </summary>
+    /// <param name="form">The submitted login form data.</param>
+    /// <param name="returnUrl">The URL to redirect to after successful admin login.</param>
+    /// <returns>Redirects on success if user is admin, otherwise redisplays the admin login view with errors.</returns>
     [HttpPost("AdminLogin")] // Explicit route: /Auth/AdminLogin (POST)
     public async Task<IActionResult> AdminLogin(MemberLoginForm form, string returnUrl = "/")
     {
@@ -197,6 +240,10 @@ public class AuthController(
 
     #region Session Management
 
+    /// <summary>
+    /// Logs the current user out (GET: /Auth/Logout).
+    /// </summary>
+    /// <returns>Redirects to the home page.</returns>
     [HttpGet("Logout")] // Explicit route: /Auth/Logout
     public async Task<IActionResult> Logout()
     {
@@ -204,6 +251,10 @@ public class AuthController(
         return LocalRedirect("~/");
     }
 
+    /// <summary>
+    /// Displays the access denied page (GET: /Auth/AccessDenied).
+    /// </summary>
+    /// <returns>The access denied view.</returns>
     [HttpGet("AccessDenied")] // Explicit route: /Auth/AccessDenied
     public IActionResult AccessDenied()
     {
@@ -214,7 +265,12 @@ public class AuthController(
 
     #region External Authentication
 
-
+    /// <summary>
+    /// Initiates the external authentication flow for a specified provider (POST: /Auth/ExternalSignIn).
+    /// </summary>
+    /// <param name="provider">The external authentication provider (e.g., "Google", "GitHub").</param>
+    /// <param name="returnUrl">The URL to return to after external authentication.</param>
+    /// <returns>A challenge result that redirects the user to the external provider.</returns>
     [HttpPost("ExternalSignIn")] // Explicit route: /Auth/ExternalSignIn
     public IActionResult ExternalSignIn(string provider, string returnUrl = null!)
     {
@@ -225,6 +281,10 @@ public class AuthController(
 
     #region Password Reset
 
+    /// <summary>
+    /// Displays the forgot password page (GET: /Auth/ForgotPassword).
+    /// </summary>
+    /// <returns>The forgot password view.</returns>
     [HttpGet("ForgotPassword")]
     public IActionResult ForgotPassword()
     {
@@ -233,6 +293,12 @@ public class AuthController(
         return View();
     }
 
+    /// <summary>
+    /// Handles the forgot password form submission (POST: /Auth/ForgotPassword).
+    /// NOTE: This is currently a dummy implementation and does not actually send reset emails.
+    /// </summary>
+    /// <param name="form">The submitted forgot password form data.</param>
+    /// <returns>Redisplays the forgot password view with a success or error message.</returns>
     [HttpPost("ForgotPassword")]
     public IActionResult ForgotPassword(ForgotPasswordForm form)
     {

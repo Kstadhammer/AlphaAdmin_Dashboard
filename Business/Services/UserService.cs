@@ -10,6 +10,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
 
+/// <summary>
+/// Service for managing user accounts, primarily focused on creation and role assignments.
+/// Uses ASP.NET Core Identity's UserManager and RoleManager.
+/// </summary>
+/// <param name="userRepository">Repository for basic user data operations (like checking existence).</param>
+/// <param name="userManager">ASP.NET Core Identity UserManager for user creation, updates, etc.</param>
+/// <param name="roleManager">ASP.NET Core Identity RoleManager for role checks and assignments.</param>
 public class UserService(
     IUserRepository userRepository,
     UserManager<MemberEntity> userManager,
@@ -20,6 +27,12 @@ public class UserService(
     private readonly UserManager<MemberEntity> _userManager = userManager;
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 
+    /// <summary>
+    /// Retrieves a list of all registered users.
+    /// Note: This currently mixes UserManager and IUserRepository, potentially inefficiently.
+    /// Consider refactoring to use only UserManager or only IUserRepository for consistency.
+    /// </summary>
+    /// <returns>A <see cref="ServiceResult{T}"/> containing the user data or an error.</returns>
     public async Task<ServiceResult<object>> GetUsersAsync()
     {
         var users = await _userManager.Users.ToListAsync();
@@ -34,6 +47,12 @@ public class UserService(
         };
     }
 
+    /// <summary>
+    /// Assigns a specified role to a user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="roleName">The name of the role to assign.</param>
+    /// <returns>A <see cref="ServiceResult{T}"/> indicating success or failure.</returns>
     public async Task<ServiceResult<object>> AddUserToRole(string userId, string roleName)
     {
         if (!await _roleManager.RoleExistsAsync(roleName))
@@ -68,6 +87,13 @@ public class UserService(
             };
     }
 
+    /// <summary>
+    /// Creates a new user account with the specified details and assigns them to a given role.
+    /// Performs checks for existing users and role validity.
+    /// </summary>
+    /// <param name="formData">The sign-up form data containing user details.</param>
+    /// <param name="roleName">The name of the role to assign to the new user.</param>
+    /// <returns>A <see cref="ServiceResult{T}"/> indicating success (201) or failure (4xx, 5xx).</returns>
     public async Task<ServiceResult<object>> CreateUserAsync(
         SignUpFormData formData,
         string roleName
@@ -173,6 +199,12 @@ public class UserService(
         }
     }
 
+    /// <summary>
+    /// Retrieves a user by their unique identifier. (Currently not implemented)
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <exception cref="NotImplementedException">This method is not yet implemented.</exception>
     public Task<ServiceResult<object>> GetUserByIdAsync(string userId)
     {
         throw new NotImplementedException();

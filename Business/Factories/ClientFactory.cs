@@ -8,6 +8,11 @@ using Data.Entities;
 
 namespace Business.Factories
 {
+    /// <summary>
+    /// Factory responsible for creating and mapping Client-related objects
+    /// (Entities, Models, Forms, ListItems) between different layers.
+    /// Handles assignment of random default avatars for new clients if no image is provided.
+    /// </summary>
     public class ClientFactory : IClientFactory
     {
         // List of available default avatar paths (relative to wwwroot)
@@ -21,6 +26,13 @@ namespace Business.Factories
         };
         private static readonly Random _random = new Random();
 
+        /// <summary>
+        /// Creates a new <see cref="ClientEntity"/> from an <see cref="AddClientForm"/>.
+        /// Assigns a random default avatar if no image URL is provided.
+        /// </summary>
+        /// <param name="form">The form data for the new client.</param>
+        /// <param name="imageUrl">Optional URL of an uploaded image for the client.</param>
+        /// <returns>A new <see cref="ClientEntity"/> instance.</returns>
         public ClientEntity CreateClientEntity(AddClientForm form, string? imageUrl = null)
         {
             string finalImageUrl = imageUrl;
@@ -44,6 +56,13 @@ namespace Business.Factories
             };
         }
 
+        /// <summary>
+        /// Updates an existing <see cref="ClientEntity"/> with data from an <see cref="EditClientForm"/>.
+        /// </summary>
+        /// <param name="entity">The existing client entity to update.</param>
+        /// <param name="form">The form data containing updates.</param>
+        /// <param name="imageUrl">Optional new image URL if the avatar was updated.</param>
+        /// <returns>The updated <see cref="ClientEntity"/> instance.</returns>
         public ClientEntity UpdateClientEntity(
             ClientEntity entity,
             EditClientForm form,
@@ -64,6 +83,11 @@ namespace Business.Factories
             return entity;
         }
 
+        /// <summary>
+        /// Creates a <see cref="ClientListItem"/> suitable for display from a <see cref="ClientEntity"/>.
+        /// </summary>
+        /// <param name="entity">The client data entity.</param>
+        /// <returns>A new <see cref="ClientListItem"/> instance.</returns>
         public ClientListItem CreateClientListItem(ClientEntity entity)
         {
             return new ClientListItem
@@ -78,6 +102,11 @@ namespace Business.Factories
             };
         }
 
+        /// <summary>
+        /// Creates an <see cref="EditClientForm"/> from a <see cref="ClientEntity"/> for editing purposes.
+        /// </summary>
+        /// <param name="entity">The client data entity.</param>
+        /// <returns>A new <see cref="EditClientForm"/> instance.</returns>
         public EditClientForm CreateEditClientForm(ClientEntity entity)
         {
             return new EditClientForm

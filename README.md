@@ -1,10 +1,107 @@
-# AlphaAdmin Dashboard
+# AlphaAdmin Dashboard - ASP.NET Assignment
 
-![AlphaAdmin Dashboard](Presentation/wwwroot/images/admin/dashboard-preview.png)
+[![.NET Build and Test](https://github.com/kimhammerstad/AlphaAdmin_Dashboard/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kimhammerstad/AlphaAdmin_Dashboard/actions/workflows/dotnet.yml)
+
+![AlphaAdmin Dashboard Preview](Presentation/wwwroot/images/admin/dashboard-preview.png)
 
 ## Project Overview
 
-AlphaAdmin Dashboard is a modern project management web application built with ASP.NET Core MVC. It provides a comprehensive solution for managing projects, clients, and team members with a clean, responsive user interface that supports both light and dark themes.
+AlphaAdmin Dashboard is a web application developed as part of the ASP.NET course assignment at EC-Utbildning. It's built using ASP.NET Core MVC (.NET 9) and follows a clean, multi-layered architecture (Presentation, Business, Data, Domain).
+
+The goal of this project is to create a functional administrative dashboard for managing projects, clients, and team members, fulfilling specific requirements for "Godkänt" (Pass) and "Väl Godkänt" (Higher Pass) grades as outlined in the assignment brief.
+
+**Note on AI Assistance:** Parts of this codebase, particularly involving implementation details and refactoring efforts, were developed with assistance from the AI model Gemini 2.5 Pro. This usage adheres to the assignment guidelines regarding AI-generated code.
+
+## Key Features & Assignment Requirements
+
+This application implements features based on the assignment criteria:
+
+- **Core Functionality (G/VG):**
+  - ASP.NET MVC Framework
+  - Project Listing & Filtering (by Status)
+  - Project Creation & Updates via Forms
+  - Client & Member Management (implicit for VG)
+  - EF Core for Data Access (SQLite configured)
+  - Service & Repository Patterns
+  - User Registration & Login (Microsoft Identity)
+  - Authorization (`[Authorize]` attribute)
+- **Advanced Features (VG):**
+  - Clean Architecture (Separate Data & Business Layers)
+  - Views, Partial Views, and ViewModels
+  - Admin-Only Management Pages (e.g., Status Types - _Partially Implemented_)
+  - Server-Side (ModelState) & Client-Side (JavaScript) Validation
+  - Cookie Consent Banner
+  - Role-Based Authorization (Admin vs. User roles)
+  - External Login Providers (Google, GitHub configured)
+  - Dark/Light Theme Toggle
+  - Project Image Uploads
+  - Assigning Members to Projects
+  - Notifications for Admins (New Projects/Users - _Partially Implemented_)
+
+For a detailed breakdown of requirement completion status, see [PROJECT_REQUIREMENTS_STATUS.md](PROJECT_REQUIREMENTS_STATUS.md).
+
+## Technologies Used
+
+- **Backend**: ASP.NET Core MVC (.NET 9)
+- **Database**: Entity Framework Core with SQLite (Connection string in `appsettings.json`)
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Authentication**: ASP.NET Core Identity, Google & GitHub OAuth
+- **Architecture**: Multi-layered (Presentation, Business, Data, Domain) with Service, Repository, and Factory patterns.
+
+## Prerequisites
+
+- .NET 9 SDK (or compatible version as per `global.json`)
+- A compatible IDE (e.g., Visual Studio 2022, JetBrains Rider)
+
+## Setup and Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/kimhammerstad/AlphaAdmin_Dashboard.git
+    cd AlphaAdmin_Dashboard
+    ```
+2.  **Ensure Database Connection:**
+    - The project is configured to use SQLite (`Data Source=app.db`). The database file will be created automatically in the `Presentation` directory upon first run if it doesn't exist.
+    - No changes are needed in `appsettings.json` unless you wish to switch to a different provider.
+3.  **Build and Run:**
+    - **Using IDE:** Open the solution (`AlphaAdmin_Dashboard.sln`) and run the `Presentation` project.
+    - **Using .NET CLI:**
+      `bash
+dotnet run --project Presentation
+`
+      The application will build, apply necessary EF Core migrations automatically (including seeding initial roles, statuses, and a default admin user), and start the web server.
+4.  **Access the application:**
+    - Open your browser and navigate to the URL provided by the Kestrel server (e.g., `https://localhost:7147` or `http://localhost:5147`).
+
+## Default Admin Credentials
+
+A default administrator account is seeded into the database on the first run:
+
+- **Email:** `admin@admin.se`
+- **Password:** `Admin123!`
+
+Use these credentials to log in and access administrative features.
+
+## Project Structure
+
+```
+AlphaAdmin_Dashboard/
+├── Business/              # Business logic, services, factories, models
+├── Data/                  # Data access layer, EF Core context, entities, repositories
+├── Domain/                # Core domain models, extensions
+└── Presentation/          # ASP.NET MVC project, controllers, views, wwwroot
+    ├── app.db             # SQLite database file (created on run)
+    └── ...
+├── .gitignore
+├── AlphaAdmin_Dashboard.sln
+├── global.json            # Specifies .NET SDK version
+├── PROJECT_REQUIREMENTS_STATUS.md # Tracks assignment progress
+└── README.md              # This file
+```
+
+## License
+
+This project was created solely for educational purposes as part of an assignment for EC-Utbildning.
 
 ## Features
 
@@ -16,105 +113,6 @@ AlphaAdmin Dashboard is a modern project management web application built with A
 - **Dark/Light Mode**: Toggle between dark and light themes for comfortable viewing
 - **Real-time Notifications**: Get notified about new projects and updates
 - **Role-based Access Control**: Different permissions for administrators and regular users
-
-## Technologies Used
-
-- **Backend**: ASP.NET Core MVC (.NET 9)
-- **Database**: Entity Framework Core with SQL Server
-- **Frontend**: HTML5, CSS3, JavaScript, Bootstrap
-- **Authentication**: ASP.NET Core Identity with external login providers
-- **Architecture**: Multi-layered architecture with:
-  - Presentation Layer (MVC)
-  - Business Layer (Services)
-  - Data Layer (Repositories)
-  - Domain Layer (Models)
-
-## Prerequisites
-
-- .NET 9 SDK
-- SQL Server (or alternative database that works with EF Core)
-- Visual Studio 2022 or JetBrains Rider
-
-## Setup and Installation
-
-1. **Clone the repository**
-
-   ```
-   git clone https://github.com/yourusername/AlphaAdmin_Dashboard.git
-   cd AlphaAdmin_Dashboard
-   ```
-
-2. **Configure the database connection**
-
-   - Update the connection string in `appsettings.json` file according to your local database setup
-
-3. **Apply migrations to create the database**
-
-   ```
-   dotnet ef database update
-   ```
-
-4. **Run the application**
-
-   ```
-   dotnet run --project Presentation
-   ```
-
-5. **Access the application**
-   - Open your browser and navigate to `https://localhost:5001` or `http://localhost:5000`
-
-## Project Structure
-
-```
-AlphaAdmin_Dashboard/
-├── Business/              # Business logic layer
-│   ├── DataSeeders/       # Seed data for development
-│   ├── Factories/         # Factory pattern implementations
-│   ├── Interfaces/        # Service interfaces
-│   ├── Models/            # Business models
-│   └── Services/          # Service implementations
-├── Data/                  # Data access layer
-│   ├── Contexts/          # EF Core DbContext
-│   ├── Entities/          # Database entities
-│   ├── Interfaces/        # Repository interfaces
-│   ├── Migrations/        # EF Core migrations
-│   ├── Models/            # Data models
-│   └── Repositories/      # Repository implementations
-├── Domain/                # Domain layer
-│   ├── Extensions/        # Extension methods
-│   └── Models/            # Domain models
-└── Presentation/          # Presentation layer (MVC)
-    ├── Controllers/       # MVC controllers
-    ├── ViewModels/        # View models
-    ├── Views/             # Razor views
-    └── wwwroot/           # Static assets
-```
-
-## Features Implemented
-
-### Base Requirements (Godkänt/Passed)
-
-- ✅ All required pages from the design file
-- ✅ Project listing with filtering by status
-- ✅ Project creation and editing functionality
-- ✅ Form validation using JavaScript
-- ✅ Entity Framework Core with appropriate design patterns
-- ✅ Authentication and authorization with ASP.NET Identity
-
-### Advanced Requirements (Väl Godkänt/Well-Passed)
-
-- ✅ All pages required for the advanced level
-- ✅ Proper use of Views, Partial Views, and ViewModels
-- ✅ Complete implementation based on the design file
-- ✅ Admin interface for managing system data
-- ✅ Form validation with both JavaScript and ModelState
-- ✅ Cookie Consent implementation
-- ✅ Separate data and business layers
-- ✅ Role-based access control (Admin vs Standard users)
-- ✅ Third-party authentication providers
-- ✅ Dark/Light theme toggle
-- ✅ Notification system for new projects and users
-- ✅ Project image upload and team member assignment
 
 ## Screenshots
 
@@ -130,10 +128,6 @@ AlphaAdmin_Dashboard/
 
 ![Dark Mode](Presentation/wwwroot/images/admin/dark-mode.png)
 
-## License
-
-This project is part of an educational assignment for EC-Utbildning.
-
 ## Acknowledgements
 
 - Design inspiration from [source of design files if applicable]
@@ -143,12 +137,3 @@ This project is part of an educational assignment for EC-Utbildning.
 ---
 
 _Note: This project was created as an assignment for the ASP.NET course at EC-Utbildning._
-
-# Default Login Credentials
-
-When you first run the application with a fresh database, a default administrator account is automatically created:
-
-- **Email:** admin@admin.se
-- **Password:** Admin123!
-
-You can use these credentials to log in to the admin panel. It's recommended to change the password or create a new admin account after the first login.

@@ -6,54 +6,84 @@ using System.Threading.Tasks;
 using Business.Forms;
 using Business.Interfaces;
 using Business.Models;
-using Data.Contexts; // Add using for AppDbContext
+using Data.Contexts;
 using Data.Entities;
 using Data.Interfaces;
 using Domain.Extensions;
 using Domain.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore; // Add for ToListAsync
-using Microsoft.EntityFrameworkCore; // Add for Include
+using Microsoft.EntityFrameworkCore;
+
+// I got assistance by Gemini 2.5 to implement and refactor this codebase
 
 namespace Business.Services;
 
+/// <summary>
+/// Service responsible for all project-related business logic, including CRUD operations,
+/// file handling, and data transformation between different layers of the application.
+/// </summary>
 public class ProjectService : IProjectService
 {
+    // Repositories for data access
     private readonly IProjectRepository _projectRepository;
+    private readonly IClientRepository _clientRepository;
+
+    // Factory for creating business models
     private readonly IProjectFactory _projectFactory;
 
+    // Identity and context access
     private readonly UserManager<MemberEntity> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IWebHostEnvironment _webHostEnvironment; // For handling file uploads
 
-    private readonly IClientRepository _clientRepository; // Inject Client Repository
-    private readonly AppDbContext _dbContext; // Inject DbContext
+    // For file operations and hosting environment access
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
+    // Direct database context for complex queries
+    private readonly AppDbContext _dbContext;
+
+    /// <summary>
+    /// Constructor that injects all required dependencies for project operations
+    /// </summary>
+    /// <param name="projectRepository">Repository for project data access</param>
+    /// <param name="projectFactory">Factory for creating project models</param>
+    /// <param name="userManager">ASP.NET Identity user manager</param>
+    /// <param name="httpContextAccessor">For accessing the current HTTP context</param>
+    /// <param name="webHostEnvironment">For file system operations and paths</param>
+    /// <param name="clientRepository">Repository for client data access</param>
+    /// <param name="dbContext">Direct database context for complex queries</param>
     public ProjectService(
         IProjectRepository projectRepository,
         IProjectFactory projectFactory,
         UserManager<MemberEntity> userManager,
         IHttpContextAccessor httpContextAccessor,
         IWebHostEnvironment webHostEnvironment,
-        IClientRepository clientRepository, // Add Client Repository parameter
-        AppDbContext dbContext // Add DbContext parameter
+        IClientRepository clientRepository,
+        AppDbContext dbContext
     )
     {
         _projectRepository = projectRepository;
         _projectFactory = projectFactory;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
-        _webHostEnvironment = webHostEnvironment; // Assign injected service
-        _clientRepository = clientRepository; // Assign Client Repository
-        _dbContext = dbContext; // Assign DbContext
+        _webHostEnvironment = webHostEnvironment;
+        _clientRepository = clientRepository;
+        _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Retrieves a single project by its unique identifier
+    /// Transforms the data entity to a business model
+    /// </summary>
+    /// <param name="id">Unique identifier of the project</param>
+    /// <returns>Service result containing the project or error information</returns>
     public async Task<ServiceResult<Project>> GetProjectAsync(string id)
     {
+        // Get project entity from repository
         var result = await _projectRepository.GetByIdAsync(id);
+
+        // Return error if project not found or other repository error
         if (!result.Succeeded)
         {
             return new ServiceResult<Project>
@@ -64,7 +94,10 @@ public class ProjectService : IProjectService
             };
         }
 
+        // Transform entity to business model using factory
         var project = _projectFactory.CreateProjectModel(result.Result);
+
+        // Return successful result with project data
         return new ServiceResult<Project>
         {
             Succeeded = true,
@@ -73,9 +106,17 @@ public class ProjectService : IProjectService
         };
     }
 
+    /// <summary>
+    /// Retrieves all projects from the database
+    /// Transforms data entities to business models
+    /// </summary>
+    /// <returns>Service result containing collection of projects or error information</returns>
     public async Task<ServiceResult<IEnumerable<Project>>> GetProjectsAsync()
     {
+        // Get all project entities from repository
         var result = await _projectRepository.GetAllAsync();
+
+        // Return error if repository operation failed
         if (!result.Succeeded)
         {
             return new ServiceResult<IEnumerable<Project>>
@@ -86,9 +127,12 @@ public class ProjectService : IProjectService
             };
         }
 
+        // Transform each entity to a business model
         var projects = result
             .Result.Select(entity => _projectFactory.CreateProjectModel(entity))
             .ToList();
+
+        // Return successful result with projects collection
         return new ServiceResult<IEnumerable<Project>>
         {
             Succeeded = true,
@@ -97,13 +141,19 @@ public class ProjectService : IProjectService
         };
     }
 
-    // Removed unused CreateProjectAsync(AddProjectFormData formData) method
+    /// <summary>
+    /// Retrieves all projects with related data (status, members) for display in list views
+    /// Uses eager loading to optimize data access
+    /// </summary>
+    /// <returns>List of project list items with complete information</returns>
     public async Task<List<ProjectListItem>> GetAllProjectsAsync()
     {
-        // Include Status navigation property
+        // Get all projects with their status information using eager loading
         var result = await _projectRepository.GetAllAsync(include: query =>
             query.Include(p => p.Status)
         );
+
+        // Return empty list if repository operation failed
         if (!result.Succeeded)
         {
             return new List<ProjectListItem>();
@@ -112,86 +162,103 @@ public class ProjectService : IProjectService
         var projects = new List<ProjectListItem>();
         foreach (var entity in result.Result)
         {
-            // For each project, load its members from the ProjectMembers table
+            // For each project, load its members from the many-to-many relationship table
             var memberIds = await _dbContext
                 .ProjectMembers.Where(pm => pm.ProjectId == entity.Id)
                 .Select(pm => pm.MemberId)
                 .ToListAsync();
 
-            // Load member details for each member ID
+            // Load complete member information for each assigned member
             var members = await _userManager
                 .Users.Where(m => memberIds.Contains(m.Id))
                 .ToListAsync();
 
-            // Assign members to the project entity
+            // Populate the navigation property with loaded members
             entity.Members = members;
 
-            // Add the project to the list
+            // Transform to list item model and add to result collection
             projects.Add(_projectFactory.CreateProjectListItem(entity));
         }
 
         return projects;
     }
 
-    public async Task<EditProjectForm?> GetProjectForEditAsync(string id) // Changed id to string, added nullable return
+    /// <summary>
+    /// Retrieves a project with all data needed for the edit form
+    /// Includes associated members for selection in the UI
+    /// </summary>
+    /// <param name="id">Unique identifier of the project to edit</param>
+    /// <returns>Form object with project data or null if not found/error</returns>
+    public async Task<EditProjectForm?> GetProjectForEditAsync(string id)
     {
         try
         {
-            // ID is already a string
-            var result = await _projectRepository.GetByIdAsync(id); // Use id directly
+            // Retrieve the project entity by ID
+            var result = await _projectRepository.GetByIdAsync(id);
 
+            // Return null if project not found or repository error
             if (!result.Succeeded || result.Result == null)
             {
-                return null; // Return null if not found
+                return null;
             }
 
-            // Load project members from the ProjectMembers table
+            // Load project members from the many-to-many relationship table
             var memberIds = await _dbContext
                 .ProjectMembers.Where(pm => pm.ProjectId == id)
                 .Select(pm => pm.MemberId)
                 .ToListAsync();
 
-            // Load member details for each member ID
+            // Load complete member information for each assigned member
             var members = await _userManager
                 .Users.Where(m => memberIds.Contains(m.Id))
                 .ToListAsync();
 
-            // Assign members to the project entity
+            // Populate the navigation property with loaded members
             result.Result.Members = members;
 
+            // Transform entity to edit form model using factory
             return _projectFactory.CreateEditProjectForm(result.Result);
         }
-        catch (Exception ex) // Declare exception variable ex
+        catch (Exception ex)
         {
-            Console.WriteLine($"Error in GetProjectForEditAsync: {ex.Message}"); // Basic logging
-            return null; // Return null on exception
+            // Log error and return null on exception
+            Console.WriteLine($"Error in GetProjectForEditAsync: {ex.Message}");
+            return null;
         }
     }
 
+    /// <summary>
+    /// Creates a new project based on the submitted form data
+    /// Handles related operations like image uploads and member assignments
+    /// </summary>
+    /// <param name="form">Form containing the new project data</param>
+    /// <returns>True if project was created successfully, false otherwise</returns>
     public async Task<bool> AddProjectAsync(AddProjectForm form)
     {
+        // Validate form and context
         if (form == null || _httpContextAccessor.HttpContext == null)
             return false;
 
         try
         {
-            // 1. Get Current User ID
+            // Get current authenticated user for audit info
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
             if (user == null)
-                return false; // User not found/logged in
+                return false; // Not authenticated or user not found
             var userId = user.Id;
 
-            // 1.5 Get Client Name from ClientId
+            // Retrieve client information from the selected client ID
             if (string.IsNullOrWhiteSpace(form.ClientId))
-                return false; // No client selected
+                return false; // Client selection is required
+
             var clientResult = await _clientRepository.GetByIdAsync(form.ClientId);
             if (!clientResult.Succeeded || clientResult.Result == null)
             {
-                // Selected client not found in DB (shouldn't happen with dropdown)
+                // Client not found in database
                 Console.WriteLine($"Client not found for ID: {form.ClientId}");
                 return false;
             }
-            var clientName = clientResult.Result.ClientName; // Get the name
+            var clientName = clientResult.Result.ClientName; // Get client name for project
             // 2. Handle Image Upload
             string? imageUrl = null;
             if (form.ProjectImage != null && form.ProjectImage.Length > 0)
@@ -276,6 +343,12 @@ public class ProjectService : IProjectService
         }
     }
 
+    /// <summary>
+    /// Updates an existing project based on the submitted form data.
+    /// Handles related operations like member assignment updates.
+    /// </summary>
+    /// <param name="form">Form containing the updated project data.</param>
+    /// <returns>True if the project was updated successfully, false otherwise.</returns>
     public async Task<bool> EditProjectAsync(EditProjectForm form)
     {
         if (form == null)
@@ -326,6 +399,11 @@ public class ProjectService : IProjectService
         }
     }
 
+    /// <summary>
+    /// Deletes a project and its associated member relationships.
+    /// </summary>
+    /// <param name="id">The unique identifier of the project to delete.</param>
+    /// <returns>True if the project was deleted successfully, false otherwise.</returns>
     public async Task<bool> DeleteProjectAsync(string id) // Changed id to string
     {
         try

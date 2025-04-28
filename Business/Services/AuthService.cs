@@ -7,12 +7,22 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services;
 
+/// <summary>
+/// Service responsible for handling user authentication operations like sign-in, sign-up, and sign-out.
+/// It orchestrates interactions between user service, sign-in manager, and user manager.
+/// </summary>
 public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
     private readonly SignInManager<MemberEntity> _signInManager;
     private readonly UserManager<MemberEntity> _userManager;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthService"/> class.
+    /// </summary>
+    /// <param name="userService">Service for user creation and management.</param>
+    /// <param name="signInManager">ASP.NET Core Identity SignInManager.</param>
+    /// <param name="userManager">ASP.NET Core Identity UserManager.</param>
     public AuthService(
         IUserService userService,
         SignInManager<MemberEntity> signInManager,
@@ -24,6 +34,11 @@ public class AuthService : IAuthService
         _userManager = userManager;
     }
 
+    /// <summary>
+    /// Attempts to sign in a user using their email and password.
+    /// </summary>
+    /// <param name="formData">The sign-in form data containing email, password, and persistence preference.</param>
+    /// <returns>A <see cref="SignInResult"/> indicating the outcome of the sign-in attempt.</returns>
     public async Task<SignInResult> SignInAsync(SignInFormData formData)
     {
         if (formData == null)
@@ -41,6 +56,12 @@ public class AuthService : IAuthService
         return result;
     }
 
+    /// <summary>
+    /// Registers a new user in the system based on the provided form data.
+    /// Uses the <see cref="IUserService"/> to handle the actual user creation.
+    /// </summary>
+    /// <param name="formData">The sign-up form data containing user details.</param>
+    /// <returns>A <see cref="ServiceResult{T}"/> indicating success or failure.</returns>
     public async Task<ServiceResult<object>> SignUpAsync(SignUpFormData formData)
     {
         if (formData == null)
@@ -64,13 +85,21 @@ public class AuthService : IAuthService
             };
     }
 
+    /// <summary>
+    /// Signs out the currently authenticated user.
+    /// </summary>
+    /// <returns>A <see cref="ServiceResult{T}"/> indicating the sign-out operation was successful.</returns>
     public async Task<ServiceResult<object>> SignOutAsync()
     {
         await _signInManager.SignOutAsync();
         return new ServiceResult<object> { Succeeded = true, StatusCode = 200 };
     }
 
-    // New methods to satisfy the interface
+    /// <summary>
+    /// Attempts to log in a user using credentials from the login form model.
+    /// </summary>
+    /// <param name="form">The login form data.</param>
+    /// <returns>True if login is successful, false otherwise.</returns>
     public async Task<bool> LoginAsync(MemberLoginForm form)
     {
         if (form == null)
@@ -86,6 +115,12 @@ public class AuthService : IAuthService
         return result.Succeeded;
     }
 
+    /// <summary>
+    /// Registers a new user based on the sign-up form model.
+    /// This method adapts the form data and calls the internal SignUpAsync.
+    /// </summary>
+    /// <param name="form">The sign-up form data.</param>
+    /// <returns>True if registration is successful, false otherwise.</returns>
     public async Task<bool> SignUpAsync(MemberSignUpForm form)
     {
         if (form == null)
@@ -113,11 +148,21 @@ public class AuthService : IAuthService
         return result.Succeeded;
     }
 
+    /// <summary>
+    /// Signs out the currently authenticated user.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task LogoutAsync()
     {
         await _signInManager.SignOutAsync();
     }
 
+    /// <summary>
+    /// Registers a new user entity with basic details and assigns the default "User" role.
+    /// </summary>
+    /// <param name="email">The user's email address.</param>
+    /// <param name="password">The user's chosen password.</param>
+    /// <returns>An <see cref="IdentityResult"/> indicating the outcome of the registration process.</returns>
     public async Task<IdentityResult> RegisterUserAsync(string email, string password)
     {
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
