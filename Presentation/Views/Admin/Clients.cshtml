@@ -1,4 +1,4 @@
-    @model IEnumerable<Business.Models.ClientListItem>
+@model IEnumerable<Business.Models.ClientListItem>
 @{
     ViewData["Title"] = "Clients";
 }
@@ -15,3 +15,7 @@
         @await Html.PartialAsync("Partials/Sections/_ClientList", Model)
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/client-validation.js" asp-append-version="true"></script>
+}
