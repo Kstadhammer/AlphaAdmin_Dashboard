@@ -175,20 +175,20 @@
         console.log("Submit button clicked - doing final checks");
 
         // Final check for FirstName and LastName
-        const firstName = addMemberForm.querySelector('[name="FirstName"]');
-        const lastName = addMemberForm.querySelector('[name="LastName"]');
+        // const firstName = addMemberForm.querySelector('[name="FirstName"]');
+        // const lastName = addMemberForm.querySelector('[name="LastName"]');
 
-        if (firstName && !firstName.value.trim()) {
-          alert("First name is required");
-          firstName.focus();
-          return false;
-        }
+        // if (firstName && !firstName.value.trim()) {
+        //   alert("First name is required");
+        //   firstName.focus();
+        //   return false;
+        // }
 
-        if (lastName && !lastName.value.trim()) {
-          alert("Last name is required");
-          lastName.focus();
-          return false;
-        }
+        // if (lastName && !lastName.value.trim()) {
+        //   alert("Last name is required");
+        //   lastName.focus();
+        //   return false;
+        // }
 
         // Extra check to make sure form values are set
         const imageUrl = addMemberForm.querySelector('[name="ImageUrl"]');
