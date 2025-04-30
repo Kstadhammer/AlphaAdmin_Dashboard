@@ -120,20 +120,6 @@
                         <div class="dropdown-header">
                             <h5>Settings</h5>
                         </div>
-                        <div class="user-info">
-                            <img src="~/images/Avatar_male_1.svg" alt="User Avatar" class="avatar-small" />
-                            <span class="user-name">
-                                @if (ViewBag.CurrentUser != null)
-                                {
-                                    @(ViewBag.CurrentUser.FirstName + " " + ViewBag.CurrentUser.LastName)
-                                }
-                                else
-                                {
-                                    <text>User</text>
-                                }
-                            </span>
-                        </div>
-
                         <div class="dropdown-item">
                             <i class="fa-regular fa-moon"></i>
                             <span>Dark Mode</span>
