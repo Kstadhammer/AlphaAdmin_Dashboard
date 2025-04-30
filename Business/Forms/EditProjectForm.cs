@@ -11,13 +11,13 @@ public class EditProjectForm
 
     [Required(ErrorMessage = "Project name is required")]
     [MaxLength(100)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [Required(ErrorMessage = "Client name is required")]
     [MaxLength(100)]
-    public string ClientName { get; set; }
+    public string ClientName { get; set; } = null!;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
 
     [Required]
     public DateTime StartDate { get; set; }

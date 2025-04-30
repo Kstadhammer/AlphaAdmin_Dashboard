@@ -4,15 +4,15 @@ namespace Business.Models
 {
     public class ProjectListItem
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ClientName { get; set; }
-        public string Description { get; set; }
+        public string Id { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string ClientName { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal Budget { get; set; }
         public bool IsActive { get; set; }
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
         public int MemberCount { get; set; }
         public DateTime CreatedAt { get; set; }
         public string GradientCss { get; set; } = string.Empty;

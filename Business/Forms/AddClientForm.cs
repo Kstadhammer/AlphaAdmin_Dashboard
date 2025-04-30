@@ -29,5 +29,6 @@ public class AddClientForm
 
     [Display(Name = "Phone", Prompt = "Enter Phone")]
     [DataType(DataType.PhoneNumber)]
+    
     public string? Phone { get; set; } = null!;
 }

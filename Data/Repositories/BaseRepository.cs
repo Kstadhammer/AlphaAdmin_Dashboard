@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore.Query; // Add for IIncludableQueryable
 
 namespace Data.Repositories;
 
+// Based on Hans video for total backend for the ASP.Course, but with some modifications
+// suggested by Claude AI
+
 /// <summary>
 /// Generic base repository providing common CRUD operations for entities.
 /// Uses Entity Framework Core for data access.
