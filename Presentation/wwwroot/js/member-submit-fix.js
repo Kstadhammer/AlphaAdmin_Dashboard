@@ -1,0 +1,222 @@
+/**
+ * Add Member Form Submission Fix
+ * This script ensures member forms can submit properly
+ */
+(function () {
+  console.log(
+    "Member form submission fix loaded - Version 2.1 (FirstName fix)"
+  );
+
+  // Override any existing validation to ensure form submits
+  function fixMemberForm() {
+    // Find the Add Member form
+    const addMemberForm = document.querySelector("#addMemberModal form");
+
+    if (!addMemberForm) {
+      console.log("Add Member form not found - will try again later");
+      return null;
+    }
+
+    console.log("Add Member form found - applying fixes");
+
+    // Fix ImageUrl field (critical for MemberEntity)
+    const imageUrlField = document.getElementById("addMemberImageUrl");
+    if (imageUrlField && !imageUrlField.value) {
+      console.log("Setting default avatar URL");
+      imageUrlField.value = "/images/Avatar_male_1.svg";
+    }
+
+    // CRITICAL FIX: Make sure FirstName and LastName are never empty
+    const firstNameField = addMemberForm.querySelector('[name="FirstName"]');
+    const lastNameField = addMemberForm.querySelector('[name="LastName"]');
+
+    if (firstNameField) {
+      console.log("Found FirstName field - ensuring it's properly set");
+
+      // Set a validation event to check if it's empty
+      firstNameField.addEventListener("invalid", function (e) {
+        console.error("FirstName validation failed - this field is required!");
+      });
+
+      // Extra validation on input
+      firstNameField.addEventListener("input", function () {
+        if (!this.value.trim()) {
+          this.setCustomValidity("First name is required");
+        } else {
+          this.setCustomValidity("");
+        }
+      });
+    } else {
+      console.error(
+        "FirstName field not found! This will cause database errors!"
+      );
+    }
+
+    if (lastNameField) {
+      // Similar handling for LastName
+      lastNameField.addEventListener("invalid", function (e) {
+        console.error("LastName validation failed - this field is required!");
+      });
+    }
+
+    // Fix any required fields that might not be getting set properly
+    document
+      .querySelectorAll("#addMemberModal form [required]")
+      .forEach((field) => {
+        console.log(`Required field: ${field.name}`);
+
+        // Ensure empty required fields show proper validation
+        if (!field.value) {
+          field.setCustomValidity("This field is required");
+        } else {
+          field.setCustomValidity("");
+        }
+
+        // Clear custom validation when field value changes
+        field.addEventListener("input", function () {
+          if (this.value.trim()) {
+            this.setCustomValidity("");
+          }
+        });
+      });
+
+    // Ensure the form is properly wired for submission
+    const oldSubmitHandler = addMemberForm.onsubmit;
+    addMemberForm.onsubmit = function (e) {
+      // First log all form data for debugging
+      console.log("Form submission attempt");
+      const formData = new FormData(this);
+      const formValues = {};
+      let allRequiredFieldsFilled = true;
+
+      for (let [key, value] of formData.entries()) {
+        if (key === "Password" || key === "ConfirmPassword") {
+          formValues[key] = value ? "[PRESENT]" : "[MISSING]";
+        } else {
+          formValues[key] = value;
+        }
+
+        // Check required field but not password fields that may be handled separately
+        const field = this.querySelector(`[name="${key}"][required]`);
+        if (field && !value && !key.includes("Password")) {
+          console.warn(`Required field ${key} is empty!`);
+          allRequiredFieldsFilled = false;
+        }
+      }
+
+      console.log("Form values:", formValues);
+      console.log("All required fields filled:", allRequiredFieldsFilled);
+
+      // CRITICAL CHECK: Make sure FirstName is never empty
+      const firstName = this.querySelector('[name="FirstName"]');
+      const lastName = this.querySelector('[name="LastName"]');
+
+      if (firstName && !firstName.value.trim()) {
+        console.error(
+          "CRITICAL: FirstName is empty - this will cause a database error!"
+        );
+        firstName.setCustomValidity("First name is required");
+        firstName.reportValidity();
+        return false; // Prevent submission
+      }
+
+      if (lastName && !lastName.value.trim()) {
+        console.error(
+          "CRITICAL: LastName is empty - this will cause a database error!"
+        );
+        lastName.setCustomValidity("Last name is required");
+        lastName.reportValidity();
+        return false; // Prevent submission
+      }
+
+      // Extra validation check
+      if (!this.checkValidity()) {
+        console.warn("Form is invalid according to browser validation");
+
+        // Focus on the first invalid field
+        const firstInvalid = this.querySelector(":invalid");
+        if (firstInvalid) {
+          console.log(`First invalid field: ${firstInvalid.name}`);
+          firstInvalid.focus();
+        }
+
+        return false; // Prevent submission
+      }
+
+      // Make sure password and confirm password match
+      const password = this.querySelector('[name="Password"]');
+      const confirmPassword = this.querySelector('[name="ConfirmPassword"]');
+      if (
+        password &&
+        confirmPassword &&
+        password.value !== confirmPassword.value
+      ) {
+        console.error("Passwords don't match!");
+        confirmPassword.setCustomValidity("Passwords don't match!");
+        confirmPassword.reportValidity();
+        return false; // Prevent submission
+      }
+
+      // If there's an ImageUrl field, make sure it has a value
+      const imageUrl = this.querySelector('[name="ImageUrl"]');
+      if (imageUrl && !imageUrl.value) {
+        console.log("Setting default avatar before submission");
+        imageUrl.value = "/images/Avatar_male_1.svg";
+      }
+
+      console.log("Form is valid, allowing submission");
+      return true; // Allow the form to submit
+    };
+
+    // Also add a button click handler
+    const submitButton = addMemberForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.addEventListener("click", function () {
+        console.log("Submit button clicked - doing final checks");
+
+        // Final check for FirstName and LastName
+        const firstName = addMemberForm.querySelector('[name="FirstName"]');
+        const lastName = addMemberForm.querySelector('[name="LastName"]');
+
+        if (firstName && !firstName.value.trim()) {
+          alert("First name is required");
+          firstName.focus();
+          return false;
+        }
+
+        if (lastName && !lastName.value.trim()) {
+          alert("Last name is required");
+          lastName.focus();
+          return false;
+        }
+
+        // Extra check to make sure form values are set
+        const imageUrl = addMemberForm.querySelector('[name="ImageUrl"]');
+        if (imageUrl && !imageUrl.value) {
+          console.log("Setting default avatar on button click");
+          imageUrl.value = "/images/Avatar_male_1.svg";
+        }
+      });
+    }
+
+    return addMemberForm;
+  }
+
+  // Run when DOM is loaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", fixMemberForm);
+  } else {
+    fixMemberForm();
+  }
+
+  // Also run when the modal is opened
+  document.addEventListener("click", function (e) {
+    if (
+      e.target &&
+      e.target.getAttribute("data-target") === "#addMemberModal"
+    ) {
+      console.log("Modal open detected, will apply form fixes");
+      setTimeout(fixMemberForm, 100);
+    }
+  });
+})();

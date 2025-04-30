@@ -180,6 +180,8 @@ public class AuthService : IAuthService
             NormalizedEmail = email.ToUpper(),
             NormalizedUserName = email.ToUpper(),
             EmailConfirmed = true,
+            FirstName = "New",
+            LastName = "Member",
         };
 
         // Use UserManager to create the user with the provided password

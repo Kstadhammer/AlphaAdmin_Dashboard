@@ -6,17 +6,18 @@
             <h3>Edit Member</h3>
             <button class="btn-close" data-close="true"></button>
         </div>
-        <form novalidate method="post" asp-action="EditMember" asp-controller="Members" enctype="multipart/form-data">
+        <form novalidate method="post" asp-action="EditMember" asp-controller="Members" enctype="multipart/form-data"
+            id="edit_member_form">
             <input type="hidden" asp-for="Id" id="editMemberId" />
             <input type="hidden" asp-for="ImageUrl" id="editMemberImageUrl" />
 
             <!-- Profile Picture Upload Section -->
             <div class="profile-upload-container">
                 <div class="profile-upload">
-                    <img id="currentAvatar" src="/images/Avatar_male_1.svg" alt="Current Avatar"
+                    <img id="editCurrentAvatar" src="/images/Avatar_male_1.svg" alt="Current Avatar"
                         class="current-avatar" />
-                    <input asp-for="MemberImage" type="file" id="memberImage" class="profile-input" />
-                    <label for="MemberImage" class="profile-label">
+                    <input asp-for="MemberImage" type="file" id="edit_MemberImage" class="profile-input" />
+                    <label for="edit_MemberImage" class="profile-label">
                         <div class="camera-icon">
                             <i class="fa-regular fa-camera"></i>
                         </div>
@@ -53,7 +54,8 @@
             <div class="form-group">
                 <label asp-for="FirstName">First Name</label>
                 <div class="field-group">
-                    <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter first name" />
+                    <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter first name"
+                        id="edit_FirstName" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
             </div>
@@ -61,7 +63,8 @@
             <div class="form-group">
                 <label asp-for="LastName">Last Name</label>
                 <div class="field-group">
-                    <input asp-for="LastName" type="text" class="form-control" placeholder="Enter last name" />
+                    <input asp-for="LastName" type="text" class="form-control" placeholder="Enter last name"
+                        id="edit_LastName" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
             </div>
@@ -69,7 +72,8 @@
             <div class="form-group">
                 <label asp-for="Email">Email</label>
                 <div class="field-group">
-                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter email" />
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter email"
+                        id="edit_Email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
@@ -77,7 +81,8 @@
             <div class="form-group">
                 <label asp-for="JobTitle">Job Title</label>
                 <div class="field-group">
-                    <input asp-for="JobTitle" type="text" class="form-control" placeholder="Enter job title" />
+                    <input asp-for="JobTitle" type="text" class="form-control" placeholder="Enter job title"
+                        id="edit_JobTitle" />
                     <span asp-validation-for="JobTitle" class="text-danger"></span>
                 </div>
             </div>
@@ -85,15 +90,16 @@
             <div class="form-group">
                 <label asp-for="Phone">Phone</label>
                 <div class="field-group">
-                    <input asp-for="Phone" type="tel" class="form-control" placeholder="Enter phone number" />
+                    <input asp-for="Phone" type="tel" class="form-control" placeholder="Enter phone number"
+                        id="edit_Phone" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox-container">
-                    <input asp-for="IsActive" type="checkbox" id="isActive" />
-                    <label for="isActive">Active</label>
+                    <input asp-for="IsActive" type="checkbox" id="edit_IsActive" />
+                    <label for="edit_IsActive">Active</label>
                 </div>
             </div>
 

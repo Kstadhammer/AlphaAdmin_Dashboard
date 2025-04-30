@@ -263,7 +263,37 @@ public class MembersController : Controller
         }
         catch (Exception ex)
         {
-            TempData["Error"] = $"An error occurred: {ex.Message}";
+            // Enhanced error logging
+            var errorMessage = ex.Message;
+
+            // Get inner exception details if available
+            var innerException = ex.InnerException;
+            if (innerException != null)
+            {
+                errorMessage += " Inner exception: " + innerException.Message;
+
+                // Handle common database errors with specific messages
+                if (
+                    innerException.Message.Contains("duplicate")
+                    || innerException.Message.Contains("unique constraint")
+                )
+                {
+                    errorMessage = "A member with this email already exists.";
+                }
+                else if (
+                    innerException.Message.Contains("null value")
+                    || innerException.Message.Contains("not nullable")
+                )
+                {
+                    errorMessage = "Required field is missing: " + innerException.Message;
+                }
+            }
+
+            // Save full exception details for debugging
+            Console.WriteLine($"ERROR in AddMember: {ex.ToString()}");
+
+            TempData["Error"] = $"An error occurred: {errorMessage}";
+            return RedirectToAction("Members", "Admin");
         }
 
         return RedirectToAction("Members", "Admin");

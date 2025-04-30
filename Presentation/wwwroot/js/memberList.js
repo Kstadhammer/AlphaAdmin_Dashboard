@@ -33,13 +33,13 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   initializeAvatarSelection(
     "#editMemberModal",
-    "#currentAvatar",
+    "#editCurrentAvatar",
     "#editMemberImageUrl"
   );
 
   // File input preview for avatar upload
-  initializeAvatarUploadPreview("#addMemberImage", "#addCurrentAvatar");
-  initializeAvatarUploadPreview("#memberImage", "#currentAvatar");
+  initializeAvatarUploadPreview("#add_MemberImage", "#addCurrentAvatar");
+  initializeAvatarUploadPreview("#edit_MemberImage", "#editCurrentAvatar");
 
   // Toggle dropdown when clicking on the ellipsis icon
   const dropdownToggles = document.querySelectorAll(
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Set current avatar if available
             if (data.member.imageUrl) {
-              document.querySelector("#currentAvatar").src =
+              document.querySelector("#editCurrentAvatar").src =
                 data.member.imageUrl;
               document.querySelector("#editMemberImageUrl").value =
                 data.member.imageUrl;
