@@ -1,9 +1,5 @@
 # AlphaAdmin Dashboard - ASP.NET Assignment
 
-[![.NET Build and Test](https://github.com/kimhammerstad/AlphaAdmin_Dashboard/actions/workflows/dotnet.yml/badge.svg)](https://github.com/kimhammerstad/AlphaAdmin_Dashboard/actions/workflows/dotnet.yml)
-
-![AlphaAdmin Dashboard Preview](Presentation/wwwroot/images/admin/dashboard-preview.png)
-
 ## Project Overview
 
 AlphaAdmin Dashboard is a web application developed as part of the ASP.NET course assignment at EC-Utbildning. It's built using ASP.NET Core MVC (.NET 9) and follows a clean, multi-layered architecture (Presentation, Business, Data, Domain).
@@ -32,7 +28,7 @@ This application implements features based on the assignment criteria:
   - Server-Side (ModelState) & Client-Side (JavaScript) Validation
   - Cookie Consent Banner
   - Role-Based Authorization (Admin vs. User roles)
-  - External Login Providers (Google, GitHub configured)
+  - External Login Providers (Google, GitHub configured) - _Partially Implemented_)
   - Dark/Light Theme Toggle
   - Project Image Uploads
   - Assigning Members to Projects
@@ -63,13 +59,11 @@ For a detailed breakdown of requirement completion status, see [PROJECT_REQUIREM
 2.  **Ensure Database Connection:**
     - The project is configured to use SQLite (`Data Source=app.db`). The database file will be created automatically in the `Presentation` directory upon first run if it doesn't exist.
     - No changes are needed in `appsettings.json` unless you wish to switch to a different provider.
-3.  **Build and Run:**
-    - **Using IDE:** Open the solution (`AlphaAdmin_Dashboard.sln`) and run the `Presentation` project.
-    - **Using .NET CLI:**
-      `bash
+3.  **Build and Run:** - **Using IDE:** Open the solution (`AlphaAdmin_Dashboard.sln`) and run the `Presentation` project. - **Using .NET CLI:**
+    `bash
 dotnet run --project Presentation
 `
-      The application will build, apply necessary EF Core migrations automatically (including seeding initial roles, statuses, and a default admin user), and start the web server.
+    The application will build, apply necessary EF Core migrations automatically (including seeding initial roles, statuses, and a default admin user), and start the web server.
 4.  **Access the application:**
     - Open your browser and navigate to the URL provided by the Kestrel server (e.g., `https://localhost:7147` or `http://localhost:5147`).
 
@@ -113,20 +107,6 @@ This project was created solely for educational purposes as part of an assignmen
 - **Dark/Light Mode**: Toggle between dark and light themes for comfortable viewing
 - **Real-time Notifications**: Get notified about new projects and updates
 - **Role-based Access Control**: Different permissions for administrators and regular users
-
-## Screenshots
-
-### Dashboard
-
-![Dashboard](Presentation/wwwroot/images/admin/dashboard.png)
-
-### Project Management
-
-![Projects](Presentation/wwwroot/images/admin/projects.png)
-
-### Dark Mode
-
-![Dark Mode](Presentation/wwwroot/images/admin/dark-mode.png)
 
 ## Acknowledgements
 
