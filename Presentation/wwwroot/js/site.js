@@ -1,4 +1,7 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿// Main event listener that runs when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize modal functionality - finds all elements with data-modal="true" attribute
+  // These are buttons that trigger modal windows
   const modalButtons = document.querySelectorAll('[data-modal="true"]');
   modalButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -10,7 +13,8 @@
     });
   });
 
-  // Function to close all modals/dropdowns
+  // Utility function to close all modals and dropdowns
+  // This ensures only one modal/dropdown is open at a time
   function closeAllModals() {
     const modals = [
       document.getElementById("userDropdown"),
@@ -25,28 +29,26 @@
     });
   }
 
-  // Add user dropdown functionality
+  // User Settings Dropdown Implementation
+  // Handles the user settings menu that appears when clicking the settings button
   const settingsButton = document.getElementById("settingsButton");
   const userDropdown = document.getElementById("userDropdown");
 
   if (settingsButton && userDropdown) {
     settingsButton.addEventListener("click", (e) => {
-      e.stopPropagation();
+      e.stopPropagation(); // Prevents event from bubbling up to document
 
-      // If this dropdown is already open, just close it
+      // Toggle dropdown visibility
       if (userDropdown.style.display === "block") {
         userDropdown.style.display = "none";
         return;
       }
 
-      // Close all modals before opening this one
-      closeAllModals();
-
-      // Open this dropdown
+      closeAllModals(); // Close any other open modals/dropdowns
       userDropdown.style.display = "block";
     });
 
-    // Close dropdown when clicking outside
+    // Close dropdown when clicking anywhere outside the dropdown or button
     document.addEventListener("click", (e) => {
       if (
         userDropdown.style.display === "block" &&
@@ -57,13 +59,15 @@
       }
     });
 
-    // Dark mode toggle functionality
+    // Dark Mode Implementation
+    // Handles the dark mode toggle functionality including localStorage persistence
     const darkModeToggle = document.getElementById("darkModeToggle");
     if (darkModeToggle) {
-      // Check for saved preference
+      // Check if user previously enabled dark mode
       const darkMode = localStorage.getItem("darkMode") === "true";
       darkModeToggle.checked = darkMode;
       if (darkMode) {
+        // Apply dark mode theme and update icons
         document.documentElement.setAttribute("data-theme", "dark");
         document.querySelector(".search-icon").src = "/images/Search_white.svg";
         const notificationIcon = document.querySelector(".notification-icon");
@@ -71,8 +75,10 @@
           notificationIcon.src = "/images/Notification-white.svg";
       }
 
+      // Handle dark mode toggle changes
       darkModeToggle.addEventListener("change", () => {
         if (darkModeToggle.checked) {
+          // Enable dark mode
           document.documentElement.setAttribute("data-theme", "dark");
           document.querySelector(".search-icon").src =
             "/images/Search_white.svg";
@@ -81,6 +87,7 @@
             notificationIcon.src = "/images/Notification-white.svg";
           localStorage.setItem("darkMode", "true");
         } else {
+          // Disable dark mode
           document.documentElement.removeAttribute("data-theme");
           document.querySelector(".search-icon").src = "/images/Search.svg";
           const notificationIcon = document.querySelector(".notification-icon");
@@ -92,24 +99,22 @@
     }
   }
 
-  // Add notification dropdown functionality
+  // Notification System Implementation
+  // Handles the notification dropdown that shows user notifications
   const notificationButton = document.getElementById("notificationButton");
   const notificationDropdown = document.getElementById("notificationDropdown");
 
   if (notificationButton && notificationDropdown) {
     notificationButton.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevent click from immediately closing dropdown
+      e.stopPropagation();
 
-      // If this dropdown is already open, just close it
+      // Toggle notification dropdown
       if (notificationDropdown.style.display === "block") {
         notificationDropdown.style.display = "none";
         return;
       }
 
-      // Close all modals before opening this one
       closeAllModals();
-
-      // Open this dropdown
       notificationDropdown.style.display = "block";
     });
 
@@ -118,56 +123,54 @@
       if (
         notificationDropdown.style.display === "block" &&
         !notificationDropdown.contains(e.target) &&
-        !notificationButton.contains(e.target) // Also check if click was on the button itself
+        !notificationButton.contains(e.target)
       ) {
         notificationDropdown.style.display = "none";
       }
     });
   }
 
-  // Add profile settings modal functionality
+  // Profile Settings Modal Implementation
+  // Handles the profile settings modal where users can update their profile
   const profileButton = document.getElementById("profileButton");
   const profileSettingsModal = document.getElementById("profileSettingsModal");
 
   if (profileButton && profileSettingsModal) {
     profileButton.addEventListener("click", (e) => {
-      e.stopPropagation(); // Prevent click from immediately closing modal
+      e.stopPropagation();
 
-      // If this modal is already open, just close it
+      // Toggle profile settings modal
       if (profileSettingsModal.style.display === "block") {
         profileSettingsModal.style.display = "none";
         return;
       }
 
-      // Close all modals before opening this one
       closeAllModals();
-
-      // Open this modal
       profileSettingsModal.style.display = "block";
     });
 
-    // Close profile settings modal when clicking outside
+    // Close profile settings when clicking outside
     document.addEventListener("click", (e) => {
       if (
         profileSettingsModal.style.display === "block" &&
         !profileSettingsModal.contains(e.target) &&
-        !profileButton.contains(e.target) // Also check if click was on the button itself
+        !profileButton.contains(e.target)
       ) {
         profileSettingsModal.style.display = "none";
       }
     });
 
-    // Sync the dark mode toggle in the settings with the main toggle
+    // Sync Dark Mode Toggles
+    // Ensures the dark mode toggle in settings matches the main toggle
     const darkModeToggleSettings = document.getElementById(
       "darkModeToggleSettings"
     );
     const darkModeToggle = document.getElementById("darkModeToggle");
 
     if (darkModeToggleSettings && darkModeToggle) {
-      // Initialize the settings toggle to match the main toggle
       darkModeToggleSettings.checked = darkModeToggle.checked;
 
-      // Keep the toggles in sync
+      // Keep both toggles synchronized
       darkModeToggleSettings.addEventListener("change", () => {
         darkModeToggle.checked = darkModeToggleSettings.checked;
         darkModeToggle.dispatchEvent(new Event("change"));
@@ -179,10 +182,10 @@
     }
   }
 
-  // Add error logging for project form submissions
+  // Project Form Debugging
+  // Logs form submissions for debugging purposes
   console.log("Document loaded, checking for project forms");
 
-  // Log form submissions for debugging
   const addProjectForm = document.getElementById("addProjectForm");
   if (addProjectForm) {
     console.log("Add Project form found");
@@ -211,14 +214,15 @@
     console.log("Edit Project form not found");
   }
 
-  // We're now using our custom member selection component instead of Choices.js
-  // Contextual navbar search
+  // Contextual Search Implementation
+  // Handles the search functionality that adapts based on the current page
   const searchInput = document.querySelector(".search-input");
   if (searchInput) {
     searchInput.addEventListener("input", function () {
       const query = this.value.toLowerCase();
       const path = window.location.pathname.toLowerCase();
 
+      // Call appropriate filter function based on current page
       if (path.includes("/projects")) {
         if (typeof filterProjects === "function") {
           filterProjects(query);
@@ -235,11 +239,12 @@
     });
   }
 
-  // Generated by Google Gemini
-  // --- Quill Editor Initialization ---
+  // Rich Text Editor Implementation using Quill
+  // Handles rich text editing for project descriptions
   let addQuill;
   let editQuill;
 
+  // Configure Quill editor options
   const quillOptions = {
     theme: "snow",
     modules: {
@@ -260,15 +265,16 @@
     },
   };
 
-  // Initialize Add Project Quill Editor
+  // Initialize Quill editor for adding new projects
   const addEditorContainer = document.getElementById("add-description-editor");
   const addHiddenInput = document.getElementById("add-description-hidden");
   if (addEditorContainer && addHiddenInput) {
     try {
       addQuill = new Quill(addEditorContainer, quillOptions);
+      // Sync Quill content with hidden input for form submission
       addQuill.on("text-change", function (delta, oldDelta, source) {
         if (source === "user") {
-          addHiddenInput.value = addQuill.root.innerHTML; // Store HTML content
+          addHiddenInput.value = addQuill.root.innerHTML;
         }
       });
     } catch (error) {
@@ -276,7 +282,7 @@
     }
   }
 
-  // Initialize Edit Project Quill Editor (content set when modal opens)
+  // Initialize Quill editor for editing existing projects
   const editEditorContainer = document.getElementById(
     "edit-description-editor"
   );
@@ -286,7 +292,7 @@
       editQuill = new Quill(editEditorContainer, quillOptions);
       editQuill.on("text-change", function (delta, oldDelta, source) {
         if (source === "user") {
-          editHiddenInput.value = editQuill.root.innerHTML; // Store HTML content
+          editHiddenInput.value = editQuill.root.innerHTML;
         }
       });
     } catch (error) {
@@ -294,23 +300,24 @@
     }
   }
 
-  // Function to set content in Edit Quill editor (called when modal opens)
+  // Function to initialize edit Quill editor with existing content
   window.initializeEditQuill = function (descriptionHtml) {
     if (editQuill) {
       try {
         const delta = editQuill.clipboard.convert(descriptionHtml || "");
-        editQuill.setContents(delta, "silent"); // Set content without triggering text-change
-        editHiddenInput.value = descriptionHtml || ""; // Ensure hidden input is also set initially
+        editQuill.setContents(delta, "silent");
+        editHiddenInput.value = descriptionHtml || "";
       } catch (error) {
         console.error("Failed to set Edit Quill content:", error);
-        // Fallback: Try setting raw HTML if conversion fails
+        // Fallback to raw HTML if delta conversion fails
         editQuill.root.innerHTML = descriptionHtml || "";
         editHiddenInput.value = descriptionHtml || "";
       }
     }
   };
 
-  // Format date inputs with month name
+  // Date Input Formatting Implementation
+  // Handles the formatting of date inputs to show month names
   function formatDateForDisplay(dateString) {
     if (!dateString) return "";
 
@@ -319,6 +326,7 @@
     return date.toLocaleDateString("en-US", options);
   }
 
+  // Initialize and format all date inputs
   function initializeDateInputs() {
     const dateInputs = document.querySelectorAll(".date-actual-input");
 
@@ -327,7 +335,7 @@
         ".date-display-input"
       );
 
-      // Set initial formatted value
+      // Format initial value
       if (input.value) {
         displayInput.value = formatDateForDisplay(input.value);
       }
@@ -337,29 +345,29 @@
         displayInput.value = formatDateForDisplay(this.value);
       });
 
-      // Handle click on the display input (focus the actual input)
+      // Show date picker when clicking display input
       displayInput.addEventListener("click", function () {
         input.showPicker();
       });
     });
   }
 
-  // Initialize date inputs when DOM loads
+  // Initialize date inputs on page load
   initializeDateInputs();
 
-  // Initialize date inputs when add/edit project modals are opened
+  // Re-initialize date inputs when modals are opened
   modalButtons.forEach((button) => {
     button.addEventListener("click", function () {
-      setTimeout(initializeDateInputs, 100); // Short delay to ensure DOM is updated
+      setTimeout(initializeDateInputs, 100);
     });
   });
 });
 
-// Add event listeners for close buttons
+// Modal Close Button Implementation
+// Handles the closing of modals and form resets
 const closeButtons = document.querySelectorAll('[data-close="true"]');
 closeButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    // Find the closest parent modal
     const modal = button.closest(".modal");
     if (modal) {
       modal.style.display = "none";
@@ -367,27 +375,26 @@ closeButtons.forEach((button) => {
       // Reset all forms in the modal
       modal.querySelectorAll("form").forEach((form) => {
         form.reset();
-        // Clear Quill editors if they exist in the modal
+        // Clear Quill editors if present
         if (
           modal.id === "addProjectModal" &&
           typeof addQuill !== "undefined" &&
           addQuill
         ) {
-          addQuill.setContents([], "silent"); // Clear content using setContents with empty delta
+          addQuill.setContents([], "silent");
           if (addHiddenInput) addHiddenInput.value = "";
         } else if (
           modal.id === "editProjectModal" &&
           typeof editQuill !== "undefined" &&
           editQuill
         ) {
-          editQuill.setContents([], "silent"); // Clear content
+          editQuill.setContents([], "silent");
           if (editHiddenInput) editHiddenInput.value = "";
         }
 
-        // Reset image preview
+        // Reset image preview to default camera icon
         const profileLabel = form.querySelector(".profile-label");
         if (profileLabel) {
-          // Restore the original camera icon content
           profileLabel.innerHTML = `
             <div class="camera-icon">
               <i class="fa-regular fa-camera"></i>
@@ -397,7 +404,9 @@ closeButtons.forEach((button) => {
       });
     }
   });
-  // Handle image preview
+
+  // Image Preview Implementation
+  // Handles the preview of uploaded profile images
   document.querySelectorAll(".profile-input").forEach((input) => {
     input.addEventListener("change", async (event) => {
       const file = event.target.files[0];
@@ -413,15 +422,15 @@ closeButtons.forEach((button) => {
   });
 });
 
-// Optional: Close modal when clicking outside the content
+// Close modal when clicking outside content area
 document.addEventListener("click", (event) => {
   if (event.target.classList.contains("modal")) {
     event.target.style.display = "none";
   }
 });
 
-// Add event listener for profile image upload (code from Hans Tips och Trix)
-
+// Image Processing Implementation
+// Handles the processing and preview of uploaded images
 async function processImage(file, imagePreview, previewer, previewSize = 150) {
   try {
     const img = await loadImage(file);
@@ -429,13 +438,13 @@ async function processImage(file, imagePreview, previewer, previewSize = 150) {
     canvas.width = previewSize;
     canvas.height = previewSize;
 
+    // Draw image on canvas for preview
     const ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, previewSize, previewSize);
 
-    // Clear existing content
     imagePreview.innerHTML = "";
 
-    // Create image element
+    // Create and style preview image
     const previewImg = document.createElement("img");
     previewImg.src = canvas.toDataURL("image/jpeg");
     previewImg.style.width = "100%";
@@ -443,15 +452,14 @@ async function processImage(file, imagePreview, previewer, previewSize = 150) {
     previewImg.style.borderRadius = "30%";
     previewImg.style.objectFit = "cover";
 
-    // Add the image to the preview
     imagePreview.appendChild(previewImg);
-
     previewer.classList.add("selected");
   } catch (error) {
     console.error("Failed on image-processing:", error);
   }
 }
 
+// Utility function to load images as promises
 function loadImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -466,12 +474,12 @@ function loadImage(file) {
   });
 }
 
-// Handle alert dismissal
+// Alert System Implementation
+// Handles the display and automatic dismissal of alert messages
 document.addEventListener("DOMContentLoaded", function () {
-  // Get all alert close buttons
   const alertCloseButtons = document.querySelectorAll(".alert .btn-close");
 
-  // Add click event to each button
+  // Manual alert dismissal
   alertCloseButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const alert = this.closest(".alert");
@@ -490,14 +498,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }, 5000);
 });
 
-// Add form validation debugging
+// Form Validation Implementation
+// Handles real-time form validation and error display
 document.addEventListener("DOMContentLoaded", function () {
   const addProjectForm = document.getElementById("addProjectForm");
   if (addProjectForm) {
     const validationStatus = document.getElementById("formValidationStatus");
 
     if (validationStatus) {
-      // Check form validity on input change
+      // Monitor input changes for validation
       addProjectForm
         .querySelectorAll("input, select, textarea")
         .forEach((input) => {
@@ -506,15 +515,15 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         });
 
-      // Initial check
       updateFormValidation();
 
+      // Update validation status and highlight invalid fields
       function updateFormValidation() {
         const isValid = addProjectForm.checkValidity();
         validationStatus.textContent = isValid ? "Valid" : "Invalid";
         validationStatus.style.color = isValid ? "green" : "red";
 
-        // Check individual fields
+        // Track invalid fields
         const invalidFields = [];
         addProjectForm
           .querySelectorAll("input, select, textarea")
@@ -532,12 +541,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Prevent submission if form is invalid
+    // Handle form submission validation
     addProjectForm.addEventListener("submit", function (e) {
       if (!this.checkValidity()) {
         e.preventDefault();
 
-        // Highlight all invalid fields
+        // Highlight invalid fields
         this.querySelectorAll(":invalid").forEach((field) => {
           field.style.borderColor = "red";
         });
@@ -545,7 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
         validationStatus.textContent = "Form validation failed";
         validationStatus.style.color = "red";
 
-        // Show user a message
+        // Show error message
         if (!document.querySelector(".form-error-message")) {
           const errorMessage = document.createElement("div");
           errorMessage.className = "alert alert-danger form-error-message";
@@ -553,7 +562,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "<span>Please fix the form errors before submitting.</span>";
           addProjectForm.prepend(errorMessage);
 
-          // Automatically remove after a few seconds
+          // Auto-remove error message
           setTimeout(() => {
             errorMessage.remove();
           }, 5000);
