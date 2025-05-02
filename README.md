@@ -6,7 +6,7 @@ AlphaAdmin Dashboard is a web application developed as part of the ASP.NET cours
 
 The goal of this project is to create a functional administrative dashboard for managing projects, clients, and team members, fulfilling specific requirements for "Godkänt" (Pass) and "Väl Godkänt" (Higher Pass) grades as outlined in the assignment brief.
 
-**Note on AI Assistance:** Parts of this codebase, particularly involving implementation details and refactoring efforts, were developed with assistance from the AI model Gemini 2.5 Pro. This usage adheres to the assignment guidelines regarding AI-generated code.
+**Note on AI Assistance:** Parts of this codebase, particularly involving implementation details and refactoring efforts, were developed with assistance from the AI model Gemini 2.5 Pro Claude Sonnet 3.7. This usage adheres to the assignment guidelines regarding AI-generated code.
 
 ## Key Features & Assignment Requirements
 
