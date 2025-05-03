@@ -1,11 +1,31 @@
 /**
- * Client Form Validation
- * Handles client-side validation for Add Client and Edit Client forms
- * This is the primary validation file for client forms
+ * Client Form Validation System
+ *
+ * A comprehensive client-side validation system for client forms that provides:
+ * - Real-time validation feedback
+ * - Custom validation rules and error messages
+ * - Form-level and field-level validation
+ * - Visual error indicators
+ * - Automatic error message handling
+ *
+ * Supported Forms:
+ * - Add Client Modal Form
+ * - Edit Client Modal Form
+ *
+ * Validation Features:
+ * - Required field validation
+ * - Minimum length validation
+ * - Pattern/regex validation
+ * - Custom error messaging
+ * - Live validation on blur
+ * - Form submission validation
  */
 
 (function () {
-  // Field validation rules
+  /**
+   * Validation Rules Configuration
+   * Defines the validation rules and error messages for each field
+   */
   const validationRules = {
     ClientName: {
       required: true,
@@ -31,17 +51,23 @@
     },
   };
 
-  // Validate a specific field
+  /**
+   * Field Validation
+   * Validates a single form field against its defined rules
+   *
+   * @param {HTMLElement} field - The form field to validate
+   * @returns {boolean} - Whether the field is valid
+   */
   function validateField(field) {
     const fieldName = field.getAttribute("name") || field.id;
     const rules = validationRules[fieldName];
 
-    if (!rules) return true; // No rules for this field
+    if (!rules) return true; // Skip validation if no rules defined
 
-    // Get field value and trim it
+    // Get and trim field value
     const value = field.value.trim();
 
-    // Get or create validation message element
+    // Create or get error message element
     let errorElement = field.parentElement.querySelector(".validation-error");
     if (!errorElement) {
       errorElement = document.createElement("span");
@@ -49,7 +75,7 @@
       field.parentElement.appendChild(errorElement);
     }
 
-    // Check required
+    // Required field validation
     if (rules.required && !value) {
       field.classList.add("invalid");
       field.style.borderColor = "red";
@@ -57,7 +83,7 @@
       return false;
     }
 
-    // Check minLength
+    // Minimum length validation
     if (rules.minLength && value.length < rules.minLength) {
       field.classList.add("invalid");
       field.style.borderColor = "red";
@@ -65,7 +91,7 @@
       return false;
     }
 
-    // Check pattern
+    // Pattern/regex validation
     if (rules.pattern && value && !rules.pattern.test(value)) {
       field.classList.add("invalid");
       field.style.borderColor = "red";
@@ -73,30 +99,36 @@
       return false;
     }
 
-    // Field is valid
+    // Clear validation state for valid field
     field.classList.remove("invalid");
     field.style.borderColor = "";
     errorElement.textContent = "";
     return true;
   }
 
-  // Validate whole form
+  /**
+   * Form Validation
+   * Validates an entire form and manages error display
+   *
+   * @param {HTMLFormElement} form - The form to validate
+   * @returns {boolean} - Whether the form is valid
+   */
   function validateForm(form) {
     let isValid = true;
     const formFields = form.querySelectorAll("input, select, textarea");
 
-    // Clear any previous error summary
+    // Remove any existing error summary
     const existingErrorMessage = form.querySelector(".form-error-message");
     if (existingErrorMessage) {
       existingErrorMessage.remove();
     }
 
-    // Validate each field
+    // Validate all form fields
     formFields.forEach((field) => {
       const fieldValid = validateField(field);
       isValid = isValid && fieldValid;
 
-      // Add or remove error class to parent field-group
+      // Update field group styling
       const fieldGroup = field.closest(".field-group");
       if (fieldGroup) {
         if (!fieldValid) {
@@ -107,7 +139,7 @@
       }
     });
 
-    // If form is invalid, show summary error message
+    // Display form-level error message if invalid
     if (!isValid) {
       const errorMessage = document.createElement("div");
       errorMessage.className = "alert alert-danger form-error-message";
@@ -115,10 +147,10 @@
         "<span>Please fix the form errors before submitting.</span>";
       form.prepend(errorMessage);
 
-      // Scroll to the top of the form
+      // Scroll to form top for visibility
       form.scrollIntoView({ behavior: "smooth", block: "start" });
 
-      // Automatically remove after 5 seconds
+      // Auto-remove error message after 5 seconds
       setTimeout(() => {
         errorMessage.remove();
       }, 5000);
@@ -127,14 +159,21 @@
     return isValid;
   }
 
-  // Function to set up a specific form
+  /**
+   * Form Setup
+   * Configures validation handlers for a specific form
+   *
+   * @param {string} formSelector - CSS selector for the form
+   * @param {string} formName - Name of the form for logging
+   * @returns {HTMLFormElement|null} - The configured form or null if not found
+   */
   function setupForm(formSelector, formName) {
     const form = document.querySelector(formSelector);
     if (!form) return null;
 
     console.log(`${formName} form found, setting up validation`);
 
-    // Set up form submit validation
+    // Form submission validation
     form.addEventListener("submit", function (e) {
       if (!validateForm(this)) {
         e.preventDefault();
@@ -145,19 +184,19 @@
       }
     });
 
-    // Set up live validation on input
+    // Set up field-level validation
     form.querySelectorAll("input, select, textarea").forEach((field) => {
-      // Validate on blur (when field loses focus)
+      // Validate when field loses focus
       field.addEventListener("blur", function () {
         validateField(this);
       });
 
-      // Clear error styling on input
+      // Clear validation state on input
       field.addEventListener("input", function () {
         this.style.borderColor = "";
         this.classList.remove("invalid");
 
-        // Remove error class from parent field-group
+        // Clear field group error state
         const fieldGroup = this.closest(".field-group");
         if (fieldGroup) {
           fieldGroup.classList.remove("has-error");
@@ -175,21 +214,24 @@
     return form;
   }
 
-  // Initialize validation
+  /**
+   * Initialization
+   * Sets up validation for all client forms
+   */
   function init() {
-    // Set up both forms
+    // Initialize both client forms
     setupForm("#addClientModal form", "Add Client");
     setupForm("#editClientModal form", "Edit Client");
   }
 
-  // Run on page load
+  // Initialize on page load
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
 
-  // Also set up when modals are shown
+  // Re-initialize when modals are opened
   document.addEventListener("click", function (e) {
     if (
       e.target &&

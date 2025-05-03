@@ -1,3 +1,7 @@
+// Program.cs - Main application configuration and startup.
+// Configures services, middleware, authentication, and database.
+// Had help from AI to fix errors and refactor the code.
+
 using AspNet.Security.OAuth.GitHub;
 using Business.DataSeeders;
 using Business.Factories;

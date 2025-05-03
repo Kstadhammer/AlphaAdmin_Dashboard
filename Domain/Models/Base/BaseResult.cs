@@ -9,5 +9,5 @@ public class BaseResult
 
 public class BaseResult<T> : BaseResult
 {
-    public T Result { get; set; }
+    public T? Result { get; set; }
 }

@@ -1,67 +1,92 @@
 /**
  * Member Selection Component
- * Provides a custom member selection interface with avatars
+ * A custom UI component that provides an enhanced member selection interface with the following features:
+ * - Avatar-based member selection
+ * - Tag-based selected member display
+ * - Real-time search filtering
+ * - Multiple member selection support
+ * - Synchronization with hidden select element
+ *
+ * Component Structure:
+ * - Container (.member-selection-container)
+ *   - Input Container (.member-selection-input)
+ *     - Member Tags (.member-tag)
+ *     - Search Input (.member-selection-search)
+ *   - Dropdown (.member-selection-dropdown)
+ *     - Member Options (.member-option)
+ *   - Hidden Select (.member-selection-hidden)
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize all member selection components
+  // Initialize all member selection components on page load
   initializeMemberSelections();
 
+  /**
+   * Main initialization function
+   * Sets up all member selection components found on the page
+   */
   function initializeMemberSelections() {
-    // Find all member selection containers
-    const memberSelectionContainers = document.querySelectorAll(".member-selection-container");
-    
-    memberSelectionContainers.forEach(container => {
+    // Find all member selection containers in the document
+    const memberSelectionContainers = document.querySelectorAll(
+      ".member-selection-container"
+    );
+
+    memberSelectionContainers.forEach((container) => {
+      // Get component elements
       const input = container.querySelector(".member-selection-input");
       const dropdown = container.querySelector(".member-selection-dropdown");
       const searchInput = container.querySelector(".member-selection-search");
       const hiddenSelect = container.querySelector(".member-selection-hidden");
-      
-      // Store member data
+
+      // Initialize member data storage
       const members = [];
       const memberOptions = container.querySelectorAll(".member-option");
-      
-      // Populate members array from options
-      memberOptions.forEach(option => {
+
+      // Build members array from DOM options
+      memberOptions.forEach((option) => {
         members.push({
           id: option.dataset.id,
           name: option.dataset.name,
-          avatar: option.dataset.avatar
+          avatar: option.dataset.avatar,
         });
       });
-      
-      // Handle input container click
-      input.addEventListener("click", function(e) {
+
+      /**
+       * Event Handlers
+       */
+
+      // Handle input container click - show dropdown and focus search
+      input.addEventListener("click", function (e) {
         if (e.target === input || e.target === searchInput) {
           showDropdown();
           searchInput.focus();
         }
       });
-      
-      // Handle search input
-      searchInput.addEventListener("input", function() {
+
+      // Handle real-time search filtering
+      searchInput.addEventListener("input", function () {
         filterMembers(this.value);
       });
-      
-      // Handle search input focus
-      searchInput.addEventListener("focus", function() {
+
+      // Show dropdown when search input is focused
+      searchInput.addEventListener("focus", function () {
         showDropdown();
       });
-      
-      // Handle document click to close dropdown
-      document.addEventListener("click", function(e) {
+
+      // Close dropdown when clicking outside component
+      document.addEventListener("click", function (e) {
         if (!container.contains(e.target)) {
           hideDropdown();
         }
       });
-      
-      // Handle member option click
-      memberOptions.forEach(option => {
-        option.addEventListener("click", function() {
+
+      // Handle member selection from dropdown
+      memberOptions.forEach((option) => {
+        option.addEventListener("click", function () {
           const memberId = this.dataset.id;
           const memberName = this.dataset.name;
           const memberAvatar = this.dataset.avatar;
-          
+
           addMemberTag(memberId, memberName, memberAvatar);
           updateHiddenSelect();
           hideDropdown();
@@ -69,36 +94,46 @@ document.addEventListener("DOMContentLoaded", function () {
           searchInput.focus();
         });
       });
-      
-      // Function to show dropdown
+
+      /**
+       * Dropdown Management Functions
+       */
+
+      // Display the member selection dropdown
       function showDropdown() {
         dropdown.classList.add("show");
         filterMembers(searchInput.value);
       }
-      
-      // Function to hide dropdown
+
+      // Hide the member selection dropdown
       function hideDropdown() {
         dropdown.classList.remove("show");
       }
-      
-      // Function to filter members based on search
+
+      /**
+       * Member Filtering System
+       * Filters and displays member options based on search input
+       * Also handles visibility of already selected members
+       * @param {string} query - Search term to filter members
+       */
       function filterMembers(query) {
         const lowerQuery = query.toLowerCase();
-        
-        memberOptions.forEach(option => {
+
+        memberOptions.forEach((option) => {
           const name = option.dataset.name.toLowerCase();
-          
+
+          // Show/hide based on search match
           if (name.includes(lowerQuery)) {
             option.style.display = "flex";
           } else {
             option.style.display = "none";
           }
-          
-          // Hide already selected members
+
+          // Handle already selected members
           const isSelected = Array.from(hiddenSelect.selectedOptions).some(
-            selected => selected.value === option.dataset.id
+            (selected) => selected.value === option.dataset.id
           );
-          
+
           if (isSelected) {
             option.classList.add("selected");
           } else {
@@ -106,36 +141,48 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
       }
-      
-      // Function to add member tag
+
+      /**
+       * Member Tag Management
+       * Creates and manages the visual tags for selected members
+       * @param {string} id - Member ID
+       * @param {string} name - Member name
+       * @param {string} avatar - URL to member's avatar
+       */
       function addMemberTag(id, name, avatar) {
-        // Check if member is already selected
-        if (Array.from(hiddenSelect.selectedOptions).some(option => option.value === id)) {
+        // Prevent duplicate selection
+        if (
+          Array.from(hiddenSelect.selectedOptions).some(
+            (option) => option.value === id
+          )
+        ) {
           return;
         }
-        
-        // Create member tag
+
+        // Create the member tag element
         const tag = document.createElement("div");
         tag.className = "member-tag";
         tag.dataset.id = id;
-        
+
         tag.innerHTML = `
           <img src="${avatar}" alt="${name}" class="member-tag-avatar">
           <span class="member-tag-name">${name}</span>
           <span class="member-tag-remove">×</span>
         `;
-        
-        // Add remove event listener
-        tag.querySelector(".member-tag-remove").addEventListener("click", function(e) {
-          e.stopPropagation();
-          tag.remove();
-          updateHiddenSelect();
-        });
-        
-        // Insert before search input
+
+        // Add remove functionality
+        tag
+          .querySelector(".member-tag-remove")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            tag.remove();
+            updateHiddenSelect();
+          });
+
+        // Add tag to input container
         input.insertBefore(tag, searchInput);
-        
-        // Select the option in the hidden select
+
+        // Update hidden select
         for (let i = 0; i < hiddenSelect.options.length; i++) {
           if (hiddenSelect.options[i].value === id) {
             hiddenSelect.options[i].selected = true;
@@ -143,17 +190,21 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       }
-      
-      // Function to update hidden select based on tags
+
+      /**
+       * Hidden Select Synchronization
+       * Keeps the hidden select element in sync with the visual interface
+       * Triggers change events for form handling
+       */
       function updateHiddenSelect() {
-        // Clear all selections
+        // Reset all selections
         for (let i = 0; i < hiddenSelect.options.length; i++) {
           hiddenSelect.options[i].selected = false;
         }
-        
-        // Select based on tags
+
+        // Update selections based on visible tags
         const tags = input.querySelectorAll(".member-tag");
-        tags.forEach(tag => {
+        tags.forEach((tag) => {
           const id = tag.dataset.id;
           for (let i = 0; i < hiddenSelect.options.length; i++) {
             if (hiddenSelect.options[i].value === id) {
@@ -162,16 +213,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }
         });
-        
-        // Trigger change event
+
+        // Trigger change event for form handling
         const event = new Event("change");
         hiddenSelect.dispatchEvent(event);
       }
-      
-      // Initialize with any pre-selected members
+
+      /**
+       * Initialize Pre-selected Members
+       * Handles setup of any members that were pre-selected in the hidden select
+       */
       if (hiddenSelect.multiple) {
-        Array.from(hiddenSelect.selectedOptions).forEach(option => {
-          const member = members.find(m => m.id === option.value);
+        Array.from(hiddenSelect.selectedOptions).forEach((option) => {
+          const member = members.find((m) => m.id === option.value);
           if (member) {
             addMemberTag(member.id, member.name, member.avatar);
           }

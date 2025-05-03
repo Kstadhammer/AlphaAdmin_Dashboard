@@ -1,5 +1,6 @@
 /**
  * Project List functionality including card dropdown menu and delete confirmation
+ * Had help from AI to fix errors and refactor the code
  */
 document.addEventListener("DOMContentLoaded", function () {
   // Toggle dropdown when clicking on the ellipsis icon

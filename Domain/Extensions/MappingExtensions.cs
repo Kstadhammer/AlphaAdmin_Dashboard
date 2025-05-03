@@ -10,6 +10,7 @@ namespace Domain.Extensions;
 public static class MappingExtensions
 {
     /// <summary>
+    /// Had help from AI to fix errors and refactor the code
     /// Maps properties from a source object to a new destination object of type <typeparamref name="TDestination"/>.
     /// Copies properties with matching names and types.
     /// Includes special handling for mapping <c>SignUpFormData</c> to <c>MemberEntity</c> to set both Email and UserName.
